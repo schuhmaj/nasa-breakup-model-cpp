@@ -7,7 +7,8 @@ and its fundamentals can be found here:
 https://1drv.ms/u/s!Ag_epLxb0vqqgc53PKGgT8J1CdzrtQ?e=U2JT9E
 
 ### Requirements
-Currently none
+The project uses the following dependencies:
+- GoogleTest (Only required for Testing, Automatically set-up by CMake)
 
 ### Build
 The program is build by using CMake. So first make sure that you installed
@@ -19,5 +20,12 @@ CMake and then follow these steps:
     make
 
 ### Execution
-TODO
+After the build, the simulation can be run by executing:
+
+    ./breakupModel
     
+### Testing
+The tests use the framework GoogleTest and
+can simply be run by executing in the build directory:
+
+    ctest
