@@ -4,6 +4,8 @@
 
 /**
  * Interface for Output
+ * TODO: Maybe start already writing during calculation as second thread?
+ * To be evaluated
  */
 class OutputWriter {
 
