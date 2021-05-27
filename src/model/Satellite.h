@@ -3,11 +3,31 @@
 #include <array>
 
 /**
+ * Type of a Satellite
+ * (Derived from the NORAD Catalog types)
+ */
+enum SatType {
+    SPACECRAFT, ROCKET_BODY, DEBRIS, UNKNOWN
+};
+
+
+/**
  * Represent an object in orbit.
  * This object can either be ACTIVE (working satellite) or INACTIVE (dysfunctional satellite OR Debris)
- * TODO: Subclassing or Enumeration for status or is it required at all
  */
 class Satellite {
+
+    /**
+     * The ID of the Satellite, must be unique
+     * @note e. g. the NORAD Catalog number
+     */
+    long _id;
+
+    /**
+     * The type of the Satellite
+     * @note Needed for determining the right equations for breakup
+     */
+    SatType _satType;
 
     /**
      * The characteristic Length L_c [m]
@@ -28,7 +48,7 @@ class Satellite {
      * The area A [m^2]
      * @note Determined by either input (Radar data) or by the L_c (with Equation 8/9)
      */
-    double _area
+    double _area;
 
     /**
      * The cartesian velocity vector v [m/s^2]
@@ -40,7 +60,7 @@ class Satellite {
      * The cartesian position vector [m]
      * @note Determined with the Keplerian elements from the input or directly given
      */
-    std::array<double, 3> _position
+    std::array<double, 3> _position;
 
     /* TODO
      * Implement Keplerian Elements --> v, r
@@ -50,7 +70,28 @@ class Satellite {
 
 public:
 
-    Satellite() = default;
+    /**
+     * Generates a new Satellite with empty (zero-set) values.
+     * TODO Currently unhappy - maybe use a factory? Definitely to refactor, when input is implemented
+     */
+    Satellite(long id = 0, SatType satType = SPACECRAFT, double size = 0.05, double area = 0)
+        : _id{id},
+          _satType{satType},
+          _size{size},
+          _areaToMassRatio{0},
+          _mass{0},
+          _area{area},
+          _velocity{std::array<double, 3>{0, 0, 0}},
+          _position{std::array<double, 3>{0, 0, 0}} {}
+
+
+    friend bool operator==(const Satellite &a, const Satellite &b) {
+        return a._id == b._id;
+    }
+
+    friend bool operator!=(const Satellite &a, const Satellite &b) {
+        return a._id != b._id;
+    }
 
 };
 
