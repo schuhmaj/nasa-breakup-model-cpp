@@ -49,6 +49,7 @@ public:
 
     /**
      * Removes a specific satellite from the SatelliteCollection.
+     * @attention Does not sustain the order!
      * @param satellite - Satellite&
      */
     void remove(Satellite &satellite);
