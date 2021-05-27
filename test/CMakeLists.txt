@@ -4,6 +4,8 @@ include(gtest)
 #Recursively collects all the test files in the test Directory
 file(GLOB_RECURSE TEST_SRC
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/*/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/*/*.h"
         )
 
 #Creates the Test Target breakupModelTest
