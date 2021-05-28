@@ -17,6 +17,7 @@ target_include_directories(breakupModelTest PRIVATE "${PROJECT_SOURCE_DIR}/src")
 #Links target breakupModelTest against gtest_main (entry point, so no own main method is required)
 target_link_libraries(breakupModelTest
         gtest_main
+        yaml-cpp
         )
 
 include(GoogleTest)
