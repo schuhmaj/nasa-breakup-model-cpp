@@ -64,26 +64,20 @@ public:
      * Returns an iterator to the beginning of the SatelliteCollection.
      * @return iterator
      */
-    std::vector<Satellite>::const_iterator begin() const {
-        return _satellites.begin();
-    }
+    std::vector<Satellite>::const_iterator begin() const;
 
     /**
     * Returns an iterator to the end of the SatelliteCollection.
     * @return iterator
     */
-    std::vector<Satellite>::const_iterator end() const {
-        return _satellites.end();
-    }
+    std::vector<Satellite>::const_iterator end() const;
 
     /**
      * Returns element n
      * @param n - the index
      * @return reference to Satellite
      */
-    Satellite& operator[](unsigned long n) {
-        return _satellites[n];
-    }
+    Satellite& operator[](unsigned long n);
 
 };
 

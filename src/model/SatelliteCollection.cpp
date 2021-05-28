@@ -20,3 +20,15 @@ void SatelliteCollection::remove(Satellite &satellite) {
 long SatelliteCollection::size() {
     return _satellites.size();
 }
+
+std::vector<Satellite>::const_iterator SatelliteCollection::begin() const {
+    return _satellites.begin();
+}
+
+std::vector<Satellite>::const_iterator SatelliteCollection::end() const {
+    return _satellites.end();
+}
+
+Satellite &SatelliteCollection::operator[](unsigned long n) {
+    return _satellites[n];
+}
