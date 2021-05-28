@@ -85,10 +85,23 @@ public:
           _position{std::array<double, 3>{0, 0, 0}} {}
 
 
+    /**
+     * Compares two Satellites by comparing their IDs.
+     * @param a - Satellite
+     * @param b - Satellite
+     * @return true if thy have the same ID
+     */
     friend bool operator==(const Satellite &a, const Satellite &b) {
         return a._id == b._id;
     }
 
+
+    /**
+     * Compares two Satellites by comparing their IDs.
+     * @param a - Satellite
+     * @param b - Satellite
+     * @return true if they do not have the same ID
+     */
     friend bool operator!=(const Satellite &a, const Satellite &b) {
         return a._id != b._id;
     }
