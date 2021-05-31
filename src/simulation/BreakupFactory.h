@@ -40,5 +40,7 @@ public:
      */
     Breakup getCollision();
 
+    //TODO Maybe add some Methode getByInputSource() Methode which returns either a Collision or an Explosion
+
 
 };

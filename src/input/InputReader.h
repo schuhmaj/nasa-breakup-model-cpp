@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "model/SatelliteCollection.h"
 
 /**
@@ -10,9 +11,17 @@
  */
 class InputReader {
 
+protected:
+
+    const std::string _filename;
+
 public:
 
-    InputReader() = default;
+    explicit InputReader(const std::string &filename)
+            : _filename{filename} {}
+
+    explicit InputReader(std::string &&filename)
+            : _filename{filename} {}
 
     virtual ~InputReader() = default;
 
