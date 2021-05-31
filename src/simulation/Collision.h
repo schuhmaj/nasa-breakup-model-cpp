@@ -4,6 +4,9 @@
 
 class Collision : public Breakup {
 
+public:
+
+    using Breakup::Breakup;
 
 };
 

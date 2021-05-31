@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include "model/SatelliteCollection.h"
 
 /**
@@ -29,13 +30,13 @@ public:
             : _input{input},
               _output{} {}
 
+    explicit Breakup(SatelliteCollection &&input)
+            : _input{input},
+              _output{} {}
+
     virtual ~Breakup() = default;
 
-    /**
-     * Runs the simulation
-     * TODO: Probably not virtual
-     */
-    virtual void run() = 0;
+    virtual void run();
 
     /**
      * Return the result of the breakup event
