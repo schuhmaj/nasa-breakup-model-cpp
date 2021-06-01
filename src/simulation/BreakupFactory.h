@@ -40,7 +40,13 @@ public:
      */
     Breakup getCollision() const;
 
-    //TODO Maybe add some Methode getByInputSource() Methode which returns either a Collision or an Explosion
+    /**
+     * Creates a new Breakup Simulation with the given input.
+     * Can either be a Collision or an Explosion depending on the satellite number in the SatelliteCollection.
+     * TODO Add error handling for e. g. 3 given satellites
+     * @return Breakup Simulation
+     */
+    Breakup getBreakupTypeByInput() const;
 
 
 };
