@@ -5,10 +5,10 @@ BreakupFactory &BreakupFactory::changeInputSource(const std::shared_ptr<InputRea
     return *this;
 }
 
-Breakup BreakupFactory::getExplosion() {
+Breakup BreakupFactory::getExplosion() const {
     return Explosion{_inputReader->getSatelliteCollection()};
 }
 
-Breakup BreakupFactory::getCollision() {
+Breakup BreakupFactory::getCollision() const {
     return Collision{_inputReader->getSatelliteCollection()};
 }

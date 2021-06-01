@@ -31,14 +31,14 @@ public:
      * TODO Add error handling
      * @return Breakup Simulation
      */
-    Breakup getExplosion();
+    Breakup getExplosion() const;
 
     /**
      * Creates a new Collision Breakup Simulation with the given input.
      * TODO Add error handling, e. g. no collision can occur when there is only 1 satellite in the collection!
      * @return Breakup Simulation
      */
-    Breakup getCollision();
+    Breakup getCollision() const;
 
     //TODO Maybe add some Methode getByInputSource() Methode which returns either a Collision or an Explosion
 
