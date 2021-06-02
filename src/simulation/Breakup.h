@@ -11,6 +11,14 @@
 class Breakup {
 
     /**
+     * The minimal characteristic length. The Breakup Simulation will only produce fragments
+     * greater or equal this size.
+     * It is given in [m]
+     * TODO Better integration program flow!!!!
+     */
+    double _minimalCharacteristicLength{};
+
+    /**
      * Contains the input satellites. Normally the size for this collection is either one (explosion) or
      * two (collision)
      */
@@ -27,11 +35,13 @@ public:
     Breakup() = default;
 
     explicit Breakup(SatelliteCollection &input)
-            : _input{input},
+            : _minimalCharacteristicLength{0.05},
+              _input{input},
               _output{} {}
 
     explicit Breakup(SatelliteCollection &&input)
-            : _input{input},
+            : _minimalCharacteristicLength{0.05},
+              _input{input},
               _output{} {}
 
     virtual ~Breakup() = default;
