@@ -23,7 +23,7 @@ CMake and then follow these steps:
 ### Execution
 After the build, the simulation can be run by executing:
 
-    ./breakupModel
+    ./breakupModel [yaml-file]
     
 ### Testing
 The tests use the framework GoogleTest and
