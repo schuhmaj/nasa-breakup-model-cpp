@@ -1,0 +1,11 @@
+---
+#List of satellites
+satellites:
+  - name: "Iridium 33"
+    id: 24946
+    mass: 700.0
+    velocity: [1.0, 1.0, 1.0]
+  - name: "Kosmos 2251"
+    id: 22675
+    mass: 900.0
+    velocity: [2.0, 2.0, 2.0]
