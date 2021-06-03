@@ -4,6 +4,7 @@
 #include "util/function.h"
 #include <string>
 #include <array>
+#include <map>
 #include <exception>
 
 /**
@@ -24,12 +25,14 @@
  */
 class SatelliteBuilder {
 
+    const static std::map<std::string, SatType> stringToSatType;
+
     Satellite _satellite;
 
     bool _hasID;
     bool _hasMass;
     bool _hasVelocity;
-    //TODO Maybe _hasPosition?
+    bool _hasPosition;  //Unused, maybe useful for further modeling after breakup
 
 public:
 
@@ -37,7 +40,8 @@ public:
             : _satellite{},
               _hasID{false},
               _hasMass{false},
-              _hasVelocity{false} {}
+              _hasVelocity{false},
+              _hasPosition{false} {}
 
     /**
      * Resets the Builder to the initial state.
@@ -74,6 +78,22 @@ public:
     SatelliteBuilder &setSatType(SatType satType);
 
     /**
+     * Adds the SatelliteType. If not used the builder will use the default from Satellite class: SPACECRAFT.
+     * @param satType as string
+     * @return this
+     * @throws May throw an invalid_argument Exception if the satType String can not be mapped to a SatType!
+     */
+    SatelliteBuilder &setSatType(const std::string &satType);
+
+    /**
+     * Adds the SatelliteType. If not used the builder will use the default from Satellite class: SPACECRAFT.
+     * @param satType as string
+     * @return this
+     * @throws May throw an invalid_argument Exception if the satType String can not be mapped to a SatType!
+     */
+    SatelliteBuilder &setSatType(std::string &&satType);
+
+    /**
      * Sets the mass and only the mass of the satellite.
      * The area and characteristic length can not be determined by the mass, so they are each set to -1.
      * @param mass in [kg]
@@ -96,20 +116,29 @@ public:
      * Sets the velocity.
      * @param velocity a 3 dimensional velocity vector
      * @return this
+     * @attention This will override previous attempts of setting the velocity (e. g. with Keplerian Elements)
      */
-    SatelliteBuilder &setVelocity(std::array<double, 3> velocity);
+    SatelliteBuilder &setVelocity(const std::array<double, 3> &velocity);
 
-    //TODO Add Position?
+    /**
+    * Sets the cartesian position of the satellite.
+    * @param position a 3 dimensional vector
+    * @return this
+    * @attention This will override previous attempts of setting the position (e. g. with Keplerian Elements)
+    */
+    SatelliteBuilder &setPosition(const std::array<double, 3> &position);
 
     /**
      * TODO
      * @return
+     * @attention This will override previous attempts of setting the velocity/ position.
      */
     SatelliteBuilder &setKeplerianElements();
 
     /**
      * Returns the fully build satellite. Validates if all necessary parameters are specified.
      * @return Satellite
+     * @throws May throw an invalid_argument Exception if not all requirements for a satellite a fulfilled!
      */
     Satellite &getResult();
 

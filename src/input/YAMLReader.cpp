@@ -29,14 +29,20 @@ Satellite YAMLReader::parseSatellite(SatelliteBuilder &satelliteBuilder, const Y
     if (node["name"]) {
         satelliteBuilder.setName(node["name"].as<std::string>());
     }
-    if (node["type"]) {
-        //TODO
+    if (node["satType"]) {
+        satelliteBuilder.setSatType(node["satType"].as<std::string>());
     }
     if (node["mass"]) {
         satelliteBuilder.setMass(node["mass"].as<double>());
     }
+    if (node["area"]) {
+        satelliteBuilder.setMassByArea(node["area"].as<double>());
+    }
     if (node["velocity"]) {
         satelliteBuilder.setVelocity(node["velocity"].as<std::array<double, 3>>());
+    }
+    if (node["position"]) {
+        satelliteBuilder.setPosition(node["position"].as<std::array<double, 3>>());
     }
     return satelliteBuilder.getResult();
 }
