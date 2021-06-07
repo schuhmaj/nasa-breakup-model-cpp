@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Satellite.h"
-#include "util/function.h"
+#include "util/UtilityFunctions.h"
 #include <string>
 #include <array>
 #include <map>
