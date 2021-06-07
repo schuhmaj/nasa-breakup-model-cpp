@@ -25,6 +25,17 @@ After the build, the simulation can be run by executing:
 
     ./breakupModel [yaml-file]
     
+The given yaml-file should look like this:
+
+    satellites:
+    - name: "Muster Satellite"      #Optional
+      id: 24946                     #A must e. g. NORAD Catalog ID)
+      satType: SPACECRAFT           #Optional (Default: SPACECRAFT)
+      mass: 700.0                   #Either mass or area is a must
+      area: 3.5                     #Mass in [kg], Area in [m^2]
+      velocity: [1.0, 1.0, 1.0]     #The cartesian velcoity vector [m/s]
+    - ...
+
 ### Testing
 The tests use the framework GoogleTest and
 can simply be run by executing in the build directory:
