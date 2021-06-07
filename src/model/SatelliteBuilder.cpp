@@ -67,11 +67,11 @@ SatelliteBuilder &SatelliteBuilder::setMass(double mass) {
 }
 
 SatelliteBuilder &SatelliteBuilder::setMassByArea(double area) {
-    double radius = calculateCircleRadius(area);
-    double mass = calculateSphereMass(radius);
+    double characteristicLength = calculateCharacteristicLength(area);
+    double mass = calculateSphereMass(characteristicLength);
     _satellite.setMass(mass);
     _satellite.setArea(area);
-    _satellite.setCharacteristicLength(radius);
+    _satellite.setCharacteristicLength(characteristicLength);
     _hasMass = true;
     return *this;
 }

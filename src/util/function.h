@@ -7,39 +7,43 @@
  * (and as constexpr and no preprocessor magic)
  */
 constexpr double PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
+constexpr double ALUMINIUM_DENSITY = 2698.9;
 
 /**
  * Calculates the density according to Equation 1.
- * @param radius/ the characteristic length in [m]
+ * If the density is smaller than 1cm, the density of Aluminium is returned.
+ * @param characteristicLength in [m] which correspond to the diameter
  * @return density in [kg/m^3]
  */
-inline double calculateDensity(double radius) {
-    return 92.937 * pow(radius*2.0, -0.74);
+inline double calculateDensity(double characteristicLength) {
+    return characteristicLength < 0.01 ? ALUMINIUM_DENSITY : 92.937 * pow(characteristicLength, -0.74);
 }
 
 /**
- * Calculates the circle area for a given radius.
- * @param radius or the characteristic length in [m]
+ * Calculates the circle area for a given characteristic length.
+ * @param characteristicLength in [m] which correspond to the diameter
  * @return area in [m^2]
  */
-inline double calculateCircleArea(double radius) {
+inline double calculateCircleArea(double characteristicLength) {
+    double radius = characteristicLength / 2.0;
     return PI * radius * radius;
 }
 
 /**
- * Calculates the radius for a given circle area.
+ * Calculates the characteristicLength (= diameter) for a given circle area.
  * @param area in [m^2]
- * @return radius in [m]
+ * @return diameter in [m]
  */
-inline double calculateCircleRadius(double area) {
-    return sqrt(area/PI);
+inline double calculateCharacteristicLength(double area) {
+    return 2.0 * sqrt(area / PI);
 }
 
 /**
- * Calculates the mass according to a radius assuming the object is a sphere.
- * @param radius in [m]
+ * Calculates the mass according to a characteristicLength assuming the object is a sphere.
+ * @param characteristicLength in [m] which correspond to the diameter
  * @return mass in [kg]
  */
-inline double calculateSphereMass(double radius) {
-    return 4.0 / 3.0 * PI * (radius * radius * radius) * calculateDensity(radius);
+inline double calculateSphereMass(double characteristicLength) {
+    double radius = characteristicLength / 2.0;
+    return 4.0 / 3.0 * PI * (radius * radius * radius) * calculateDensity(characteristicLength);
 }
