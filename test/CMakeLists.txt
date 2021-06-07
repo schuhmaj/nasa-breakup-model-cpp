@@ -20,6 +20,9 @@ target_link_libraries(breakupModelTest
         yaml-cpp
         )
 
+#Copies the test resources into a directory next to the test executable
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+
 include(GoogleTest)
 
 # Adds the Tests to CTest by querying the test target executable
