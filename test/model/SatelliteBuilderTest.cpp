@@ -11,8 +11,8 @@ protected:
 
     virtual void SetUp() {
         _satelliteBuilder = SatelliteBuilder{};
-        _array123 = std::array<double, 3> {1.0,2.0,3.0};
-        _array000 = std::array<double, 3> {0.0,0.0,0.0};
+        _array123 = std::array<double, 3>{1.0, 2.0, 3.0};
+        _array000 = std::array<double, 3>{0.0, 0.0, 0.0};
     }
 
     SatelliteBuilder _satelliteBuilder{};
@@ -135,49 +135,43 @@ TEST_F(SatelliteBuilderTest, Sat4_Thor_Ablestar_RB_Test) {
  * Incomplete information for breakup
  */
 TEST_F(SatelliteBuilderTest, Expection_No_ID) {
-    try {
-        Satellite sat = _satelliteBuilder
-                .setName("NoSatelliteAtAll")
-                .setSatType(UNKNOWN)
-                .setMass(10)
-                .setVelocity(_array000)
-                .getResult();
-        FAIL() << "No exception was thrown although the satellite is invalid!";
-    } catch (std::exception &e) {
-        ASSERT_EQ(std::string{e.what()}, "Satellite has no ID!");
-    }
+    ASSERT_THROW(
+            _satelliteBuilder
+                    .setName("NoSatelliteAtAll")
+                    .setSatType(UNKNOWN)
+                    .setMass(10)
+                    .setVelocity(_array000)
+                    .getResult(),
+            std::invalid_argument
+    ) << "No exception was thrown although the satellite is invalid and has no ID";
 }
 
 /**
  * Incomplete information for breakup
  */
 TEST_F(SatelliteBuilderTest, Expection_No_Mass) {
-    try {
-        Satellite sat = _satelliteBuilder
-                .setID(1000)
-                .setName("NoSatelliteAtAll")
-                .setSatType(UNKNOWN)
-                .setVelocity(_array000)
-                .getResult();
-        FAIL() << "No exception was thrown although the satellite is invalid!";
-    } catch (std::exception &e) {
-        ASSERT_EQ(std::string{e.what()}, "Satellite has no mass or way to derive the mass!");
-    }
+    ASSERT_THROW(
+            _satelliteBuilder
+                    .setID(1000)
+                    .setName("NoSatelliteAtAll")
+                    .setSatType(UNKNOWN)
+                    .setVelocity(_array000)
+                    .getResult(),
+            std::invalid_argument
+    ) << "No exception was thrown although the satellite is invalid and has no mass";
 }
 
 /**
  * Incomplete information for breakup
  */
 TEST_F(SatelliteBuilderTest, Expection_No_Velocity) {
-    try {
-        Satellite sat = _satelliteBuilder
-                .setID(1000)
-                .setName("NoSatelliteAtAll")
-                .setMass(10)
-                .setSatType(UNKNOWN)
-                .getResult();
-        FAIL() << "No exception was thrown although the satellite is invalid!";
-    } catch (std::exception &e) {
-        ASSERT_EQ(std::string{e.what()}, "Satellite has no velocity or way to derive the velocity!");
-    }
+    ASSERT_THROW(
+            _satelliteBuilder
+                    .setID(1000)
+                    .setName("NoSatelliteAtAll")
+                    .setMass(10)
+                    .setSatType(UNKNOWN)
+                    .getResult(),
+            std::invalid_argument
+    ) << "No exception was thrown although the satellite is invalid and has no velocity";
 }
