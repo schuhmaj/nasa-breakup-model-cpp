@@ -7,6 +7,9 @@
  * (and as constexpr and no preprocessor magic)
  */
 constexpr double PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
+/**
+ * Density of Aluminium in [kg/m^3]
+ */
 constexpr double ALUMINIUM_DENSITY = 2698.9;
 
 /**
