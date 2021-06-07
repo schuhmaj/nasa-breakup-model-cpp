@@ -2,6 +2,7 @@
 
 #include <array>
 #include <string>
+#include <ostream>
 
 /**
  * Type of a Satellite
@@ -99,24 +100,26 @@ public:
 
     /**
      * Compares two Satellites by comparing their IDs.
-     * @param a - Satellite
-     * @param b - Satellite
+     * @param lhs - Satellite
+     * @param rhs - Satellite
      * @return true if thy have the same ID
      */
-    friend bool operator==(const Satellite &a, const Satellite &b) {
-        return a._id == b._id;
+    friend bool operator==(const Satellite &lhs, const Satellite &rhs) {
+        return lhs._id == rhs._id;
     }
 
 
     /**
      * Compares two Satellites by comparing their IDs.
-     * @param a - Satellite
-     * @param b - Satellite
+     * @param lhs - Satellite
+     * @param rhs - Satellite
      * @return true if they do not have the same ID
      */
-    friend bool operator!=(const Satellite &a, const Satellite &b) {
-        return a._id != b._id;
+    friend bool operator!=(const Satellite &lhs, const Satellite &rhs) {
+        return lhs._id != rhs._id;
     }
+
+    friend std::ostream &operator<<(std::ostream &os, const Satellite &satellite);
 
     /*
      * Getter and Setter
