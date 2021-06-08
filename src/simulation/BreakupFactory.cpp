@@ -5,19 +5,19 @@ BreakupFactory &BreakupFactory::changeInputSource(const std::shared_ptr<InputRea
     return *this;
 }
 
-Breakup BreakupFactory::getExplosion() const {
-    return Explosion{_inputReader->getSatelliteCollection()};
+std::unique_ptr<Breakup> BreakupFactory::getExplosion() const {
+    return std::make_unique<Explosion>(_inputReader->getSatelliteCollection());
 }
 
-Breakup BreakupFactory::getCollision() const {
-    return Collision{_inputReader->getSatelliteCollection()};
+std::unique_ptr<Breakup> BreakupFactory::getCollision() const {
+    return std::make_unique<Collision>(_inputReader->getSatelliteCollection());
 }
 
-Breakup BreakupFactory::getBreakupTypeByInput() const {
+std::unique_ptr<Breakup> BreakupFactory::getBreakupTypeByInput() const {
     SatelliteCollection satelliteCollection{_inputReader->getSatelliteCollection()};
     if (satelliteCollection.size() == 1) {
-        return Explosion{satelliteCollection};
+        return std::make_unique<Explosion>(_inputReader->getSatelliteCollection());
     } else {
-        return Collision{satelliteCollection};
+        return std::make_unique<Collision>(_inputReader->getSatelliteCollection());
     }
 }

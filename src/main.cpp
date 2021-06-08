@@ -26,11 +26,11 @@ int main(int argc, char *argv[]) {
 
     //Create and run the simulation
     //TODO Here it will always be a collision. See TODO in BreakupFactory
-    auto breakUpSimulation = breakupFactory.getCollision();
-    breakUpSimulation.run();
+    auto breakUpSimulation = breakupFactory.getBreakupTypeByInput();
+    breakUpSimulation->run();
 
     //TODO Establish interface to Output
-    breakUpSimulation.getResult();
+    breakUpSimulation->getResult();
 
     return 0;
 }

@@ -31,14 +31,14 @@ public:
      * TODO Add error handling
      * @return Breakup Simulation
      */
-    Breakup getExplosion() const;
+    std::unique_ptr<Breakup> getExplosion() const;
 
     /**
      * Creates a new Collision Breakup Simulation with the given input.
      * TODO Add error handling, e. g. no collision can occur when there is only 1 satellite in the collection!
      * @return Breakup Simulation
      */
-    Breakup getCollision() const;
+    std::unique_ptr<Breakup> getCollision() const;
 
     /**
      * Creates a new Breakup Simulation with the given input.
@@ -46,7 +46,7 @@ public:
      * TODO Add error handling for e. g. 3 given satellites
      * @return Breakup Simulation
      */
-    Breakup getBreakupTypeByInput() const;
+    std::unique_ptr<Breakup> getBreakupTypeByInput() const;
 
 
 };
