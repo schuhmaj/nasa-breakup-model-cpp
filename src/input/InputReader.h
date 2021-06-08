@@ -4,10 +4,7 @@
 #include "model/SatelliteCollection.h"
 
 /**
- * Interface for Input.
- * TODO Subclass from it, in order of priority:
- * - YAML Input? For direct v, r elements, etc --> More versatile
- * - TLE/ SatCat as second alternative? Or integrate into YAML as "alternative"
+ * Interface for Input. Provides methods to get satellites from an specific input file.
  */
 class InputReader {
 
@@ -25,6 +22,10 @@ public:
 
     virtual ~InputReader() = default;
 
+    /**
+     * Returns a satellite collection. Input form varies depending on subclass
+     * @return SatelliteCollection
+     */
     virtual SatelliteCollection getSatelliteCollection() = 0;
 
 };
