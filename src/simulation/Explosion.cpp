@@ -1,8 +1,13 @@
 #include "Explosion.h"
 
-//TODO Remove this
-#include <iostream>
+int Explosion::fragmentCount() {
+    return 0;
+}
 
-void Explosion::run() {
-    std::cout << "I'm a Explosion Simulation" << std::endl;
+void Explosion::sizeDistribution() {
+
+}
+
+void Explosion::deltaVelocityDistribution() {
+
 }

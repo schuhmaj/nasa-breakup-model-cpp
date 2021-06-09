@@ -1,8 +1,13 @@
 #include "Collision.h"
 
-//TODO Remove this
-#include <iostream>
+int Collision::fragmentCount() {
+    return 0;
+}
 
-void Collision::run() {
-    std::cout << "I'm a Collision Simulation" << std::endl;
+void Collision::sizeDistribution() {
+
+}
+
+void Collision::deltaVelocityDistribution() {
+
 }
