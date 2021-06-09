@@ -19,7 +19,7 @@ constexpr double ALUMINIUM_DENSITY = 2698.9;
  * @return density in [kg/m^3]
  */
 inline double calculateDensity(double characteristicLength) {
-    return characteristicLength < 0.01 ? ALUMINIUM_DENSITY : 92.937 * pow(characteristicLength, -0.74);
+    return characteristicLength < 0.01 ? ALUMINIUM_DENSITY : 92.937 * std::pow(characteristicLength, -0.74);
 }
 
 /**

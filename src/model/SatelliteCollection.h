@@ -79,5 +79,9 @@ public:
      */
     Satellite &operator[](unsigned long n);
 
+    /*
+     * TODO: Map and Filter Function with lambda expression as parameter!
+     */
+
 };
 
