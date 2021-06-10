@@ -21,7 +21,7 @@ class Satellite {
      * The ID of the Satellite, must be unique
      * @note e. g. the NORAD Catalog number
      */
-    long _id;
+    size_t _id;
 
     /**
      * The type of the Satellite
@@ -107,4 +107,3 @@ public:
     }
 
 };
-
