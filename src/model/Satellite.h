@@ -13,7 +13,6 @@ enum class SatType {
 
 /**
  * Represent an object in orbit.
- * This object can either be ACTIVE (working satellite) or INACTIVE (dysfunctional satellite OR Debris)
  */
 class Satellite {
 
