@@ -103,7 +103,7 @@ public:
      * @return true if they do not have the same ID
      */
     friend bool operator!=(const Satellite &a, const Satellite &b) {
-        return a._id != b._id;
+        return not (a == b);
     }
 
 };
