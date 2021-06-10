@@ -15,7 +15,7 @@ file(GLOB_RECURSE SRC
         "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
 #Creates the executable target from the source files
-add_executable(breakupModel ${SRC})
+add_executable(${PROJECT_NAME} ${SRC})
 
 #Adds the include Path PROJECT_SOURCE_DIR/src to the target breakupModel
 target_include_directories(breakupModel PRIVATE "${PROJECT_SOURCE_DIR}/src")

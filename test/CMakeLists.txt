@@ -12,7 +12,7 @@ file(GLOB_RECURSE TEST_SRC
 add_executable(breakupModelTest ${TEST_SRC})
 
 #Adds the the source files from the src Directory to the include path
-target_include_directories(breakupModelTest PRIVATE "${PROJECT_SOURCE_DIR}/src")
+target_include_directories("${PROJECT_NAME}Test" PRIVATE "${PROJECT_SOURCE_DIR}/src")
 
 #Links target breakupModelTest against gtest_main (entry point, so no own main method is required)
 target_link_libraries(breakupModelTest
