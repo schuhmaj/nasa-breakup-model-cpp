@@ -43,7 +43,7 @@ public:
     /**
      * Creates a new Breakup Simulation with the given input.
      * Can either be a Collision or an Explosion depending on the satellite number in the SatelliteCollection.
-     * TODO Add error handling for e. g. 3 given satellites
+     * TODO REMOVE, Determine only by input!
      * @return Breakup Simulation
      */
     std::unique_ptr<Breakup> getBreakupTypeByInput() const;
