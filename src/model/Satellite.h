@@ -6,7 +6,7 @@
  * Type of a Satellite
  * (Derived from the NORAD Catalog types)
  */
-enum SatType {
+enum class SatType {
     SPACECRAFT, ROCKET_BODY, DEBRIS, UNKNOWN
 };
 
@@ -74,7 +74,7 @@ public:
      * Generates a new Satellite with empty (zero-set) values.
      * TODO Currently unhappy - maybe use a factory? Definitely to refactor, when input is implemented
      */
-    Satellite(long id = 0, SatType satType = SPACECRAFT, double size = 0.05, double area = 0)
+    Satellite(long id = 0, SatType satType = SatType::SPACECRAFT, double size = 0.05, double area = 0)
         : _id{id},
           _satType{satType},
           _size{size},
