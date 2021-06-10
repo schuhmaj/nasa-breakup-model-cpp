@@ -25,8 +25,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
               
-      - name: Build and Test with CMake
-        uses: ashutoshvarma/action-cmake-build@v1
-        with:
-          # Run CTest or not
-          run-test: true
+      - name: Test
+        run: |
+          echo Hallo
+      
