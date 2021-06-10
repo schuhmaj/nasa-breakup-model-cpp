@@ -22,7 +22,7 @@ class Satellite {
      * The ID of the Satellite, must be unique e. g. the NORAD Catalog number.
      * @attention This parameter is a must!
      */
-    size_t _id;
+    size_t _id{0};
 
     /**
      * The name of the Satellite, more human readable.
