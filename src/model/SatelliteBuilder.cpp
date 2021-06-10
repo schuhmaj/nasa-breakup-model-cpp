@@ -1,13 +1,13 @@
 #include "SatelliteBuilder.h"
 
 
-const std::map<std::string, SatType> SatelliteBuilder::stringToSatType{{"SPACECRAFT",  SPACECRAFT},
-                                                                       {"SC",  SPACECRAFT},
-                                                                       {"ROCKET_BODY", ROCKET_BODY},
-                                                                       {"RB", ROCKET_BODY},
-                                                                       {"DEBRIS",      DEBRIS},
-                                                                       {"DEB",      DEBRIS},
-                                                                       {"UNKNOWN",     UNKNOWN}
+const std::map<std::string, SatType> SatelliteBuilder::stringToSatType{{"SPACECRAFT",  SatType::SPACECRAFT},
+                                                                       {"SC",  SatType::SPACECRAFT},
+                                                                       {"ROCKET_BODY", SatType::ROCKET_BODY},
+                                                                       {"RB", SatType::ROCKET_BODY},
+                                                                       {"DEBRIS",      SatType::DEBRIS},
+                                                                       {"DEB",      SatType::DEBRIS},
+                                                                       {"UNKNOWN",     SatType::UNKNOWN}
 };
 
 SatelliteBuilder &SatelliteBuilder::reset() {

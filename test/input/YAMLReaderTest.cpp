@@ -14,7 +14,7 @@ protected:
         _sat[0] = satelliteBuilder
                 .setID(1)
                 .setName("Iridium 33")
-                .setSatType(SPACECRAFT)
+                .setSatType(SatType::SPACECRAFT)
                 .setMass(700)
                 .setVelocity({1,1,1})
                 .getResult();
@@ -22,7 +22,7 @@ protected:
         _sat[1] = satelliteBuilder
                 .setID(2)
                 .setName("Kosmos 2251")
-                .setSatType(SPACECRAFT)
+                .setSatType(SatType::SPACECRAFT)
                 .setMass(900)
                 .setVelocity({2,2,2})
                 .getResult();
@@ -30,7 +30,7 @@ protected:
         _sat[2] = satelliteBuilder
                 .setID(3)
                 .setName("1962-060B")
-                .setSatType(ROCKET_BODY)
+                .setSatType(SatType::ROCKET_BODY)
                 .setMassByArea(3.5428)
                 .setVelocity({2,2,2})
                 .getResult();
@@ -38,7 +38,7 @@ protected:
         _sat[3] = satelliteBuilder
                 .setID(4)
                 .setName("UFO")
-                .setSatType(UNKNOWN)
+                .setSatType(SatType::UNKNOWN)
                 .setMassByArea(3333.33)
                 .setVelocity({11,22,33})
                 .getResult();
