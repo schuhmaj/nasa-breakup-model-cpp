@@ -29,12 +29,14 @@ jobs:
         run: |
           sudo apt install cmake
           sudo apt install build-essential
+          
       - name: Build project
         run: |
           mkdir build
           cd build
           cmake ..
           make
+          
       - name: Test
         run: |
           ctest
