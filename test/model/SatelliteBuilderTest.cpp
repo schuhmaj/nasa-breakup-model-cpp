@@ -36,7 +36,7 @@ TEST_F(SatelliteBuilderTest, Sat1_Sputnik_1_Test) {
 
     EXPECT_EQ(sat.getId(), 1);
     EXPECT_EQ(sat.getName(), "Sputnik 1");
-    EXPECT_EQ(sat.getSatType(), SPACECRAFT);
+    EXPECT_EQ(sat.getSatType(), SatType::SPACECRAFT);
 
     //Only mass is set, no area or L_c are determined by it
     EXPECT_EQ(sat.getMass(), 83);
@@ -56,14 +56,14 @@ TEST_F(SatelliteBuilderTest, Sat2_Vanguard_1_Test) {
     Satellite sat = _satelliteBuilder
             .setID(5)
             .setName("Vanguard 1")
-            .setSatType(SPACECRAFT)
+            .setSatType(SatType::SPACECRAFT)
             .setMassByArea(0.12)
             .setVelocity(_array000)
             .getResult();
 
     EXPECT_EQ(sat.getId(), 5);
     EXPECT_EQ(sat.getName(), "Vanguard 1");
-    EXPECT_EQ(sat.getSatType(), SPACECRAFT);
+    EXPECT_EQ(sat.getSatType(), SatType::SPACECRAFT);
 
     //Area is set (cataloged as radar cross section RCS in the satcat), mass and L_c are determined by it
     EXPECT_NEAR(sat.getMass(), 5.82933889321, 0.01);
@@ -84,14 +84,14 @@ TEST_F(SatelliteBuilderTest, Sat3_Tiros_4_Test) {
     Satellite sat = _satelliteBuilder
             .setID(226)
             .setName("Tiros 4")
-            .setSatType(SPACECRAFT)
+            .setSatType(SatType::SPACECRAFT)
             .setMassByArea(0.8351)
             .setVelocity(_array000)
             .getResult();
 
     EXPECT_EQ(sat.getId(), 226);
     EXPECT_EQ(sat.getName(), "Tiros 4");
-    EXPECT_EQ(sat.getSatType(), SPACECRAFT);
+    EXPECT_EQ(sat.getSatType(), SatType::SPACECRAFT);
 
     //Area is set (cataloged as radar cross section RCS in the satcat), mass and L_c are determined by it
     EXPECT_NEAR(sat.getMass(), 52.1555094977, 0.01);
@@ -112,14 +112,14 @@ TEST_F(SatelliteBuilderTest, Sat4_Thor_Ablestar_RB_Test) {
     Satellite sat = _satelliteBuilder
             .setID(447)
             .setName("1962-060B")
-            .setSatType(ROCKET_BODY)
+            .setSatType(SatType::ROCKET_BODY)
             .setMassByArea(3.5428)
             .setVelocity(_array000)
             .getResult();
 
     EXPECT_EQ(sat.getId(), 447);
     EXPECT_EQ(sat.getName(), "1962-060B");
-    EXPECT_EQ(sat.getSatType(), ROCKET_BODY);
+    EXPECT_EQ(sat.getSatType(), SatType::ROCKET_BODY);
 
     //Area is set (cataloged as radar cross section RCS in the satcat), mass and L_c are determined by it
     EXPECT_NEAR(sat.getMass(), 266.991481026, 0.01);
@@ -138,7 +138,7 @@ TEST_F(SatelliteBuilderTest, Expection_No_ID) {
     ASSERT_THROW(
             _satelliteBuilder
                     .setName("NoSatelliteAtAll")
-                    .setSatType(UNKNOWN)
+                    .setSatType(SatType::UNKNOWN)
                     .setMass(10)
                     .setVelocity(_array000)
                     .getResult(),
@@ -154,7 +154,7 @@ TEST_F(SatelliteBuilderTest, Expection_No_Mass) {
             _satelliteBuilder
                     .setID(1000)
                     .setName("NoSatelliteAtAll")
-                    .setSatType(UNKNOWN)
+                    .setSatType(SatType::UNKNOWN)
                     .setVelocity(_array000)
                     .getResult(),
             std::invalid_argument
@@ -170,7 +170,7 @@ TEST_F(SatelliteBuilderTest, Expection_No_Velocity) {
                     .setID(1000)
                     .setName("NoSatelliteAtAll")
                     .setMass(10)
-                    .setSatType(UNKNOWN)
+                    .setSatType(SatType::UNKNOWN)
                     .getResult(),
             std::invalid_argument
     ) << "No exception was thrown although the satellite is invalid and has no velocity";
