@@ -1,6 +1,10 @@
 # nasa-breakup-model-cpp
 Implementation as part of the Bachelor Thesis "Efficient Implementation and Evaluation of the NASA Breakup Model in modern C++"
 
+Comments to Equations or similar in the source code reference the following document:
+
+Johnson, Nicholas L., et al. “NASA’s new breakup model of EVOLVE 4.0” Advances in Space Research 28.9 (2001): 1377-1384
+
 ### Additional Information (TODO: Remove when public)
 Additional Documents and Descriptions to the Implementation
 and its fundamentals can be found here:
