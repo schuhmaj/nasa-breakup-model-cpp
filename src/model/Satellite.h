@@ -8,26 +8,21 @@
  * Type of a Satellite
  * (Derived from the NORAD Catalog types)
  */
-enum SatType {
+enum class SatType {
     SPACECRAFT, ROCKET_BODY, DEBRIS, UNKNOWN
 };
 
 
 /**
  * Represent an object in orbit.
- * This object can either be ACTIVE (working satellite) or INACTIVE (dysfunctional satellite OR Debris)
  */
 class Satellite {
-
-    /*
-     * Naming Members
-     */
 
     /**
      * The ID of the Satellite, must be unique e. g. the NORAD Catalog number.
      * @attention This parameter is a must!
      */
-    unsigned long _id{};
+    size_t _id;
 
     /**
      * The name of the Satellite, more human readable.
@@ -39,7 +34,7 @@ class Satellite {
      * The type of the Satellite. Needed for determining the right equations for breakup.
      * If not given this will be always a SPACECRAFT.
      */
-    SatType _satType{SPACECRAFT};
+    SatType _satType{SatType::SPACECRAFT};
 
     /**
      * The characteristic Length L_c [m]
@@ -94,7 +89,7 @@ public:
 
     Satellite() = default;
 
-    explicit Satellite(unsigned long id)
+    explicit Satellite(size_t id)
         : _id{id} {}
 
 
@@ -116,7 +111,7 @@ public:
      * @return true if they do not have the same ID
      */
     friend bool operator!=(const Satellite &lhs, const Satellite &rhs) {
-        return lhs._id != rhs._id;
+        return not (lhs == rhs);
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Satellite &satellite);
@@ -125,11 +120,11 @@ public:
      * Getter and Setter
      */
 
-    unsigned long getId() const {
+    size_t getId() const {
         return _id;
     }
 
-    void setId(unsigned long id) {
+    void setId(size_t id) {
         _id = id;
     }
 
