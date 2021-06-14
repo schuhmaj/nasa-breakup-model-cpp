@@ -1,7 +1,5 @@
 #include "YAMLReader.h"
 
-#include <iostream>
-
 SatelliteCollection YAMLReader::getSatelliteCollection() {
     SatelliteCollection satelliteCollection{};
     SatelliteBuilder satelliteBuilder{};
