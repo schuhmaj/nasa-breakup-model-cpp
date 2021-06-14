@@ -44,7 +44,7 @@ class Satellite {
     double _mass;
 
     /**
-     * The area A [m^2]
+     * The area A [m^2] respectively the radar cross section (RCS) of the satellite
      * @note Determined by either input (Radar data) or by the L_c (with Equation 8/9)
      */
     double _area;
