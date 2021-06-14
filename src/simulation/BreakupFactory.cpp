@@ -16,8 +16,8 @@ std::unique_ptr<Breakup> BreakupFactory::getCollision() const {
 std::unique_ptr<Breakup> BreakupFactory::getBreakupTypeByInput() const {
     SatelliteCollection satelliteCollection{_inputReader->getSatelliteCollection()};
     if (satelliteCollection.size() == 1) {
-        return std::make_unique<Explosion>(_inputReader->getSatelliteCollection());
+        return std::make_unique<Explosion>(satelliteCollection);
     } else {
-        return std::make_unique<Collision>(_inputReader->getSatelliteCollection());
+        return std::make_unique<Collision>(satelliteCollection);
     }
 }
