@@ -58,7 +58,7 @@ class Satellite {
     double _mass{};
 
     /**
-     * The area A [m^2]
+     * The area A [m^2] respectively the radar cross section (RCS) of the satellite
      * @note Determined by input parameter (radar cross section, part of satcat)
      * @remark Determined by the breakup simulation by using the characteristic length L_c (Equation 8/9)
      */
