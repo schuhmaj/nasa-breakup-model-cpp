@@ -2,12 +2,12 @@
 
 #include <utility>
 #include <vector>
+#include <cmath>
 #include "model/Satellite.h"
 
 /**
  * Pure virtual class which needs a Collection of Satellites as input and output and simulates a breakup
  * which is either a collision or an explosion.
- * TODO: Idea is to use the Template Method Pattern to share common properties like A/M functions
  */
 class Breakup {
 
@@ -29,7 +29,6 @@ protected:
 
     /**
      * Contains the output satellites aka fragments of the collision or explosion
-     * TODO: To be reviewed very later: just use one Collection for both input and output?
      */
     std::vector<Satellite> _output;
 
@@ -47,6 +46,10 @@ public:
 
     virtual ~Breakup() = default;
 
+    /**
+     * Runs the simulation.
+     * Afterwards one can get the result with the member method getResult().
+     */
     virtual void run();
 
     /**
@@ -60,15 +63,18 @@ public:
 private:
 
     /**
-     * Returns the number of fragments created by the Breakup.
-     * @return fragments created
+     * This method contains every step required to re-run the simulation.
+     * The method for example resets the _output's size to zero.
+     */
+    virtual void init();
+
+    /**
+     * Creates the a number of fragments, following the Equation 2 for Explosions and
+     * Equation 4 for Collisions.
      */
     virtual void generateFragments() = 0;
 
-    /**
-     * Returns the
-     */
-    virtual void sizeDistribution() = 0;
+    virtual void characteristicLengthDistribution() = 0;
 
     virtual void areaToMassRatioDistribution();
 

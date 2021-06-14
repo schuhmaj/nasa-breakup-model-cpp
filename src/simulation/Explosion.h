@@ -11,7 +11,7 @@ public:
 private:
     void generateFragments() override;
 
-    void sizeDistribution() override;
+    void characteristicLengthDistribution() override;
 
     void deltaVelocityDistribution() override;
 

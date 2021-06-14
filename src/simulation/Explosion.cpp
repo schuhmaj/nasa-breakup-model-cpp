@@ -4,7 +4,7 @@ void Explosion::generateFragments() {
 
 }
 
-void Explosion::sizeDistribution() {
+void Explosion::characteristicLengthDistribution() {
 
 }
 
