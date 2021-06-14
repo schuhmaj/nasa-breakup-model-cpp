@@ -8,6 +8,9 @@
 #include "model/SatelliteCollection.h"
 #include "model/SatelliteBuilder.h"
 
+/**
+ * Reads Satellites from an YAML file.
+ */
 class YAMLReader : public InputReader {
 
 public:
