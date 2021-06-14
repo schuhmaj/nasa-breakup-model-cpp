@@ -33,6 +33,9 @@ class Satellite {
     /**
      * The type of the Satellite. Needed for determining the right equations for breakup.
      * If not given this will be always a SPACECRAFT.
+     * @note For the simulation the two types SPACECRAFT (--> e.g. active satellites)
+     * and ROCKET_BODY (--> e.g. upper stages) make a difference in what equation is utilised.
+     * Furthermore there are the types DEBRIS and UNKNOWN which currently have no special effect.
      */
     SatType _satType{SatType::SPACECRAFT};
 
