@@ -9,7 +9,7 @@ public:
     using Breakup::Breakup;
 
 private:
-    int fragmentCount() override;
+    void generateFragments() override;
 
     void sizeDistribution() override;
 

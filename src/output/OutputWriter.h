@@ -1,6 +1,7 @@
 #pragma once
 
-#include "model/SatelliteCollection.h"
+#include <vector>
+#include "model/Satellite.h"
 
 /**
  * Interface for Output
@@ -13,6 +14,6 @@ class OutputWriter {
 
     virtual ~OutputWriter() = default;
 
-    virtual void printResult(SatelliteCollection &satelliteCollection) = 0;
+    virtual void printResult(std::vector<Satellite> &satelliteCollection) = 0;
 
 };

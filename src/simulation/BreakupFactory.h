@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <exception>
 #include "input/InputReader.h"
 #include "output/OutputWriter.h"
 #include "Breakup.h"
@@ -28,15 +29,17 @@ public:
 
     /**
      * Creates a new Explosion Breakup Simulation with the given input.
-     * TODO Add error handling
+     * A explosion needs 1 satellite! Not more not less!
      * @return Breakup Simulation
+     * @throws an invalid_argument exception if not exactly one satellite is in the input source
      */
     std::unique_ptr<Breakup> getExplosion() const;
 
     /**
      * Creates a new Collision Breakup Simulation with the given input.
-     * TODO Add error handling, e. g. no collision can occur when there is only 1 satellite in the collection!
+     * A collision needs 2 satellites! Not more not less!
      * @return Breakup Simulation
+     * @throws an invalid_argument exception if not exactly two satellites are in the input source
      */
     std::unique_ptr<Breakup> getCollision() const;
 
@@ -45,6 +48,7 @@ public:
      * Can either be a Collision or an Explosion depending on the satellite number in the SatelliteCollection.
      * TODO REMOVE, Determine only by input!
      * @return Breakup Simulation
+     * @throws an invalid_argument exception if zero or more than two satellites are in the input source
      */
     std::unique_ptr<Breakup> getBreakupTypeByInput() const;
 

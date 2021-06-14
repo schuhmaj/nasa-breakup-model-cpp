@@ -1,8 +1,9 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <iostream>
-#include "model/SatelliteCollection.h"
+#include "model/Satellite.h"
 
 /**
  * Interface for Input. Provides methods to get satellites from an specific input file.
@@ -27,7 +28,7 @@ public:
      * Returns a satellite collection. Input form varies depending on subclass
      * @return SatelliteCollection
      */
-    virtual SatelliteCollection getSatelliteCollection() = 0;
+    virtual std::vector<Satellite> getSatelliteCollection() = 0;
 
 };
 

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <utility>
-#include "model/SatelliteCollection.h"
+#include <vector>
+#include "model/Satellite.h"
 
 /**
  * Pure virtual class which needs a Collection of Satellites as input and output and simulates a breakup
@@ -24,23 +25,23 @@ protected:
      * Contains the input satellites. Normally the fragmentCount for this collection is either one (explosion) or
      * two (collision)
      */
-    SatelliteCollection _input;
+    std::vector<Satellite> _input;
 
     /**
      * Contains the output satellites aka fragments of the collision or explosion
      * TODO: To be reviewed very later: just use one Collection for both input and output?
      */
-    SatelliteCollection _output;
+    std::vector<Satellite> _output;
 
 public:
 
     Breakup() = default;
 
-    explicit Breakup(SatelliteCollection &input)
+    explicit Breakup(std::vector<Satellite> &input)
             : _input{input},
               _output{} {}
 
-    explicit Breakup(SatelliteCollection &&input)
+    explicit Breakup(std::vector<Satellite> &&input)
             : _input{input},
               _output{} {}
 
@@ -52,7 +53,7 @@ public:
      * Return the result of the breakup event
      * @return SatelliteCollection with the generated fragments
      */
-    SatelliteCollection &getResult() {
+    std::vector<Satellite> &getResult() {
         return _output;
     }
 
@@ -62,7 +63,7 @@ private:
      * Returns the number of fragments created by the Breakup.
      * @return fragments created
      */
-    virtual int fragmentCount() = 0;
+    virtual void generateFragments() = 0;
 
     /**
      * Returns the

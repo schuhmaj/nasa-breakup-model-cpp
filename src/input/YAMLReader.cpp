@@ -1,7 +1,7 @@
 #include "YAMLReader.h"
 
-SatelliteCollection YAMLReader::getSatelliteCollection() {
-    SatelliteCollection satelliteCollection{};
+std::vector<Satellite> YAMLReader::getSatelliteCollection() {
+    std::vector<Satellite> satelliteVector{};
     SatelliteBuilder satelliteBuilder{};
     YAML::Node file{};
 
@@ -9,20 +9,20 @@ SatelliteCollection YAMLReader::getSatelliteCollection() {
         file = YAML::LoadFile(_filename);
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
-        return satelliteCollection;
+        return satelliteVector;
     }
 
     if (file["satellites"]) {
         YAML::Node satellites{file["satellites"]};
         for (auto satNode : satellites) {
             try {
-                satelliteCollection.push_back(parseSatellite(satelliteBuilder, satNode));
+                satelliteVector.push_back(parseSatellite(satelliteBuilder, satNode));
             } catch (const std::exception& e) {
                 std::cerr << e.what();
             }
         }
     }
-    return satelliteCollection;
+    return satelliteVector;
 }
 
 Satellite YAMLReader::parseSatellite(SatelliteBuilder &satelliteBuilder, const YAML::Node& node) {

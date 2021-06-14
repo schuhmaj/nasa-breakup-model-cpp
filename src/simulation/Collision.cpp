@@ -1,7 +1,7 @@
 #include "Collision.h"
 
-int Collision::fragmentCount() {
-    return 0;
+void Collision::generateFragments() {
+
 }
 
 void Collision::sizeDistribution() {

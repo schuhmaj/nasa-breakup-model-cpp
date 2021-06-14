@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <exception>
 
 #include "input/YAMLReader.h"
 #include "simulation/BreakupFactory.h"
@@ -24,13 +25,16 @@ int main(int argc, char *argv[]) {
     //The SimulationFactory which builds our breakup simulation
     BreakupFactory breakupFactory{inputSource};
 
-    //Create and run the simulation
+    //Create and run the simulation or catch an exception in case something is wrong with the simulation
     //TODO Here it will always be a collision. See TODO in BreakupFactory
-    auto breakUpSimulation = breakupFactory.getBreakupTypeByInput();
-    breakUpSimulation->run();
-
-    //TODO Establish interface to Output
-    breakUpSimulation->getResult();
+    try {
+        auto breakUpSimulation = breakupFactory.getBreakupTypeByInput();
+        breakUpSimulation->run();
+        //TODO Establish interface to Output
+        breakUpSimulation->getResult();
+    } catch (std::exception &e) {
+        std::cerr << e.what();
+    }
 
     return 0;
 }

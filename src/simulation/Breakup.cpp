@@ -3,10 +3,6 @@
 #include <iostream>
 
 void Breakup::run() {
-    int fragmentCount = this->fragmentCount();
-
-    _output = SatelliteCollection{fragmentCount};
-
 
 }
 

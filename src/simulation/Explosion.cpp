@@ -1,7 +1,7 @@
 #include "Explosion.h"
 
-int Explosion::fragmentCount() {
-    return 0;
+void Explosion::generateFragments() {
+
 }
 
 void Explosion::sizeDistribution() {
