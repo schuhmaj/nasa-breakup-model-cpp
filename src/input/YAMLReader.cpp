@@ -3,8 +3,14 @@
 SatelliteCollection YAMLReader::getSatelliteCollection() {
     SatelliteCollection satelliteCollection{};
     SatelliteBuilder satelliteBuilder{};
+    YAML::Node file{};
 
-    YAML::Node file = YAML::LoadFile(_filename);
+    try {
+        file = YAML::LoadFile(_filename);
+    } catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return satelliteCollection;
+    }
 
     if (file["satellites"]) {
         YAML::Node satellites{file["satellites"]};
