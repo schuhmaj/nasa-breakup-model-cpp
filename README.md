@@ -28,7 +28,7 @@ After the build, the simulation can be run by executing:
 The given yaml-file should look like this:
 
     satellites:
-    - name: "Muster Satellite"      #Optional
+    - name: "Example Satellite"     #Optional
       id: 24946                     #A must e. g. NORAD Catalog ID)
       satType: SPACECRAFT           #Optional (Default: SPACECRAFT)
       mass: 700.0                   #Either mass or area is a must
