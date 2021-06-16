@@ -60,8 +60,8 @@ SatelliteBuilder &SatelliteBuilder::setSatType(std::string &&satType) {
 
 SatelliteBuilder &SatelliteBuilder::setMass(double mass) {
     //TODO To be reviewed!!!!!! Is this good or is it a very bad assumption?
-    double characteristicLength = calculateCharacteristicLengthFromMass(mass);
-    double area = calculateCircleArea(characteristicLength);
+    double characteristicLength = util::calculateCharacteristicLengthFromMass(mass);
+    double area = util::calculateCircleArea(characteristicLength);
     _satellite.setMass(mass);
     _satellite.setArea(area);
     _satellite.setCharacteristicLength(characteristicLength);
@@ -70,8 +70,8 @@ SatelliteBuilder &SatelliteBuilder::setMass(double mass) {
 }
 
 SatelliteBuilder &SatelliteBuilder::setMassByArea(double area) {
-    double characteristicLength = calculateCharacteristicLength(area);
-    double mass = calculateSphereMass(characteristicLength);
+    double characteristicLength = util::calculateCharacteristicLength(area);
+    double mass = util::calculateSphereMass(characteristicLength);
     _satellite.setMass(mass);
     _satellite.setArea(area);
     _satellite.setCharacteristicLength(characteristicLength);

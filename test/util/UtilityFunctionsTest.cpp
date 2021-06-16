@@ -8,6 +8,7 @@ class UtilityFunctions : public ::testing::TestWithParam<double> {
 };
 
 TEST_P(UtilityFunctions, CharacteristicLengthFromMass){
+    using namespace util;
     double expectedCharacteristicLength = GetParam();
 
     double mass = calculateSphereMass(expectedCharacteristicLength);
