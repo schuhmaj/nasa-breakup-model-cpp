@@ -59,9 +59,12 @@ SatelliteBuilder &SatelliteBuilder::setSatType(std::string &&satType) {
 }
 
 SatelliteBuilder &SatelliteBuilder::setMass(double mass) {
+    //TODO To be reviewed!!!!!! Is this good or is it a very bad assumption?
+    double characteristicLength = calculateCharacteristicLengthFromMass(mass);
+    double area = calculateCircleArea(characteristicLength);
     _satellite.setMass(mass);
-    _satellite.setArea(-1);
-    _satellite.setCharacteristicLength(-1);
+    _satellite.setArea(area);
+    _satellite.setCharacteristicLength(characteristicLength);
     _hasMass = true;
     return *this;
 }

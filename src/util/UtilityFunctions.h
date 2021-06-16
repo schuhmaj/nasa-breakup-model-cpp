@@ -50,3 +50,7 @@ inline double calculateSphereMass(double characteristicLength) {
     double radius = characteristicLength / 2.0;
     return 4.0 / 3.0 * PI * (radius * radius * radius) * calculateDensity(characteristicLength);
 }
+
+inline double calculateCharacteristicLengthFromMass(double mass) {
+    return std::pow( (6 * mass) / (92.937 * PI), 1 / 2.26 );
+}
