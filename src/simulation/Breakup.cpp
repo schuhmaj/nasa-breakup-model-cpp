@@ -26,6 +26,8 @@ void Breakup::init() {
 
 void Breakup::characteristicLengthDistribution(double powerLawExponent) {
     using util::transformUniformToPowerLaw;
+    //Init a random device, which then generates the seed for the mt19937-generator (pseudo-random) which
+    //then feeds the uniform distribution
     std::random_device rd;
     std::mt19937 generator{rd()};
     std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
