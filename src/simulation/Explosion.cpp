@@ -19,5 +19,6 @@ void Explosion::characteristicLengthDistribution() {
 }
 
 void Explosion::deltaVelocityDistribution() {
-
+    //Equation 11 mu = 0.2 * chi + 1.85
+    Breakup::deltaVelocityDistribution(0.2, 1.85);
 }

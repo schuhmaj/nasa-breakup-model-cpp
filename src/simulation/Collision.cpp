@@ -42,5 +42,6 @@ void Collision::characteristicLengthDistribution() {
 }
 
 void Collision::deltaVelocityDistribution() {
-
+    //Equation 12 mu = 0.9 * chi + 2.9
+    Breakup::deltaVelocityDistribution(0.9, 2.9);
 }

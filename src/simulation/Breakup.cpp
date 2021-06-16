@@ -84,6 +84,25 @@ void Breakup::areaToMassRatioDistribution() {
 
 }
 
+void Breakup::deltaVelocityDistribution(double factor, double offset) {
+    std::random_device rd;
+    std::mt19937 generator{rd()};
+
+    std::for_each(_output.begin(),
+                  _output.end(),
+                  [&](Satellite &sat) {
+                      const double chi = log10(sat.getAreaToMassRatio());
+                      const double mu = factor * chi + offset;
+                      static constexpr double sigma = 0.4;
+                      std::normal_distribution normalDistribution{mu, sigma};
+                      double velocity = std::pow(normalDistribution(generator), 10);
+
+                      //TODO Create cartesian vector from scalar ejection velocity (see Python)
+                      //Currently, we just set the first component of the velocity vector
+                      sat.setVelocity({velocity, 0 , 0});
+                  });
+}
+
 std::array<double, 5> Breakup::getParameterAM(double characteristicLength) {
     std::array<double, 5> res{};
 

@@ -89,20 +89,40 @@ protected:
      * Creates the Size Distribution. After the fragments are generated this method will assign
      * every fragment a L_c value based on the corresponding power law distribution (Equation 2 and 4).
      * Contains the specific part, so this method is for each subclass different.
+     * @note This method is implemented in the subclasses and calls the general form with parameters in the base class
      */
     virtual void characteristicLengthDistribution() = 0;
 
     /**
      * Creates the Size Distribution according to an specific powerLaw Exponent.
      * The Exponent comes from the probability density function (pdf).
-     * @attention This method will be used by the specific base class with their specific parameter
+     * @attention Implemented in the base class, called by the subclasses with their parameters
      * @param powerLawExponent - double
      */
     virtual void characteristicLengthDistribution(double powerLawExponent);
 
+    /**
+     * Creates for every satellite the area-to-mass ratio according to Equation 6.
+     */
     virtual void areaToMassRatioDistribution();
 
+    /**
+     * Implements the Delta Velocity Distribution. Assigns every satellite an cartesian velocity vector.
+     * Therefore it first calculates the velocity according to Equation 11/ 12 as an scalar and transform this
+     * into an cartesian vector.
+     * @note This method is implemented in the subclasses and calls the general form with parameters in the base class
+     */
     virtual void deltaVelocityDistribution() = 0;
+
+    /**
+     * Implements the Delta Velocity Distribution according to Equation 11/ 12.
+     * The parameters can be described as the following: mu = factor * chi + offset where mu is the mean value of the
+     * normal distribution.
+     * @attention Implemented in the base class, called by the subclasses with their parameters
+     * @param factor - for the chi
+     * @param offset - on top of the chi
+     */
+    virtual void deltaVelocityDistribution(double factor, double offset);
 
 private:
 
