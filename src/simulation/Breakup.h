@@ -70,7 +70,7 @@ public:
         return _output;
     }
 
-private:
+protected:
 
     /**
      * This method contains every step required to re-run the simulation.
@@ -87,8 +87,17 @@ private:
     /**
      * Creates the Size Distribution. After the fragments are generated this method will assign
      * every fragment a L_c value based on the corresponding power law distribution (Equation 2 and 4).
+     * Contains the specific part, so this method is for each subclass different.
      */
     virtual void characteristicLengthDistribution() = 0;
+
+    /**
+     * Creates the Size Distribution according to an specific powerLaw Exponent.
+     * The Exponent comes from the probability density function (pdf).
+     * @attention This method will be used by the specific base class with their specific parameter
+     * @param powerLawExponent - double
+     */
+    virtual void characteristicLengthDistribution(double powerLawExponent);
 
     virtual void areaToMassRatioDistribution();
 

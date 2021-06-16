@@ -14,7 +14,8 @@ void Explosion::generateFragments() {
 }
 
 void Explosion::characteristicLengthDistribution() {
-
+    //The pdf for Explosions is: 0.0132578/x^2.6
+    Breakup::characteristicLengthDistribution(-2.6);
 }
 
 void Explosion::deltaVelocityDistribution() {

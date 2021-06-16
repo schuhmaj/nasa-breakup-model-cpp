@@ -37,22 +37,8 @@ void Collision::generateFragments() {
 }
 
 void Collision::characteristicLengthDistribution() {
-    using util::transformUniformToPowerLaw;
-    std::random_device rd;
-    std::mt19937 generator{rd()};
-    std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
-
-    std::for_each(_output.begin(),
-                  _output.end(),
-                  [&](Satellite &sat) {
-                        double y = uniformRealDistribution(generator);
-                        double L_c = transformUniformToPowerLaw(_minimalCharacteristicLength,
-                                                                _maximalCharacteristicLength,
-                                                                -2.71,
-                                                                y);
-                        sat.setCharacteristicLength(L_c);
-    });
-
+    //The pdf for Collisions is: 0.0101914/(x^2.71)
+    Breakup::characteristicLengthDistribution(-2.71);
 }
 
 void Collision::deltaVelocityDistribution() {
