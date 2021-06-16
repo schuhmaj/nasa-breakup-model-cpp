@@ -3,8 +3,11 @@
 #include <utility>
 #include <vector>
 #include <cmath>
+#include <random>
+#include <algorithm>
 #include "model/Satellite.h"
 #include "util/UtilityContainer.h"
+#include "util/UtilityFunctions.h"
 
 /**
  * Pure virtual class which needs a Collection of Satellites as input and output and simulates a breakup
@@ -21,6 +24,12 @@ protected:
      * TODO Better integration program flow!!!!
      */
     const double _minimalCharacteristicLength{0.05};
+
+    /**
+     * The maximal characteristic length. The value is set during the run of the simulation and derived
+     * from the input satellites (the max L_c of them).
+     */
+    double _maximalCharacteristicLength{};
 
     /**
      * Contains the input satellites. Normally the fragmentCount for this collection is either one (explosion) or
@@ -75,6 +84,10 @@ private:
      */
     virtual void generateFragments() = 0;
 
+    /**
+     * Creates the Size Distribution. After the fragments are generated this method will assign
+     * every fragment a L_c value based on the corresponding power law distribution (Equation 2 and 4).
+     */
     virtual void characteristicLengthDistribution() = 0;
 
     virtual void areaToMassRatioDistribution();
