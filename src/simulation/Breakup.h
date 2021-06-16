@@ -2,6 +2,7 @@
 
 #include <utility>
 #include <vector>
+#include <array>
 #include <cmath>
 #include <random>
 #include <algorithm>
@@ -102,6 +103,17 @@ protected:
     virtual void areaToMassRatioDistribution();
 
     virtual void deltaVelocityDistribution() = 0;
+
+private:
+
+    /**
+     * TODO: Rework this!
+     * Contains the parameter for the A/M Distribution for a specific L_c.
+     * Spacecraft, Greater than 11 cm Case.
+     * @param characteristicLength in [m]
+     * @return alpha, mu_1, sigma_1, mu_2, sigma_2 (in this order)
+     */
+    static std::array<double, 5> getParameterAM(double characteristicLength);
 
 };
 
