@@ -51,6 +51,11 @@ inline double calculateSphereMass(double characteristicLength) {
     return 4.0 / 3.0 * PI * (radius * radius * radius) * calculateDensity(characteristicLength);
 }
 
+/**
+ * Calculates the Characteristic Length assuming the mass is formed like a sphere.
+ * @param mass in [kg] of the satellite
+ * @return diameter/ characteristic Length in [m]
+ */
 inline double calculateCharacteristicLengthFromMass(double mass) {
     return std::pow( (6 * mass) / (92.937 * PI), 1 / 2.26 );
 }
