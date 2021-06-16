@@ -63,7 +63,7 @@ void Breakup::areaToMassRatioDistribution() {
 
                     //Calculate the A/M value in [m^2/kg]
                     const double areaToMassRatio =
-                            std::pow(param[0] * n1(generator) + (1-param[0]) * n2(generator), 10);
+                            std::pow(10, param[0] * n1(generator) + (1-param[0]) * n2(generator));
 
                     //Calculate the are A in [m^2]
                     double area = 0;
@@ -95,7 +95,7 @@ void Breakup::deltaVelocityDistribution(double factor, double offset) {
                       const double mu = factor * chi + offset;
                       static constexpr double sigma = 0.4;
                       std::normal_distribution normalDistribution{mu, sigma};
-                      double velocity = std::pow(normalDistribution(generator), 10);
+                      double velocity = std::pow(10, normalDistribution(generator));
 
                       //TODO Create cartesian vector from scalar ejection velocity (see Python)
                       //Currently, we just set the first component of the velocity vector
