@@ -35,8 +35,8 @@ void Breakup::characteristicLengthDistribution(double powerLawExponent) {
     std::for_each(_output.begin(),
                   _output.end(),
                   [&](Satellite &sat) {
-                      double y = uniformRealDistribution(generator);
-                      double L_c = transformUniformToPowerLaw(_minimalCharacteristicLength,
+                      const double y = uniformRealDistribution(generator);
+                      const double L_c = transformUniformToPowerLaw(_minimalCharacteristicLength,
                                                               _maximalCharacteristicLength,
                                                               powerLawExponent,
                                                               y);
@@ -54,7 +54,7 @@ void Breakup::areaToMassRatioDistribution() {
     std::for_each(_output.begin(),
                   _output.end(),
                   [&](Satellite &sat) {
-                    double lc = sat.getCharacteristicLength();
+                    const double lc = sat.getCharacteristicLength();
 
                     //Get the parameter alpha, mu, sigma
                     auto param = getParameterAM(lc);
@@ -62,7 +62,7 @@ void Breakup::areaToMassRatioDistribution() {
                     std::normal_distribution n2{param[3], param[4]};
 
                     //Calculate the A/M value in [m^2/kg]
-                    double areaToMassRatio =
+                    const double areaToMassRatio =
                             std::pow(param[0] * n1(generator) + (1-param[0]) * n2(generator), 10);
 
                     //Calculate the are A in [m^2]
@@ -74,7 +74,7 @@ void Breakup::areaToMassRatioDistribution() {
                     }
 
                     //Calculate the mass m in [kg]
-                    double mass = area / areaToMassRatio;
+                    const double mass = area / areaToMassRatio;
 
                     //Finally set every value in the satellite
                     sat.setAreaToMassRatio(areaToMassRatio);
