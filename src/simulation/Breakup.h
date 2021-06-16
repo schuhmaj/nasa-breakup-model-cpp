@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include "model/Satellite.h"
+#include "util/UtilityContainer.h"
 
 /**
  * Pure virtual class which needs a Collection of Satellites as input and output and simulates a breakup
