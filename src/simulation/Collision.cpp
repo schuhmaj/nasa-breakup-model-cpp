@@ -6,6 +6,7 @@ void Collision::generateFragments() {
     Satellite &sat1 = _input.at(0);
     Satellite &sat2 = _input.at(1);
 
+    //Sets the maximalCharacteristicLength which will be required later
     _maximalCharacteristicLength = std::max(sat1.getCharacteristicLength(), sat2.getCharacteristicLength());
 
     //Contains the mass M (later filled with an adequate value)
