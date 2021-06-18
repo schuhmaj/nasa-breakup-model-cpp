@@ -1,19 +1,27 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include "model/Satellite.h"
 
 /**
- * Interface for Output
- * TODO: Maybe start already writing during calculation as second thread?
- * To be evaluated
+ * Interface for Output.
  */
 class OutputWriter {
 
-    OutputWriter() = default;
+    const std::vector<Satellite> _satelliteCollection;
+
+public:
+
+    explicit OutputWriter(const std::vector<Satellite> &satelliteCollection)
+            : _satelliteCollection{satelliteCollection} {};
 
     virtual ~OutputWriter() = default;
 
-    virtual void printResult(std::vector<Satellite> &satelliteCollection) = 0;
+    /**
+     * Virtual method which prints the internal satellite Collection to an output source.
+     * The Implementation is dependent on the corresponding subclass.
+     */
+    virtual void printResult() = 0;
 
 };
