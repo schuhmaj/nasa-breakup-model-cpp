@@ -50,20 +50,13 @@ void Breakup::areaToMassRatioDistribution() {
     std::random_device rd;
     std::mt19937 generator{rd()};
 
-    //TODO Refactor and make it smaller
     std::for_each(_output.begin(),
                   _output.end(),
                   [&](Satellite &sat) {
                     const double lc = sat.getCharacteristicLength();
 
-                    //Get the parameter alpha, mu, sigma
-                    auto param = getParameterAM(lc);
-                    std::normal_distribution n1{param[1], param[2]};
-                    std::normal_distribution n2{param[3], param[4]};
-
                     //Calculate the A/M value in [m^2/kg]
-                    const double areaToMassRatio =
-                            std::pow(10, param[0] * n1(generator) + (1-param[0]) * n2(generator));
+                    const double areaToMassRatio = calculateAM(lc, generator);
 
                     //Calculate the are A in [m^2]
                     double area = 0;
@@ -103,55 +96,24 @@ void Breakup::deltaVelocityDistribution(double factor, double offset) {
                   });
 }
 
-std::array<double, 5> Breakup::getParameterAM(double characteristicLength) {
-    std::array<double, 5> res{};
+double Breakup::calculateAM(double characteristicLength, std::mt19937 &generator) {
+    using namespace util;
+    const double logLc = std::log10(characteristicLength);
 
-    double logLc = std::log10(characteristicLength);
+    double areaToMassRatio{0};
 
-    //alpha
-    if (logLc <= -1.95) {
-        res[0] = 0;
-    } else if(logLc >= 0.55) {
-        res[0] = 1;
-    } else{
-        res[0] = 0.3 + 0.4 * (logLc + 1.2);
+    if (characteristicLength > 0.11) {          //Case bigger than 11 cm
+        std::normal_distribution n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
+        std::normal_distribution n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
+        
+        areaToMassRatio = std::pow(10, alpha(_satType, logLc) * n1(generator) + (1-alpha(_satType, logLc)) * n2(generator));
+    } else if (characteristicLength < 0.08) {   //Case smaller than 8 cm
+        std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
+
+        areaToMassRatio = std::pow(10, n(generator));
+    } else {                                    //Case between 8 cm and 11 cm
+        //Bridge Function required here
     }
 
-    //mu_1
-    if (logLc <= -1.1) {
-        res[1] = -0.6;
-    } else if(logLc >= 0.0) {
-        res[1] = -0.95;
-    } else {
-        res[1] = -0.6 - 0.318 * (logLc + 1.1);
-    }
-
-    //sigma_1
-    if (logLc <= -1.3) {
-        res[2] = 0.1;
-    } else if(logLc >= -0.3) {
-        res[2] = 0.3;
-    } else {
-        res[2] = 0.1 + 0.2 * (logLc + 1.3);
-    }
-
-    //mu_2
-    if (logLc <= -0.7) {
-        res[3] = -1.2;
-    } else if(logLc >= -0.1) {
-        res[3] = -2.0;
-    } else {
-        res[3] = -1.2 - 1.333 * (logLc + 0.7);
-    }
-
-    //sigma_2
-    if (logLc <= -0.5) {
-        res[4] = 0.5;
-    } else if(logLc >= -0.3) {
-        res[4] = 0.3;
-    } else {
-        res[4] = 0.5 - (logLc + 0.5);
-    }
-
-    return res;
+    return areaToMassRatio;
 }

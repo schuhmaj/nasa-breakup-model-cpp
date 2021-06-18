@@ -9,6 +9,7 @@
 #include "model/Satellite.h"
 #include "util/UtilityContainer.h"
 #include "util/UtilityFunctions.h"
+#include "util/UtilityAreaMassRatio.h"
 
 /**
  * Pure virtual class which needs a Collection of Satellites as input and output and simulates a breakup
@@ -31,6 +32,11 @@ protected:
      * from the input satellites (the max L_c of them).
      */
     double _maximalCharacteristicLength{};
+
+    /**
+     * Member which is required to choose the correct Distribution function for the A/M values.
+     */
+    SatType _satType{SatType::SPACECRAFT};
 
     /**
      * Contains the input satellites. Normally the fragmentCount for this collection is either one (explosion) or
@@ -133,7 +139,7 @@ private:
      * @param characteristicLength in [m]
      * @return alpha, mu_1, sigma_1, mu_2, sigma_2 (in this order)
      */
-    static std::array<double, 5> getParameterAM(double characteristicLength);
+    double calculateAM(double characteristicLength, std::mt19937 &generator);
 
 };
 

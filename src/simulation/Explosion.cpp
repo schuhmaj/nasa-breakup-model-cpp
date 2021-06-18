@@ -7,6 +7,11 @@ void Explosion::generateFragments() {
     //Sets the maximalCharacteristicLength which will be required later
     _maximalCharacteristicLength = sat.getCharacteristicLength();
 
+    //Sets the _satType attribute to the correct type (later required for the A/M)
+    //The Default of this member is SPACECRAFT
+    _satType = sat.getSatType();
+
+
     //The fragment Count, respectively Equation 2
     double fragmentCount = 6 * std::pow(_minimalCharacteristicLength, -1.6);
 
