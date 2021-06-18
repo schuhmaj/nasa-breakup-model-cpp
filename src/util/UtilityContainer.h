@@ -34,6 +34,31 @@ namespace util {
     }
 
     /**
+     * Applies a binary function to elements of two objects piece by piece. The objects must
+     * be iterable and should have the same size. If they have not the same size the function is applied as long
+     * as the smaller one still have elements.
+     * @tparam Container - a iterable object like an array or vector
+     * @tparam Scalar - a scalar to use on each element
+     * @tparam BinOp - a binary function to apply
+     * @param lhs - the first container
+     * @param scalar - a scalar to use on each element
+     * @param binOp - the binary function
+     * @return a container containing the result
+     */
+    template<typename Container, typename Scalar,typename BinOp>
+    Container applyBinaryFunction(const Container &lhs, const Scalar &scalar, BinOp binOp) {
+        Container ret = lhs;
+
+        auto lhsIt = std::begin(lhs);
+        auto lhsEnd = std::end(lhs);
+
+        for (auto retIt = std::begin(ret); lhsIt != lhsEnd; ++lhsIt, ++retIt) {
+            *retIt = binOp(*lhsIt, scalar);
+        }
+        return ret;
+    }
+
+    /**
      * Applies the Operation Minus to two Container piece by piece.
      * @example {1, 2, 3} - {1, 1, 1} = {0, 1, 2}
      * @tparam Container

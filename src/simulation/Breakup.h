@@ -141,6 +141,8 @@ private:
      */
     double calculateAM(double characteristicLength, std::mt19937 &generator);
 
+    std::array<double, 3> calculateVelocityVector(double velocity, std::mt19937 &generator);
+
 };
 
 
