@@ -133,11 +133,11 @@ protected:
 private:
 
     /**
-     * TODO: Rework this!
-     * Contains the parameter for the A/M Distribution for a specific L_c.
-     * Spacecraft, Greater than 11 cm Case.
+     * Calculates an A/M Value for a given L_c.
+     * The utilised equation is chosen based on L_c and the SatType attribute of this Breakup.
      * @param characteristicLength in [m]
-     * @return alpha, mu_1, sigma_1, mu_2, sigma_2 (in this order)
+     * @param generator a generator "to power" the normal distributions
+     * @return A/M value
      */
     double calculateAM(double characteristicLength, std::mt19937 &generator);
 
