@@ -114,7 +114,15 @@ double Breakup::calculateAM(double characteristicLength, std::mt19937 &generator
 
         areaToMassRatio = std::pow(10, n(generator));
     } else {                                    //Case between 8 cm and 11 cm
-        //TODO Bridge Function required here
+        std::normal_distribution n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
+        std::normal_distribution n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
+        std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
+
+        double y1 = std::pow(10, alpha(_satType, logLc) * n1(generator) +
+                                (1 - alpha(_satType, logLc)) * n2(generator));
+        double y0 = std::pow(10, n(generator));
+
+        areaToMassRatio = y0 + (characteristicLength - 0.08) * (y1 - y0) / (0.03);
     }
 
     return areaToMassRatio;
