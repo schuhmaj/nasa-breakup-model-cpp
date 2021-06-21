@@ -4,7 +4,6 @@
 #include "util/UtilityFunctions.h"
 #include <string>
 #include <array>
-#include <map>
 #include <exception>
 
 /**
@@ -24,8 +23,6 @@
  * - velocity vector is needed for the non-catastrophic collision
  */
 class SatelliteBuilder {
-
-    const static std::map<std::string, SatType> stringToSatType;
 
     Satellite _satellite;
 

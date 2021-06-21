@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <map>
 #include <string>
 #include <ostream>
 
@@ -89,6 +90,10 @@ class Satellite {
      */
 
 public:
+
+    const static std::map<std::string, SatType> stringToSatType;
+
+    const static std::map<SatType, std::string> satTypeToString;
 
     Satellite() = default;
 

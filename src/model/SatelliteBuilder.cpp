@@ -1,15 +1,5 @@
 #include "SatelliteBuilder.h"
 
-
-const std::map<std::string, SatType> SatelliteBuilder::stringToSatType{{"SPACECRAFT",  SatType::SPACECRAFT},
-                                                                       {"SC",  SatType::SPACECRAFT},
-                                                                       {"ROCKET_BODY", SatType::ROCKET_BODY},
-                                                                       {"RB", SatType::ROCKET_BODY},
-                                                                       {"DEBRIS",      SatType::DEBRIS},
-                                                                       {"DEB",      SatType::DEBRIS},
-                                                                       {"UNKNOWN",     SatType::UNKNOWN}
-};
-
 SatelliteBuilder &SatelliteBuilder::reset() {
     _satellite = Satellite{};
     _hasID = false;
@@ -42,7 +32,7 @@ SatelliteBuilder &SatelliteBuilder::setSatType(SatType satType) {
 
 SatelliteBuilder &SatelliteBuilder::setSatType(const std::string &satType) {
     try {
-        this->setSatType(stringToSatType.at(satType));
+        this->setSatType(Satellite::stringToSatType.at(satType));
     } catch (std::exception &e) {
         throw std::invalid_argument{"Satellite Type is not well defined!"};
     }
@@ -51,7 +41,7 @@ SatelliteBuilder &SatelliteBuilder::setSatType(const std::string &satType) {
 
 SatelliteBuilder &SatelliteBuilder::setSatType(std::string &&satType) {
     try {
-        this->setSatType(stringToSatType.at(satType));
+        this->setSatType(Satellite::stringToSatType.at(satType));
     } catch (std::exception &e) {
         throw std::invalid_argument{"Satellite Type is not well defined!"};
     }
