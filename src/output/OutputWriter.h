@@ -3,25 +3,29 @@
 #include <vector>
 #include <string>
 #include "model/Satellite.h"
+#include "simulation/Breakup.h"
 
 /**
- * Interface for Output.
+ * Interface for Output (Pure virtual).
  */
 class OutputWriter {
 
-    const std::vector<Satellite> _satelliteCollection;
-
 public:
 
-    explicit OutputWriter(const std::vector<Satellite> &satelliteCollection)
-            : _satelliteCollection{satelliteCollection} {};
+    OutputWriter() = default;
 
     virtual ~OutputWriter() = default;
 
     /**
-     * Virtual method which prints the internal satellite Collection to an output source.
-     * The Implementation is dependent on the corresponding subclass.
+     * Prints the Satellites to an output source.
+     * @param satelliteCollection
      */
-    virtual void printResult() = 0;
+    virtual void printResult(const std::vector<Satellite> &satelliteCollection) = 0;
+
+    /**
+     * Prints the result Satellites to an output source.
+     * @param breakup
+     */
+    virtual void printResult(const Breakup &breakup) = 0;
 
 };

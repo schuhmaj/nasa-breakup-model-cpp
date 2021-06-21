@@ -73,7 +73,7 @@ public:
      * Return the result of the breakup event
      * @return SatelliteCollection with the generated fragments
      */
-    std::vector<Satellite> &getResult() {
+    const std::vector<Satellite> &getResult() const {
         return _output;
     }
 

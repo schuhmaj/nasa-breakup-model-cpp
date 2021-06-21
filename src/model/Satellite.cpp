@@ -15,6 +15,10 @@ const std::map<SatType, std::string> Satellite::satTypeToString{{SatType::SPACEC
                                                                 {SatType::UNKNOWN,     "UNKNOWN"}
 };
 
+std::ostream &operator<<(std::ostream &os, SatType satType) {
+    return os << Satellite::satTypeToString.at(satType);
+}
+
 
 std::ostream &operator<<(std::ostream &os, const Satellite &satellite) {
     //TODO Rework later

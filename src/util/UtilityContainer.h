@@ -4,6 +4,8 @@
 #include <numeric>
 #include <functional>
 #include <cmath>
+#include <string>
+#include <iostream>
 
 namespace util {
 
@@ -100,6 +102,27 @@ namespace util {
                         [](const double acc, const double x) -> double { return acc + x * x; }
                 )
         );
+    }
+
+    /**
+     * Operator << for an array of any size.
+     * @tparam T - type of the array, must have an << operator overload
+     * @tparam N - size of the array
+     * @param os - the ostream
+     * @param array - the array itself
+     * @return ostream
+     */
+    template<typename T, size_t N>
+    std::ostream &operator<<(std::ostream &os, const std::array<T, N> &array) {
+        os << "{";
+        auto it = array.begin();
+        auto end = array.end()-1;
+        while (it != end) {
+            os << *it << "; ";
+            ++it;
+        }
+        os << *it << "}";
+        return os;
     }
 
 }

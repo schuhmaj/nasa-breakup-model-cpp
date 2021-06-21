@@ -13,6 +13,8 @@ enum class SatType {
     SPACECRAFT, ROCKET_BODY, DEBRIS, UNKNOWN
 };
 
+std::ostream &operator<<(std::ostream &os, SatType satType);
+
 
 /**
  * Represent an object in orbit.

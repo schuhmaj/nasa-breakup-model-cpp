@@ -5,6 +5,7 @@
 
 #include "input/YAMLReader.h"
 #include "simulation/BreakupFactory.h"
+#include "output/CSVWriter.h"
 
 int main(int argc, char *argv[]) {
 
@@ -26,12 +27,14 @@ int main(int argc, char *argv[]) {
     BreakupFactory breakupFactory{inputSource};
 
     //Create and run the simulation or catch an exception in case something is wrong with the simulation
-    //TODO Here it will always be a collision. See TODO in BreakupFactory
     try {
+        //Creates and Runs the simulation
         auto breakUpSimulation = breakupFactory.getBreakupTypeByInput();
         breakUpSimulation->run();
-        //TODO Establish interface to Output
-        breakUpSimulation->getResult();
+
+        //Prints the the output to a CSV file
+        auto output = std::unique_ptr<OutputWriter>{new CSVWriter{"result.csv"}};
+        output->printResult(*breakUpSimulation);
     } catch (std::exception &e) {
         std::cerr << e.what();
     }
