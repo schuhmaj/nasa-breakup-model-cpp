@@ -1,4 +1,5 @@
 #include "Explosion.h"
+#include "Breakup.h"
 
 void Explosion::generateFragments() {
     //Gets the one satellite from the input
@@ -15,7 +16,8 @@ void Explosion::generateFragments() {
     //The fragment Count, respectively Equation 2
     double fragmentCount = 6 * std::pow(_minimalCharacteristicLength, -1.6);
 
-    _output.resize(static_cast<size_t>(fragmentCount));
+    const std::string debrisName{sat.getName() + "-Explosion-Fragment"};
+    this->createFragments(fragmentCount, debrisName);
 }
 
 void Explosion::characteristicLengthDistribution() {

@@ -28,13 +28,15 @@ protected:
     const double _minimalCharacteristicLength{0.05};
 
     /**
-     * The maximal characteristic length. The value is set during the run of the simulation and derived
+     * The maximal characteristic length.
+     * The value is set during the run of the simulation and derived
      * from the input satellites (the max L_c of them).
      */
     double _maximalCharacteristicLength{};
 
     /**
      * Member which is required to choose the correct Distribution function for the A/M values.
+     * This value is set during the run of the simulation.
      */
     SatType _satType{SatType::SPACECRAFT};
 
@@ -48,6 +50,8 @@ protected:
      * Contains the output satellites aka fragments of the collision or explosion
      */
     std::vector<Satellite> _output;
+
+
 
 public:
 
@@ -90,6 +94,14 @@ protected:
      * Equation 4 for Collisions.
      */
     virtual void generateFragments() = 0;
+
+    /**
+     * Actually creates the fragments (Resizes the vector and assigns a unique ID and name to each fragment)
+     * @param fragmentCount - the number of fragments which should be created
+     * @param debrisName - the name for the fragments
+     * @attention Implemented in the base class, called by the subclasses with their parameters
+     */
+    virtual void createFragments(double fragmentCount, const std::string &debrisName);
 
     /**
      * Creates the Size Distribution. After the fragments are generated this method will assign

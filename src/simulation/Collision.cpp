@@ -39,7 +39,8 @@ void Collision::generateFragments() {
     //The fragment Count, respectively Equation 4
     double fragmentCount = 0.1 * std::pow(mass, 0.75) * std::pow(_minimalCharacteristicLength, -1.71);
 
-    _output.resize(static_cast<size_t>(fragmentCount));
+    const std::string debrisName{sat1.getName() + " " + sat2.getName() + "-Collision-Fragment"};
+    this->createFragments(fragmentCount, debrisName);
 }
 
 void Collision::characteristicLengthDistribution() {

@@ -19,6 +19,8 @@ const std::map<SatType, std::string> Satellite::satTypeToString{{SatType::SPACEC
                                                                 {SatType::UNKNOWN,     "UNKNOWN"}
 };
 
+size_t Satellite::currentMaxGivenID{0};
+
 std::ostream &operator<<(std::ostream &os, const Satellite &satellite) {
     //TODO Rework later
     return os << "ID:\t" << satellite._id << "\n"

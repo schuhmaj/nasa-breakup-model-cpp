@@ -93,14 +93,29 @@ class Satellite {
 
 public:
 
+    /**
+     * Map containing a mapping from String to SatType.
+     */
     const static std::map<std::string, SatType> stringToSatType;
 
+    /**
+     * Map containing a mapping from SatType to String.
+     */
     const static std::map<SatType, std::string> satTypeToString;
+
+    /**
+     * The maximum already given NORAD-ID, usually set by an input source
+     */
+    static size_t currentMaxGivenID;
 
     Satellite() = default;
 
     explicit Satellite(size_t id)
-        : _id{id} {}
+            : _id{id} {}
+
+    Satellite(const std::string &name, SatType satType)
+            : _name{name},
+              _satType{satType} {}
 
 
     /**
@@ -121,7 +136,7 @@ public:
      * @return true if they do not have the same ID
      */
     friend bool operator!=(const Satellite &lhs, const Satellite &rhs) {
-        return not (lhs == rhs);
+        return not(lhs == rhs);
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Satellite &satellite);
