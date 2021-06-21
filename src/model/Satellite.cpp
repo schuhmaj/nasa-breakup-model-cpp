@@ -1,5 +1,9 @@
 #include "Satellite.h"
 
+std::ostream &operator<<(std::ostream &os, SatType satType) {
+    return os << Satellite::satTypeToString.at(satType);
+}
+
 const std::map<std::string, SatType> Satellite::stringToSatType{{"SPACECRAFT",  SatType::SPACECRAFT},
                                                                 {"SC",          SatType::SPACECRAFT},
                                                                 {"ROCKET_BODY", SatType::ROCKET_BODY},
@@ -14,11 +18,6 @@ const std::map<SatType, std::string> Satellite::satTypeToString{{SatType::SPACEC
                                                                 {SatType::DEBRIS,      "DEBRIS"},
                                                                 {SatType::UNKNOWN,     "UNKNOWN"}
 };
-
-std::ostream &operator<<(std::ostream &os, SatType satType) {
-    return os << Satellite::satTypeToString.at(satType);
-}
-
 
 std::ostream &operator<<(std::ostream &os, const Satellite &satellite) {
     //TODO Rework later
