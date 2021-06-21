@@ -104,6 +104,7 @@ public:
     const static std::map<SatType, std::string> satTypeToString;
 
     /**
+     * TODO: Connect to input config file
      * The maximum already given NORAD-ID, usually set by an input source
      */
     static size_t currentMaxGivenID;

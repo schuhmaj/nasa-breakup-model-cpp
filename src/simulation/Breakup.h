@@ -52,18 +52,18 @@ protected:
     std::vector<Satellite> _output;
 
 
-
 public:
 
     Breakup() = default;
 
-    explicit Breakup(std::vector<Satellite> &input)
+    explicit Breakup(const std::vector<Satellite> &input)
             : _input{input},
               _output{} {}
 
-    explicit Breakup(std::vector<Satellite> &&input)
+    Breakup(const std::vector<Satellite> &input, double minimalCharacteristicLength)
             : _input{input},
-              _output{} {}
+              _minimalCharacteristicLength{minimalCharacteristicLength} {}
+
 
     virtual ~Breakup() = default;
 
