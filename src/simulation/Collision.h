@@ -17,5 +17,11 @@ private:
 
     void deltaVelocityDistribution() override;
 
+public:
+
+    bool isIsCatastrophic() const {
+        return _isCatastrophic;
+    }
+
 };
 

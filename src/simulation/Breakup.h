@@ -172,6 +172,16 @@ private:
      */
     std::array<double, 3> calculateVelocityVector(double velocity);
 
+public:
+
+    const double getMinimalCharacteristicLength() const {
+        return _minimalCharacteristicLength;
+    }
+
+    double getMaximalCharacteristicLength() const {
+        return _maximalCharacteristicLength;
+    }
+
 };
 
 
