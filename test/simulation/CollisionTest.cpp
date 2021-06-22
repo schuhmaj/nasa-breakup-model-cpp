@@ -100,4 +100,3 @@ TEST_F(CollisionTest, DeltaVelocityDistributionTest) {
 
 
 }
-
