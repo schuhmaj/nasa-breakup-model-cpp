@@ -41,6 +41,12 @@ protected:
     SatType _satType{SatType::SPACECRAFT};
 
     /**
+     * The random number generator, used by the implementation.
+     * It is correctly initialized by the init method with a random seed each time before the simulation runs.
+     */
+    std::mt19937 _randomNumberGenerator{};
+
+    /**
      * Contains the input satellites. Normally the fragmentCount for this collection is either one (explosion) or
      * two (collision)
      */
@@ -154,12 +160,17 @@ private:
      * Calculates an A/M Value for a given L_c.
      * The utilised equation is chosen based on L_c and the SatType attribute of this Breakup.
      * @param characteristicLength in [m]
-     * @param generator a generator "to power" the normal distributions
      * @return A/M value
      */
-    double calculateAM(double characteristicLength, std::mt19937 &generator);
+    double calculateAM(double characteristicLength);
 
-    std::array<double, 3> calculateVelocityVector(double velocity, std::mt19937 &generator);
+    /**
+     * Transforms a scalar velocity into a 3-dimensional cartesian velocity vector.
+     * The transformation is based around a uniform Distribution.
+     * @param velocity - scalar velocity
+     * @return 3-dimensional cartesian velocity vector
+     */
+    std::array<double, 3> calculateVelocityVector(double velocity);
 
 };
 

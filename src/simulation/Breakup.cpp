@@ -20,6 +20,8 @@ void Breakup::run() {
 
 void Breakup::init() {
     _output.clear();
+    std::random_device rd;
+    _randomNumberGenerator = std::mt19937{rd()};
 }
 
 void inline Breakup::createFragments(double fragmentCount, const std::string &debrisName) {
@@ -30,16 +32,12 @@ void inline Breakup::createFragments(double fragmentCount, const std::string &de
 
 void Breakup::characteristicLengthDistribution(double powerLawExponent) {
     using util::transformUniformToPowerLaw;
-    //Init a random device, which then generates the seed for the mt19937-generator (pseudo-random) which
-    //then feeds the uniform distribution
-    std::random_device rd;
-    std::mt19937 generator{rd()};
-    std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
 
+    std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
     std::for_each(_output.begin(),
                   _output.end(),
                   [&](Satellite &sat) {
-                      const double y = uniformRealDistribution(generator);
+                      const double y = uniformRealDistribution(_randomNumberGenerator);
                       const double L_c = transformUniformToPowerLaw(_minimalCharacteristicLength,
                                                                     _maximalCharacteristicLength,
                                                                     powerLawExponent,
@@ -49,18 +47,13 @@ void Breakup::characteristicLengthDistribution(double powerLawExponent) {
 }
 
 void Breakup::areaToMassRatioDistribution() {
-    //Init a random device, which then generates the seed for the mt19937-generator (pseudo-random) which
-    //then feeds the uniform distribution
-    std::random_device rd;
-    std::mt19937 generator{rd()};
-
     std::for_each(_output.begin(),
                   _output.end(),
                   [&](Satellite &sat) {
                       const double lc = sat.getCharacteristicLength();
 
                       //Calculate the A/M value in [m^2/kg]
-                      const double areaToMassRatio = calculateAM(lc, generator);
+                      const double areaToMassRatio = calculateAM(lc);
 
                       //Calculate the are A in [m^2]
                       double area = 0;
@@ -82,9 +75,6 @@ void Breakup::areaToMassRatioDistribution() {
 }
 
 void Breakup::deltaVelocityDistribution(double factor, double offset) {
-    std::random_device rd;
-    std::mt19937 generator{rd()};
-
     std::for_each(_output.begin(),
                   _output.end(),
                   [&](Satellite &sat) {
@@ -93,10 +83,10 @@ void Breakup::deltaVelocityDistribution(double factor, double offset) {
                       const double mu = factor * chi + offset;
                       static constexpr double sigma = 0.4;
                       std::normal_distribution normalDistribution{mu, sigma};
-                      double velocity = std::pow(10, normalDistribution(generator));
+                      double velocity = std::pow(10, normalDistribution(_randomNumberGenerator));
 
                       //Transform the scalar velocity into an cartesian vector
-                      auto velocityVector = calculateVelocityVector(velocity, generator);
+                      auto velocityVector = calculateVelocityVector(velocity);
                       sat.setVelocity(velocityVector);
                   });
 }
@@ -105,7 +95,7 @@ void Breakup::finalize() {
     //TODO see header file
 }
 
-double Breakup::calculateAM(double characteristicLength, std::mt19937 &generator) {
+double Breakup::calculateAM(double characteristicLength) {
     using namespace util;
     const double logLc = std::log10(characteristicLength);
 
@@ -115,20 +105,20 @@ double Breakup::calculateAM(double characteristicLength, std::mt19937 &generator
         std::normal_distribution n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
         std::normal_distribution n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
 
-        areaToMassRatio = std::pow(10, alpha(_satType, logLc) * n1(generator) +
-                                       (1 - alpha(_satType, logLc)) * n2(generator));
+        areaToMassRatio = std::pow(10, alpha(_satType, logLc) * n1(_randomNumberGenerator) +
+                                       (1 - alpha(_satType, logLc)) * n2(_randomNumberGenerator));
     } else if (characteristicLength < 0.08) {   //Case smaller than 8 cm
         std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
 
-        areaToMassRatio = std::pow(10, n(generator));
+        areaToMassRatio = std::pow(10, n(_randomNumberGenerator));
     } else {                                    //Case between 8 cm and 11 cm
         std::normal_distribution n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
         std::normal_distribution n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
         std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
 
-        double y1 = std::pow(10, alpha(_satType, logLc) * n1(generator) +
-                                (1 - alpha(_satType, logLc)) * n2(generator));
-        double y0 = std::pow(10, n(generator));
+        double y1 = std::pow(10, alpha(_satType, logLc) * n1(_randomNumberGenerator) +
+                                (1 - alpha(_satType, logLc)) * n2(_randomNumberGenerator));
+        double y0 = std::pow(10, n(_randomNumberGenerator));
 
         areaToMassRatio = y0 + (characteristicLength - 0.08) * (y1 - y0) / (0.03);
     }
@@ -136,11 +126,11 @@ double Breakup::calculateAM(double characteristicLength, std::mt19937 &generator
     return areaToMassRatio;
 }
 
-std::array<double, 3> Breakup::calculateVelocityVector(double velocity, std::mt19937 &generator) {
+std::array<double, 3> Breakup::calculateVelocityVector(double velocity) {
     std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
 
-    double u = uniformRealDistribution(generator) * 2.0 - 1.0;
-    double theta = uniformRealDistribution(generator) * 2.0 * util::PI;
+    double u = uniformRealDistribution(_randomNumberGenerator) * 2.0 - 1.0;
+    double theta = uniformRealDistribution(_randomNumberGenerator) * 2.0 * util::PI;
     double v = std::sqrt(1.0 - u * u);
 
     return std::array<double, 3>
