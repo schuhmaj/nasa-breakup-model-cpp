@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <exception>
+#include <utility>
 #include "model/Satellite.h"
 #include "util/UtilityContainer.h"
 
@@ -16,8 +17,8 @@ public:
 
     using OutputWriter::OutputWriter;
 
-    explicit CSVWriter(const std::string &filename)
-        : _filename{filename} {}
+    explicit CSVWriter(std::string filename)
+        : _filename{std::move(filename)} {}
 
 
     void printResult(const std::vector<Satellite> &satelliteCollection) override;

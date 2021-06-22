@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <ostream>
+#include <utility>
 
 /**
  * Type of a Satellite
@@ -114,8 +115,8 @@ public:
     explicit Satellite(size_t id)
             : _id{id} {}
 
-    Satellite(const std::string &name, SatType satType)
-            : _name{name},
+    Satellite(std::string name, SatType satType)
+            : _name{std::move(name)},
               _satType{satType} {}
 
 

@@ -62,12 +62,12 @@ public:
 
     Breakup() = default;
 
-    explicit Breakup(const std::vector<Satellite> &input)
-            : _input{input},
+    explicit Breakup(std::vector<Satellite> input)
+            : _input{std::move(input)},
               _output{} {}
 
-    Breakup(const std::vector<Satellite> &input, double minimalCharacteristicLength)
-            : _input{input},
+    Breakup(std::vector<Satellite> input, double minimalCharacteristicLength)
+            : _input{std::move(input)},
               _minimalCharacteristicLength{minimalCharacteristicLength} {}
 
 

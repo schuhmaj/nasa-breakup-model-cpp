@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 #include <vector>
 #include <iostream>
 #include "model/Satellite.h"
@@ -16,11 +17,8 @@ protected:
 
 public:
 
-    explicit InputReader(const std::string &filename)
-            : _filename{filename} {}
-
-    explicit InputReader(std::string &&filename)
-            : _filename{filename} {}
+    explicit InputReader(std::string filename)
+            : _filename{std::move(filename)} {}
 
     virtual ~InputReader() = default;
 
