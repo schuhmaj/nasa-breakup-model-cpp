@@ -126,10 +126,10 @@ TEST_F(CSVWriterTest, DataCheck) {
         ASSERT_EQ(line.at(0), std::to_string(expectedID));
         ASSERT_EQ(line.at(1), expectedName);
         ASSERT_EQ(line.at(2), expectedType);
-        ASSERT_FLOAT_EQ(std::stod(line.at(3)), expectedCharacteristicLength);
-        ASSERT_FLOAT_EQ(std::stod(line.at(4)), expectedAM);
-        ASSERT_FLOAT_EQ(std::stod(line.at(5)), expectedArea);
-        ASSERT_FLOAT_EQ(std::stod(line.at(6)), expectedMass);
+        ASSERT_DOUBLE_EQ(std::stod(line.at(3)), expectedCharacteristicLength);
+        ASSERT_DOUBLE_EQ(std::stod(line.at(4)), expectedAM);
+        ASSERT_DOUBLE_EQ(std::stod(line.at(5)), expectedArea);
+        ASSERT_DOUBLE_EQ(std::stod(line.at(6)), expectedMass);
         ASSERT_EQ(line.at(7), expectedVelocity);
         ASSERT_EQ(line.at(8), expectedPosition);
         expectedID += 1;
