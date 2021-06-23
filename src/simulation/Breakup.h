@@ -196,6 +196,10 @@ public:
         return _maximalCharacteristicLength;
     }
 
+    size_t getCurrentMaxGivenId() const {
+        return _currentMaxGivenID;
+    }
+
 };
 
 
