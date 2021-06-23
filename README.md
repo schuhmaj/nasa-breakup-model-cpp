@@ -32,7 +32,7 @@ After the build, the simulation can be run by executing:
 The given yaml-file should look like this:
 
     minimalCharacteristicLength: 0.05 #minimal fragment L_c in [m]
-    simulationType: COLLISION         #COLLISION or EXPLOSION
+    simulationType: COLLISION         #Option (Alias): COLLISION (CO) or EXPLOSION (EX)
                                       #If not given type is determined
                                       # by number of input satellites 
     currentMaxID: 48514               #For determining fragment ID
@@ -47,7 +47,8 @@ If the "data.yaml" should have the following form (for example):
     satellites:
     - name: "Example Satellite"     #Optional
       id: 24946                     #A must e. g. NORAD Catalog ID)
-      satType: SPACECRAFT           #Optional (Default: SPACECRAFT)
+      satType: SPACECRAFT           #Optional (Default: SPACECRAFT); Option (Alias):
+                                    #SPACECRAFT (SC), ROCKET_BODY (RB), DEBRIS (DEB), UNKNOWN
       mass: 700.0                   #Either mass or area is a must
       area: 3.5                     #Mass in [kg], Area (Radar Cross Section) in [m^2]
       velocity: [1.0, 1.0, 1.0]     #The cartesian velcoity vector [m/s]

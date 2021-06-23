@@ -25,9 +25,9 @@ public:
 
     inline const static std::map<std::string, SimulationType> stringToSimulationType{
             {"COLLISION", SimulationType::COLLISION},
-            {"COL",       SimulationType::COLLISION},
+            {"CO",       SimulationType::COLLISION},
             {"EXPLOSION", SimulationType::EXPLOSION},
-            {"EXP",       SimulationType::EXPLOSION}
+            {"EX",       SimulationType::EXPLOSION}
     };
 
     virtual ~ConfigurationReader() = default;
