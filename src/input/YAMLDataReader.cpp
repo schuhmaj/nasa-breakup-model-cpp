@@ -12,7 +12,7 @@ std::vector<Satellite> YAMLDataReader::getSatelliteCollection() {
         return satelliteVector;
     }
 
-    if (file["satellites"]) {
+    if (file["satellites"] && file["satellites"].IsSequence()) {
         YAML::Node satellites{file["satellites"]};
         for (auto satNode : satellites) {
             try {

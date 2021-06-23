@@ -4,6 +4,7 @@
 #include <exception>
 
 #include "input/YAMLDataReader.h"
+#include "input/YAMLConfigurationReader.h"
 #include "simulation/BreakupFactory.h"
 #include "output/CSVWriter.h"
 
@@ -20,11 +21,14 @@ int main(int argc, char *argv[]) {
     //The fileName of the YAML file
     std::string fileName{argv[1]};
 
-    //The DataReader
-    auto inputSource = std::shared_ptr<DataReader>{new YAMLDataReader{fileName}};
+    //Load an Configuration Reader which contains the necessary config + data for the BreakupFactory
+    auto inputSource = std::shared_ptr<ConfigurationReader>{new YAMLConfigurationReader{fileName}};
+
+    //TODO Remove this step
+    auto inputData = inputSource->getDataReader();
 
     //The SimulationFactory which builds our breakup simulation
-    BreakupFactory breakupFactory{inputSource};
+    BreakupFactory breakupFactory{inputData};
 
     //Create and run the simulation or catch an exception in case something is wrong with the simulation
     try {
