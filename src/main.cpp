@@ -22,18 +22,15 @@ int main(int argc, char *argv[]) {
     std::string fileName{argv[1]};
 
     //Load an Configuration Reader which contains the necessary config + data for the BreakupFactory
-    auto inputSource = std::shared_ptr<ConfigurationReader>{new YAMLConfigurationReader{fileName}};
-
-    //TODO Remove this step
-    auto inputData = inputSource->getDataReader();
+    auto inputConfiguration = std::shared_ptr<ConfigurationReader>{new YAMLConfigurationReader{fileName}};
 
     //The SimulationFactory which builds our breakup simulation
-    BreakupFactory breakupFactory{inputData};
+    BreakupFactory breakupFactory{inputConfiguration};
 
     //Create and run the simulation or catch an exception in case something is wrong with the simulation
     try {
         //Creates and Runs the simulation
-        auto breakUpSimulation = breakupFactory.getBreakupTypeByInput();
+        auto breakUpSimulation = breakupFactory.getBreakup();
         breakUpSimulation->run();
 
         //Prints the the output to a CSV file

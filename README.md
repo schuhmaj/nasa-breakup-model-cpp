@@ -28,8 +28,21 @@ CMake and then follow these steps:
 After the build, the simulation can be run by executing:
 
     ./breakupModel [yaml-file]
-    
+
 The given yaml-file should look like this:
+
+    minimalCharacteristicLength: 0.05 #minimal fragment L_c in [m]
+    simulationType: COLLISION         #COLLISION or EXPLOSION
+                                      #If not given type is determined
+                                      # by number of input satellites 
+    currentMaxID: 48514               #For determining fragment ID
+                                      #Should be the currently largest given NORAD-Catalog ID
+                                      #If not given, zero is assumed
+    inputSource: ["../data.yaml"]     #Path to input file(s) - One of the following:
+                                      #1) ["data.yaml"]
+                                      #2) ["satcat.csv, "tle.txt"]
+    
+If the "data.yaml" should have the following form (for example):
 
     satellites:
     - name: "Example Satellite"     #Optional

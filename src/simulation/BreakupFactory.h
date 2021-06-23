@@ -2,8 +2,9 @@
 
 #include <memory>
 #include <exception>
+#include <iostream>
+#include "input/ConfigurationReader.h"
 #include "input/DataReader.h"
-#include "output/OutputWriter.h"
 #include "Breakup.h"
 #include "Explosion.h"
 #include "Collision.h"
@@ -13,44 +14,55 @@
  */
 class BreakupFactory {
 
-    std::shared_ptr<DataReader> _inputReader;
+    std::shared_ptr<ConfigurationReader> _configurationReader;
+
+    std::shared_ptr<DataReader> _dataReader;
 
 public:
 
-    explicit BreakupFactory(std::shared_ptr<DataReader> &inputReader)
-            : _inputReader{inputReader} {}
+    explicit BreakupFactory(std::shared_ptr<ConfigurationReader> &configurationReader)
+            : _configurationReader{configurationReader},
+              _dataReader{configurationReader->getDataReader()} {}
 
     /**
      * Adds an input source for the satellites.
-     * @param inputReader - a shared pointer to an input source
+     * @param configurationReader - a shared pointer to an input source
      * @return this
      */
-    BreakupFactory &changeInputSource(const std::shared_ptr<DataReader> &inputReader);
-
-    /**
-     * Creates a new Explosion Breakup Simulation with the given input.
-     * A explosion needs 1 satellite! Not more not less!
-     * @return Breakup Simulation
-     * @throws an invalid_argument exception if not exactly one satellite is in the input source
-     */
-    std::unique_ptr<Breakup> getExplosion() const;
-
-    /**
-     * Creates a new Collision Breakup Simulation with the given input.
-     * A collision needs 2 satellites! Not more not less!
-     * @return Breakup Simulation
-     * @throws an invalid_argument exception if not exactly two satellites are in the input source
-     */
-    std::unique_ptr<Breakup> getCollision() const;
+    BreakupFactory &changeConfiguration(const std::shared_ptr<ConfigurationReader> &configurationReader);
 
     /**
      * Creates a new Breakup Simulation with the given input.
      * Can either be a Collision or an Explosion depending on the satellite number in the SatelliteCollection.
-     * TODO REMOVE, Determine only by input!
+     * Three types of Input Specification are imaginable:<br>
+     * STRONG --> Specified type in config file & Satellite number are harmonic<br>
+     * WEAK   --> No specified input type, but Satellite number suggests a type (error message, but simulation continues)<br>
+     * NONE   --> No input type given, type cannot be derived from satellite number (throws exception)<br>
      * @return Breakup Simulation
-     * @throws an invalid_argument exception if zero or more than two satellites are in the input source
+     * @throws an invalid_argument exception if type is not determined
      */
-    std::unique_ptr<Breakup> getBreakupTypeByInput() const;
+    std::unique_ptr<Breakup> getBreakup() const;
 
 
+private:
+
+    /**
+     * Creates a Explosion Simulation.
+     * @param satelliteVector - std::vector<Satellite>
+     * @return a Explosion
+     */
+    inline std::unique_ptr<Breakup> createExplosion(std::vector<Satellite> &satelliteVector) const {
+        return std::make_unique<Explosion>(satelliteVector, _configurationReader->getMinimalCharacteristicLength(),
+                                           _configurationReader->getCurrentMaximalGivenID());
+    }
+
+    /**
+     * Creates a Collision Simulation.
+     * @param satelliteVector - std::vector<Satellite>
+     * @return a Collision
+     */
+    inline std::unique_ptr<Breakup> createCollision(std::vector<Satellite> &satelliteVector) const {
+        return std::make_unique<Collision>(satelliteVector, _configurationReader->getMinimalCharacteristicLength(),
+                                           _configurationReader->getCurrentMaximalGivenID());
+    }
 };
