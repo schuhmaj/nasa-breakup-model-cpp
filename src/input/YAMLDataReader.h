@@ -3,19 +3,24 @@
 #include <fstream>
 #include <exception>
 #include <vector>
+#include <utility>
+#include <iostream>
 #include "yaml-cpp/yaml.h"
-#include "InputReader.h"
+#include "input/DataReader.h"
 #include "model/Satellite.h"
 #include "model/SatelliteBuilder.h"
 
 /**
  * Reads Satellites from an YAML file.
  */
-class YAMLReader : public InputReader {
+class YAMLDataReader : public DataReader {
+
+    const std::string _filename;
 
 public:
 
-    using InputReader::InputReader;
+    explicit YAMLDataReader(std::string filename)
+        : _filename{std::move(filename)} {}
 
     /**
      * Returns a SatelliteCollection. Satellites are read from the YAML file.<br>

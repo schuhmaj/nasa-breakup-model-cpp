@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <exception>
-#include "input/InputReader.h"
+#include "input/DataReader.h"
 #include "output/OutputWriter.h"
 #include "Breakup.h"
 #include "Explosion.h"
@@ -13,11 +13,11 @@
  */
 class BreakupFactory {
 
-    std::shared_ptr<InputReader> _inputReader;
+    std::shared_ptr<DataReader> _inputReader;
 
 public:
 
-    explicit BreakupFactory(std::shared_ptr<InputReader> &inputReader)
+    explicit BreakupFactory(std::shared_ptr<DataReader> &inputReader)
             : _inputReader{inputReader} {}
 
     /**
@@ -25,7 +25,7 @@ public:
      * @param inputReader - a shared pointer to an input source
      * @return this
      */
-    BreakupFactory &changeInputSource(const std::shared_ptr<InputReader> &inputReader);
+    BreakupFactory &changeInputSource(const std::shared_ptr<DataReader> &inputReader);
 
     /**
      * Creates a new Explosion Breakup Simulation with the given input.

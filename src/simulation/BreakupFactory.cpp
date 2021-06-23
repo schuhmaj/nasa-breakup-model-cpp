@@ -1,6 +1,6 @@
 #include "BreakupFactory.h"
 
-BreakupFactory &BreakupFactory::changeInputSource(const std::shared_ptr<InputReader> &inputReader) {
+BreakupFactory &BreakupFactory::changeInputSource(const std::shared_ptr<DataReader> &inputReader) {
     _inputReader = inputReader;
     return *this;
 }

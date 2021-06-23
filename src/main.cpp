@@ -3,7 +3,7 @@
 #include <memory>
 #include <exception>
 
-#include "input/YAMLReader.h"
+#include "input/YAMLDataReader.h"
 #include "simulation/BreakupFactory.h"
 #include "output/CSVWriter.h"
 
@@ -20,8 +20,8 @@ int main(int argc, char *argv[]) {
     //The fileName of the YAML file
     std::string fileName{argv[1]};
 
-    //The InputReader
-    auto inputSource = std::shared_ptr<InputReader>{new YAMLReader{fileName}};
+    //The DataReader
+    auto inputSource = std::shared_ptr<DataReader>{new YAMLDataReader{fileName}};
 
     //The SimulationFactory which builds our breakup simulation
     BreakupFactory breakupFactory{inputSource};

@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 #include <array>
-#include "input/YAMLReader.h"
+#include "input/YAMLDataReader.h"
 
 
 class YAMLReaderTest : public ::testing::Test {
@@ -50,7 +50,7 @@ protected:
  * Checks if the file "resources/getSatelliteCollectionTest.yaml" is correctly read in
  */
 TEST_F(YAMLReaderTest, getSatelliteCollectionTest) {
-    YAMLReader yamlReader{"resources/getSatelliteCollectionTest.yaml"};
+    YAMLDataReader yamlReader{"resources/getSatelliteCollectionTest.yaml"};
     auto satelliteCollection = yamlReader.getSatelliteCollection();
 
     ASSERT_EQ(satelliteCollection.size(), 4);

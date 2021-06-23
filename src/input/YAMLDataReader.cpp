@@ -1,6 +1,6 @@
-#include "YAMLReader.h"
+#include "YAMLDataReader.h"
 
-std::vector<Satellite> YAMLReader::getSatelliteCollection() {
+std::vector<Satellite> YAMLDataReader::getSatelliteCollection() {
     std::vector<Satellite> satelliteVector{};
     SatelliteBuilder satelliteBuilder{};
     YAML::Node file{};
@@ -25,7 +25,7 @@ std::vector<Satellite> YAMLReader::getSatelliteCollection() {
     return satelliteVector;
 }
 
-Satellite YAMLReader::parseSatellite(SatelliteBuilder &satelliteBuilder, const YAML::Node& node) {
+Satellite YAMLDataReader::parseSatellite(SatelliteBuilder &satelliteBuilder, const YAML::Node& node) {
     satelliteBuilder.reset();
     if (node["id"]) {
         satelliteBuilder.setID(node["id"].as<unsigned long>());
