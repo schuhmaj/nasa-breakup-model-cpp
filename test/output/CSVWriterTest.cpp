@@ -17,9 +17,10 @@ protected:
     virtual void SetUp() {
         double area = 1.0;
         double mass = 100;
+        double id = 0;
         _satelliteCollection.resize(static_cast<size_t>(4), Satellite("DebrisTestFragment", SatType::DEBRIS));
         for (auto &sat : _satelliteCollection) {
-            sat.setId(++Satellite::currentMaxGivenID);
+            sat.setId(++id);
             sat.setCharacteristicLength(0.25);
             sat.setArea(area);
             sat.setMass(mass);
@@ -32,7 +33,6 @@ protected:
     }
 
     virtual void TearDown() {
-        Satellite::currentMaxGivenID = 0;
         _satelliteCollection.clear();
         try {
             std::filesystem::remove(_filePath);

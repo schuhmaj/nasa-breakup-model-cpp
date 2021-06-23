@@ -38,11 +38,10 @@ TEST_F(SatelliteBuilderTest, Sat1_Sputnik_1_Test) {
     EXPECT_EQ(sat.getName(), "Sputnik 1");
     EXPECT_EQ(sat.getSatType(), SatType::SPACECRAFT);
 
-    //Only mass is set, no area or L_c are determined by it
-    //TODO Review in Builder and maybe change here
+    //Mass is set area and L_c are determined by it
     EXPECT_EQ(sat.getMass(), 83);
-    EXPECT_EQ(sat.getArea(), -1);
-    EXPECT_EQ(sat.getCharacteristicLength(), -1);
+    EXPECT_NEAR(sat.getArea(), 1.2598, 0.001);
+    EXPECT_NEAR(sat.getCharacteristicLength(), 1.2665, 0.001);
 
     EXPECT_EQ(sat.getVelocity(), _array123);
     EXPECT_EQ(sat.getPosition(), _array000);

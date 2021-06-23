@@ -5,6 +5,8 @@
 #include <string>
 #include <ostream>
 #include <utility>
+#include <cmath>
+#include "util/UtilityKepler.h"
 
 /**
  * Type of a Satellite
@@ -112,6 +114,33 @@ public:
     Satellite(std::string name, SatType satType)
             : _name{std::move(name)},
               _satType{satType} {}
+
+    /**
+     * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
+     * This function sets the internal members _velocity and _position to the corresponding values.
+     * @param a - semir-major axis [m]
+     * @param e - eccentricity
+     * @param i - inclination [rad]
+     * @param W - longitude of the ascending node (big omega) [rad]
+     * @param w - argument of periapsis (small omega) [rad]
+     * @param EA - eccentric Anomaly [rad]
+     * @note Code taken and adapted
+     * from pykep (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/par2ic.hpp)
+     * [23.06.2021]
+     */
+    void keplerToCartesianEA(double a, double e, double i, double W, double w, double EA);
+
+    /**
+     * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
+     * This function sets the internal members _velocity and _position to the corresponding values.
+     * @param a - semir-major axis [m]
+     * @param e - eccentricity
+     * @param i - inclination [rad]
+     * @param W - longitude of the ascending node (big omega) [rad]
+     * @param w - argument of periapsis (small omega) [rad]
+     * @param MA - mean Anomaly [rad]
+     */
+    void keplerToCartesianMA(double a, double e, double i, double W, double w, double MA);
 
 
     /**
