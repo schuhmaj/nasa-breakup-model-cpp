@@ -35,6 +35,15 @@ protected:
     double _maximalCharacteristicLength{};
 
     /**
+     * The Breakup simulation will assign each satellite, created after setting this, an ID greater than this number.
+     * ID will be unique if _currentMaxGivenID is set to the current maximal given NORAD-Catalog ID.
+     * @note Default value is zero which could led to confusion because those numbers directly after zero are already
+     * assigned to existing satellites. Nevertheless the simulation never uses those IDs, so this value is only a
+     * MUST if the users wants to work with valid satellite IDs beyond the Breakup simulation.
+     */
+    size_t _currentMaxGivenID{0};
+
+    /**
      * Member which is required to choose the correct Distribution function for the A/M values.
      * This value is set during the run of the simulation.
      */
@@ -68,7 +77,12 @@ public:
 
     Breakup(std::vector<Satellite> input, double minimalCharacteristicLength)
             : _input{std::move(input)},
-              _minimalCharacteristicLength{minimalCharacteristicLength} {}
+              _minimalCharacteristicLength{minimalCharacteristicLength} {};
+
+    Breakup(std::vector<Satellite> input, double minimalCharacteristicLength, size_t currentMaxGivenID)
+            : _input{std::move(input)},
+              _minimalCharacteristicLength{minimalCharacteristicLength},
+              _currentMaxGivenID{currentMaxGivenID} {}
 
 
     virtual ~Breakup() = default;

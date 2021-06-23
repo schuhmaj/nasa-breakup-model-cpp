@@ -27,7 +27,7 @@ void Breakup::init() {
 void inline Breakup::createFragments(size_t fragmentCount, const std::string &debrisName) {
     _output.resize(fragmentCount, Satellite(debrisName, SatType::DEBRIS));
     std::for_each(_output.begin(), _output.end(),
-                  [](Satellite &sat) {sat.setId(++Satellite::currentMaxGivenID);});
+                  [&](Satellite &sat) {sat.setId(++_currentMaxGivenID);});
 }
 
 void Breakup::characteristicLengthDistribution(double powerLawExponent) {
