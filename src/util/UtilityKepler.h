@@ -69,5 +69,4 @@ namespace util {
         return EA - e * sin(EA);
     }
 
-
 }
