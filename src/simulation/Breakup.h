@@ -107,7 +107,7 @@ protected:
      * @param debrisName - the name for the fragments
      * @attention Implemented in the base class, called by the subclasses with their parameters
      */
-    virtual void createFragments(double fragmentCount, const std::string &debrisName);
+    virtual void createFragments(size_t fragmentCount, const std::string &debrisName);
 
     /**
      * Creates the Size Distribution. After the fragments are generated this method will assign

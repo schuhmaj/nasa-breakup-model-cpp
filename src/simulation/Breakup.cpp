@@ -24,8 +24,8 @@ void Breakup::init() {
     _randomNumberGenerator = std::mt19937{rd()};
 }
 
-void inline Breakup::createFragments(double fragmentCount, const std::string &debrisName) {
-    _output.resize(static_cast<size_t>(fragmentCount), Satellite(debrisName, SatType::DEBRIS));
+void inline Breakup::createFragments(size_t fragmentCount, const std::string &debrisName) {
+    _output.resize(fragmentCount, Satellite(debrisName, SatType::DEBRIS));
     std::for_each(_output.begin(), _output.end(),
                   [](Satellite &sat) {sat.setId(++Satellite::currentMaxGivenID);});
 }
