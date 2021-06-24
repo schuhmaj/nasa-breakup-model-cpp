@@ -19,6 +19,7 @@ void CSVWriter::printResult(const Breakup &breakup) {
 
 void CSVWriter::csvLine(std::ostream &ostream, const Satellite &satellite) {
     using util::operator<<;
+    ostream.precision(17);
     ostream << satellite.getId() << ','
             << satellite.getName() << ','
             << satellite.getSatType() << ','
