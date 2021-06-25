@@ -49,9 +49,9 @@ protected:
 
     /**
      * The random number generator, used by the implementation.
-     * It is correctly initialized by the init method with a random seed each time before the simulation runs.
+     * It is default initialized with a random seed when the Breakup is constructed.
      */
-    std::mt19937 _randomNumberGenerator{};
+    std::mt19937 _randomNumberGenerator{std::random_device{}()};
 
     /**
      * Contains the input satellites. Normally the fragmentCount for this collection is either one (explosion) or
@@ -99,13 +99,27 @@ public:
         return _output;
     }
 
+    /**
+     * This method allows to set the seed of the random number generator to generate predictable fragments when
+     * the run method is called.
+     * @param seed
+     * @return this
+     */
+    virtual Breakup &setSeed(unsigned long seed);
+
+    /**
+    * This method reinitialize the random number generator of this Breakup to use a randomly generated seed.
+     * @return this
+    */
+    virtual Breakup &setRandom();
+
 protected:
 
     /**
      * This method contains every step required to re-run the simulation.
      * The method for example resets the _output's size to zero.
      */
-    virtual void init();
+    virtual void prepare();
 
     /**
      * Creates the a number of fragments, following the Equation 2 for Explosions and

@@ -2,7 +2,7 @@
 
 void Breakup::run() {
     //1. Step: Remove all old stuff which there possible is and makes the Breakup ready to go
-    this->init();
+    this->prepare();
 
     //2. Step: Generate the new Satellites
     this->generateFragments();
@@ -18,10 +18,18 @@ void Breakup::run() {
 
 }
 
-void Breakup::init() {
+Breakup &Breakup::setSeed(unsigned long seed) {
+    _randomNumberGenerator = std::mt19937{seed};
+    return *this;
+}
+
+Breakup &Breakup::setRandom() {
+    _randomNumberGenerator = std::mt19937{std::random_device{}()};
+    return *this;
+}
+
+void Breakup::prepare() {
     _output.clear();
-    std::random_device rd;
-    _randomNumberGenerator = std::mt19937{rd()};
 }
 
 void inline Breakup::createFragments(size_t fragmentCount, const std::string &debrisName) {
