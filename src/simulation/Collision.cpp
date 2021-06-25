@@ -27,6 +27,8 @@ void Collision::generateFragments() {
     double dv = euclideanNorm(sat1.getVelocity() - sat2.getVelocity());
 
     //Calculate the Catastrophic Ratio, if greater than 40 J/kg then we have an catastrophic collision
+    //A catastrophic collision means that both satellites are fully fragmented whereas in a non-catastrophic collision
+    //only the smaller satellite is fragmented (see here Section: Collision in [johnson et al.]
     double catastrophicRatio = (sat2.getMass() * dv * dv) / (2 * sat1.getMass() * 1000);
     if (catastrophicRatio < 40) {
         _isCatastrophic = false;
