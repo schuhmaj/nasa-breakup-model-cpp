@@ -20,15 +20,13 @@ class Breakup {
 protected:
 
     /**
-     * The minimal characteristic length. The Breakup Simulation will only produce fragments
-     * greater or equal this fragmentCount.
-     * It is given in [m]
-     * TODO Better integration program flow!!!!
+     * The minimal characteristic length in [m]
+     * The Breakup Simulation will only produce fragments greater or equal this fragmentCount.
      */
     const double _minimalCharacteristicLength{0.05};
 
     /**
-     * The maximal characteristic length.
+     * The maximal characteristic length in [m]
      * The value is set during the run of the simulation and derived
      * from the input satellites (the max L_c of them).
      */
