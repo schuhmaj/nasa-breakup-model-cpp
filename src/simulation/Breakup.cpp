@@ -78,7 +78,7 @@ void Breakup::deltaVelocityDistribution(double factor, double offset) {
     std::for_each(_output.begin(),
                   _output.end(),
                   [&](Satellite &sat) {
-                      //Calculates the the velocity as an scalar based on Equation 11/ 12
+                      //Calculates the velocity as an scalar based on Equation 11/ 12
                       const double chi = log10(sat.getAreaToMassRatio());
                       const double mu = factor * chi + offset;
                       static constexpr double sigma = 0.4;
