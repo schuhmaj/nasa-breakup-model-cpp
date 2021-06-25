@@ -95,7 +95,7 @@ public:
      * Return the result of the breakup event
      * @return SatelliteCollection with the generated fragments
      */
-    const std::vector<Satellite> &getResult() const {
+    std::vector<Satellite> getResult() const {
         return _output;
     }
 
@@ -159,12 +159,6 @@ protected:
      * @param offset - on top of the chi
      */
     virtual void deltaVelocityDistribution(double factor, double offset);
-
-    /**
-     * TODO Remember vel/pos TO Kep should be implemented in the Satellite Class, NOT HERE!!!!
-     * Optional method which assigns every Satellite their Keplerian Elements.
-     */
-    virtual void finalize();
 
 private:
 

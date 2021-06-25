@@ -91,10 +91,6 @@ void Breakup::deltaVelocityDistribution(double factor, double offset) {
                   });
 }
 
-void Breakup::finalize() {
-    //TODO see header file
-}
-
 double Breakup::calculateAM(double characteristicLength) {
     using namespace util;
     const double logLc = std::log10(characteristicLength);
