@@ -12,8 +12,8 @@ https://1drv.ms/u/s!Ag_epLxb0vqqgc53PKGgT8J1CdzrtQ?e=U2JT9E
 
 ### Requirements
 The project uses the following dependencies:
-- GoogleTest (Only required for Testing, Automatically set-up by CMake)
-- yaml-cpp (Required for Input, Automatically set-up by CMake)
+- GoogleTest-1.10.0 (Only required for Testing, Automatically set-up by CMake)
+- yaml-cpp-0.6.3 (Required for Input, Automatically set-up by CMake)
 
 ### Build
 The program is build by using CMake. So first make sure that you installed
