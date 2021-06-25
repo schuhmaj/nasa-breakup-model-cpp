@@ -7,6 +7,7 @@
 #include <utility>
 #include <cmath>
 #include "util/UtilityKepler.h"
+#include "util/UtilityContainer.h"
 
 /**
  * Type of a Satellite
@@ -142,6 +143,43 @@ public:
      */
     void keplerToCartesianMA(double a, double e, double i, double W, double w, double MA);
 
+    /**
+     * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
+     * This function sets the internal members _velocity and _position to the corresponding values.
+     * @param a - semir-major axis [m]
+     * @param e - eccentricity
+     * @param i - inclination [rad]
+     * @param W - longitude of the ascending node (big omega) [rad]
+     * @param w - argument of periapsis (small omega) [rad]
+     * @param TA - true Anomaly [rad]
+     */
+    void keplerToCartesianTA(double a, double e, double i, double W, double w, double TA);
+
+    /**
+     * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
+     * @return an array consisting of the six Keplerian Elements in the following order [a, e, i, W, w, EA] where
+     * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
+     * w = argument of periapsis [rad]; EA = eccentric Anomaly [rad]
+     * @note Code taken and adapted from pykep
+     * (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/ic2par.hpp) [25.06.2021]
+     */
+    std::array<double, 6> cartesianToKeplerEA();
+
+    /**
+    * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
+    * @return an array consisting of the six Keplerian Elements in the following order [a, e, i, W, w, MA] where
+    * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
+    * w = argument of periapsis [rad]; MA = mean Anomaly [rad]
+    */
+    std::array<double, 6> cartesianToKeplerMA();
+
+    /**
+    * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
+    * @return an array consisting of the six Keplerian Elements in the following order [a, e, i, W, w, TA] where
+    * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
+    * w = argument of periapsis [rad]; TA = true Anomaly [rad]
+    */
+    std::array<double, 6> cartesianToKeplerTA();
 
     /**
      * Compares two Satellites by comparing their IDs.

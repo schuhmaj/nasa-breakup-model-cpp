@@ -95,6 +95,105 @@ void Satellite::keplerToCartesianMA(double a, double e, double i, double W, doub
     keplerToCartesianEA(a, e, i, W, w, EA);
 }
 
+void Satellite::keplerToCartesianTA(double a, double e, double i, double W, double w, double TA) {
+    double EA = util::trueAnomalyToEccentricAnomaly(TA, e);
+    keplerToCartesianEA(a, e, i, W, w, EA);
+}
+
+std::array<double, 6> Satellite::cartesianToKeplerEA() {
+    using namespace util;
+    std::array<double, 6> keplerianElements{};
+
+    std::array<double, 3> k = {0.0, 0.0, 1.0};
+    // build generic arrays to size - init values don't matter:
+    std::array<double, 3> h = {0.0, 0.0, 0.0};
+    std::array<double, 3> Dum_Vec = {0.0, 0.0, 0.0};
+    std::array<double, 3> n = {0.0, 0.0, 0.0};
+    std::array<double, 3> evett = {0.0, 0.0, 0.0};
+
+    double p = 0.0;
+    double temp = 0.0;
+    double R0, ni;
+    int i;
+
+    /// 1 - We compute h: the orbital angular momentum vector
+    h = cross(_position, _velocity);
+
+    /// 2 - We compute p: the orbital parameter
+    p = dot(h, h) / GRAVITATIONAL_PARAMETER_EARTH; // h^2 / mu
+
+    /// 3 - We compute n: the vector of the node line
+    /// This operation is singular when inclination is zero, in which case the orbital parameters
+    /// are not defined
+    n = cross(k, h);
+    n = n / euclideanNorm(n); // vers(x, y) = unit vector of y -> x
+
+    /// 4 - We compute evett: the eccentricity vector
+    R0 = euclideanNorm(_position);
+    Dum_Vec = cross(_velocity, h);
+    /*TODO Remove when tested and solution right
+    for (i = 0; i < 3; i++)
+        evett[i] = Dum_Vec[i] / GRAVITATIONAL_PARAMETER_EARTH - _position[i] / R0;
+    */
+    evett = Dum_Vec / GRAVITATIONAL_PARAMETER_EARTH - _position / R0;
+
+    /// The eccentricity is calculated and stored as the second orbital element
+    keplerianElements[1] = euclideanNorm(evett);
+
+    /// The semi-major axis (positive quantity) is calculated and stored as the first orbital element
+    keplerianElements[0] = std::abs(p / (1 - keplerianElements[1] * keplerianElements[1]));
+
+    /// Inclination is calculated and stored as the third orbital element
+    keplerianElements[2] = acos(h[2] / euclideanNorm(h));
+
+    /// Argument of pericentrum is calculated and stored as the fifth orbital element
+    temp = dot(n, evett);
+    keplerianElements[4] = acos(temp / keplerianElements[1]);
+    if (evett[2] < 0) {
+        keplerianElements[4] = 2 * M_PI - keplerianElements[4];
+    }
+
+    /// Argument of longitude is calculated and stored as the fourth orbital element
+    keplerianElements[3] = acos(n[0]);
+    if (n[1] < 0) {
+        keplerianElements[3] = 2 * M_PI - keplerianElements[3];
+    }
+
+    temp = dot(evett, _position);
+
+    /// 4 - We compute ni: the true anomaly (in 0, 2*PI)
+    ni = acos(temp / keplerianElements[1] / R0);
+
+    temp = dot(_position, _velocity);
+
+    if (temp < 0.0) {
+        ni = 2 * M_PI - ni;
+    }
+
+    /// Eccentric anomaly or the gudermannian is calculated and stored as the sixth orbital element
+    if (keplerianElements[1] < 1.0) {
+        keplerianElements[5] = 2.0 * atan(sqrt((1 - keplerianElements[1]) / (1 + keplerianElements[1])) *
+                                          tan(ni / 2.0)); // algebraic kepler's equation
+    } else {
+        keplerianElements[5] = 2.0 * atan(sqrt((keplerianElements[1] - 1) / (keplerianElements[1] + 1))
+                                          * tan(ni /
+                                                2.0)); // algebraic equivalent of kepler's equation in terms of the Gudermannian
+    }
+    return keplerianElements;
+}
+
+std::array<double, 6> Satellite::cartesianToKeplerMA() {
+    auto kepler = cartesianToKeplerEA();
+    kepler[5] = util::eccentricAnomalyToMeanAnomaly(kepler[5], kepler[1]);
+    return kepler;
+}
+
+std::array<double, 6> Satellite::cartesianToKeplerTA() {
+    auto kepler = cartesianToKeplerEA();
+    kepler[5] = util::eccentricAnomalyToTrueAnomaly(kepler[5], kepler[1]);
+    return kepler;
+}
+
 std::ostream &operator<<(std::ostream &os, const Satellite &satellite) {
     //TODO Rework later
     return os << "ID:\t" << satellite._id << "\n"

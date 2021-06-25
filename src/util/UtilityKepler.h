@@ -69,4 +69,24 @@ namespace util {
         return EA - e * sin(EA);
     }
 
+    /**
+     * Converts the True Anomaly to the Eccentric Anomaly.
+     * @param TA - True Anomaly [rad]
+     * @param e  - eccentricity
+     * @return Eccentric Anomaly in [rad]
+     */
+    inline double trueAnomalyToEccentricAnomaly(double TA, double e) {
+        return asin((sqrt(1 - e * e) * sin(TA)) / (1 + e * cos(TA)));
+    }
+
+    /**
+     * Converts the Eccentric Anomaly to the True Anomaly.
+     * @param EA - Eccentric Anomaly [rad]
+     * @param e  - eccentricity
+     * @return True Anomaly in [rad]
+     */
+    inline double eccentricAnomalyToTrueAnomaly(double EA, double e) {
+        return acos((cos(EA) - e) / (1 - e * cos(EA)));
+    }
+
 }
