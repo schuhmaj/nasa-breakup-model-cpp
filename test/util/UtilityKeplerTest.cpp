@@ -37,14 +37,14 @@ TEST_P(UtilityKeplerTest, trueAnomalyToEccentricAnomaly){
 }
 
 /**
- * Returns a vector containing all possible angles in [rad] in the interval [0.0, 2pi[ with spacing 0.1;
- * @return an vector containing 63 values from 0.0 to 6.2
+ * Returns a vector containing all possible angles in [rad] in the interval [0.0, pi[ with spacing 0.1;
+ * @return an vector containing 63 values from 0.0 to 3.1
  */
 std::vector<double> radValues() {
     std::vector<double> val{};
     val.reserve(63);
     double d = 0.0;
-    while (d < 2 * util::PI) {
+    while (d < util::PI) {
         val.push_back(d);
         d += 0.1;
     }

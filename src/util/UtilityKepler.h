@@ -24,14 +24,14 @@ namespace util {
 
         // With the eccentric anomaly (EA)
         inline double kepE(double EA, double MA, double eccentricity) {
-            return (EA - eccentricity * sin(EA) - MA);
+            return (EA - eccentricity * std::sin(EA) - MA);
         }
 
         inline double d_kepE(double EA, double eccentricity) {
-            return (1 - eccentricity * cos(EA));
+            return (1 - eccentricity * std::cos(EA));
         }
 
-        inline double newton_raphson(double EA, double MA, double e) {
+        inline double newtonRaphson(double EA, double MA, double e) {
             int max_loop = 100;
             double term;
             // double start = x; //DS: unused
@@ -41,7 +41,7 @@ namespace util {
                 EA = EA - term;
             }
                 // check if term is within required accuracy or loop limit is exceeded
-            while ((fabs(term / std::max(std::fabs(EA), 1.)) > accuracy) && (--max_loop));
+            while ((std::fabs(term / std::max(std::fabs(EA), 1.)) > accuracy) && (--max_loop));
             return EA;
         }
 
@@ -55,8 +55,8 @@ namespace util {
      */
     inline double meanAnomalyToEccentricAnomaly(double MA, double e) {
         using namespace detail;
-        double EA = MA + e * sin(MA);
-        return newton_raphson(EA, MA, e);
+        double EA = MA + e * std::sin(MA);
+        return newtonRaphson(EA, MA, e);
     }
 
     /**
@@ -66,7 +66,7 @@ namespace util {
      * @return Mean Anomaly in [rad]
      */
     inline double eccentricAnomalyToMeanAnomaly(double EA, double e) {
-        return EA - e * sin(EA);
+        return EA - e * std::sin(EA);
     }
 
     /**
@@ -76,7 +76,7 @@ namespace util {
      * @return Eccentric Anomaly in [rad]
      */
     inline double trueAnomalyToEccentricAnomaly(double TA, double e) {
-        return asin((sqrt(1 - e * e) * sin(TA)) / (1 + e * cos(TA)));
+        return 2 * std::atan(std::sqrt((1 - e) / (1 + e)) * std::tan(TA / 2));
     }
 
     /**
@@ -86,7 +86,7 @@ namespace util {
      * @return True Anomaly in [rad]
      */
     inline double eccentricAnomalyToTrueAnomaly(double EA, double e) {
-        return acos((cos(EA) - e) / (1 - e * cos(EA)));
+        return 2 * std::atan(std::sqrt((1 + e) / (1 - e)) * std::tan(EA / 2));
     }
 
 }
