@@ -70,7 +70,6 @@ SatelliteBuilder &SatelliteBuilder::setMassByArea(double area) {
 }
 
 SatelliteBuilder &SatelliteBuilder::setVelocity(const std::array<double, 3> &velocity) {
-    //TODO Similiar handling to mass? Or integrate Keplerian Elements into Satellite Model?
     _satellite.setVelocity(velocity);
     _hasVelocity = true;
     return *this;
@@ -82,10 +81,27 @@ SatelliteBuilder &SatelliteBuilder::setPosition(const std::array<double, 3> &pos
     return *this;
 }
 
-SatelliteBuilder &SatelliteBuilder::setKeplerianElements() {
-    //TODO Insert pykep Utilisation here to convert Keplerian Elements to Velocity vector
+SatelliteBuilder &
+SatelliteBuilder::setKeplerianElementsEA(double a, double e, double i, double W, double w, double EA) {
     _hasVelocity = true;
     _hasPosition = true;
+    _satellite.keplerToCartesianEA(a, e, i, W, w, EA);
+    return *this;
+}
+
+SatelliteBuilder &
+SatelliteBuilder::setKeplerianElementsMA(double a, double e, double i, double W, double w, double MA) {
+    _hasVelocity = true;
+    _hasPosition = true;
+    _satellite.keplerToCartesianMA(a, e, i, W, w, MA);
+    return *this;
+}
+
+SatelliteBuilder &
+SatelliteBuilder::setKeplerianElementsTA(double a, double e, double i, double W, double w, double TA) {
+    _hasVelocity = true;
+    _hasPosition = true;
+    _satellite.keplerToCartesianTA(a, e, i, W, w, TA);
     return *this;
 }
 

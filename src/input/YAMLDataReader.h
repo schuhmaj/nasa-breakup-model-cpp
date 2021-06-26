@@ -20,7 +20,7 @@ class YAMLDataReader : public DataReader {
 public:
 
     explicit YAMLDataReader(std::string filename)
-        : _filename{std::move(filename)} {}
+            : _filename{std::move(filename)} {}
 
     /**
      * Returns a SatelliteCollection. Satellites are read from the YAML file.<br>
@@ -37,13 +37,21 @@ public:
 private:
 
     /**
-     * Parses a satellite from a given YAMl Node.
+     * Parses a satellite from a given YAML Node.
      * @param satelliteBuilder - an reference to an SatelliteBuilder
      * @param node - an reference to an YAML Node
      * @return a new Satellite
      * @throws an invalid_argument exception if the satellite is invalid
      */
-    static Satellite parseSatellite(SatelliteBuilder &satelliteBuilder, const YAML::Node& node);
+    static Satellite parseSatellite(SatelliteBuilder &satelliteBuilder, const YAML::Node &node);
+
+    /**
+     * Parses the Keplerian Elements from a YAML Node.
+     * @param satelliteBuilder - an reference to an SatelliteBuilder
+     * @param node - an reference to an YAML Node, containing the Keplerian Elements
+     * @note This method is used by the parseSatellite(SatelliteBuilder&, YAML::Node&) method
+     */
+    static void parseKepler(SatelliteBuilder &satelliteBuilder, const YAML::Node &node);
 
 };
 
