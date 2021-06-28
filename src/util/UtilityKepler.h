@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include "util/UtilityFunctions.h"
 
 /*
  * Functions adapted from pykep:
@@ -87,6 +88,18 @@ namespace util {
      */
     inline double eccentricAnomalyToTrueAnomaly(double EA, double e) {
         return 2 * std::atan(std::sqrt((1 + e) / (1 - e)) * std::tan(EA / 2));
+    }
+
+    /**
+     * Transforms the mean Motion to the semi major axis.
+     * The mean motion in the TLE format is given in [rev/day]
+     * @param meanMotion in [rev/day] (1 rev/day = 2*pi/86400 rad/s)
+     * @return semi major axis in [m]
+     */
+    inline double meanMotionToSemiMajorAxis(double meanMotion) {
+        //GRAVITATIONAL_PARAMETER_EARTH^(1/3)
+        static constexpr double thirdRoot = 73594.59595000199;
+        return thirdRoot / std::pow(2 * PI / 86400, 2 / 3);
     }
 
 }
