@@ -129,11 +129,13 @@ protected:
 
     /**
      * Actually creates the fragments (Resizes the vector and assigns a unique ID and name to each fragment)
+     * Further the position vector is correctly set. This one is derived from the parents.
      * @param fragmentCount - the number of fragments which should be created
      * @param debrisName - the name for the fragments
-     * @attention Implemented in the base class, called by the subclasses with their parameters
+     * @param position - position of the fragment, derived from the one parent (explosion) or from first parent (collision)
      */
-    virtual void createFragments(size_t fragmentCount, const std::string &debrisName);
+    virtual void inline
+    createFragments(size_t fragmentCount, const std::string &debrisName, const std::array<double, 3> &position);
 
     /**
      * Creates the Size Distribution. After the fragments are generated this method will assign

@@ -32,8 +32,9 @@ void Breakup::prepare() {
     _output.clear();
 }
 
-void inline Breakup::createFragments(size_t fragmentCount, const std::string &debrisName) {
-    _output.resize(fragmentCount, Satellite(debrisName, SatType::DEBRIS));
+void inline
+Breakup::createFragments(size_t fragmentCount, const std::string &debrisName, const std::array<double, 3> &position) {
+    _output.resize(fragmentCount, Satellite(debrisName, SatType::DEBRIS), position);
     std::for_each(_output.begin(), _output.end(),
                   [&](Satellite &sat) {sat.setId(++_currentMaxGivenID);});
 }

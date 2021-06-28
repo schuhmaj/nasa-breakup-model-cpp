@@ -90,12 +90,6 @@ class Satellite {
      */
     std::array<double, 3> _position{};
 
-
-    /* TODO Subclass to add Keplerian Elements only if they are given, no memory overhead or Factory/ Builder before?
-     * Implement Keplerian Elements --> v, r
-     * Not necessarily required for the simulation (only in case of non-catastrophic collision)
-     */
-
 public:
 
     /**
@@ -116,6 +110,11 @@ public:
     Satellite(std::string name, SatType satType)
             : _name{std::move(name)},
               _satType{satType} {}
+
+    Satellite(std::string name, SatType satType, std::array<double, 3> position)
+            : _name{std::move(name)},
+              _satType{satType},
+              _position{position} {}
 
     /**
      * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
