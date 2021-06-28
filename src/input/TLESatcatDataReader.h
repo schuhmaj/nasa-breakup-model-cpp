@@ -2,6 +2,7 @@
 
 #include "input/DataSource.h"
 #include "input/CSVReader.h"
+#include "input/TLEReader.h"
 
 /**
  * Class which reads data from a tle.txt and a satcat.csv
@@ -11,7 +12,12 @@ class TLESatcatDataReader : public DataSource {
     /**
      * Delegation to read the satcat.csv
      */
-    CSVReader _csvReader;
+    CSVReader _satcatReader;
+
+    /**
+     * Delegation to read the tle.txt
+     */
+    TLEReader _tleReader;
 
 public:
 

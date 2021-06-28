@@ -2,18 +2,18 @@
 
 
 std::vector<std::vector<std::string>> CSVReader::getLines() {
-    //Open file stream
-    std::ifstream file{_filename};
+    //Open fileStream stream
+    std::ifstream fileStream{_filename};
     std::vector<std::vector<std::string>> lines{};
 
-    //Skip header if the file has a header
+    //Skip header if the fileStream has a header
     if (_hasHeader) {
-        nextLine(file);
+        nextLine(fileStream);
     }
 
     //Read row by row
-    while (!file.eof()) {
-        lines.push_back(nextLine(file));
+    while (!fileStream.eof()) {
+        lines.push_back(nextLine(fileStream));
     }
 
     return lines;
