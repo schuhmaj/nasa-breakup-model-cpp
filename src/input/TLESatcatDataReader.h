@@ -1,12 +1,12 @@
 #pragma once
 
-#include "input/DataReader.h"
+#include "input/DataSource.h"
 #include "input/CSVReader.h"
 
 /**
  * Class which reads data from a tle.txt and a satcat.csv
  */
-class TLESatcatDataReader : public DataReader {
+class TLESatcatDataReader : public DataSource {
 
     /**
      * Delegation to read the satcat.csv

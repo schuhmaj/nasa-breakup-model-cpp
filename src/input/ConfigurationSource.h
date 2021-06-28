@@ -5,7 +5,7 @@
 #include <iostream>
 #include <map>
 #include "yaml-cpp/yaml.h"
-#include "input/DataReader.h"
+#include "input/DataSource.h"
 
 /**
  * (Expressive) Return type for getTypeOfSimulation.
@@ -19,7 +19,7 @@ enum class SimulationType {
  * Provides methods to get config data, like minimal L_c, type of simulation, maximal given NORAD-ID or
  * the source file(s) for Satellite Data.
  */
-class ConfigurationReader {
+class ConfigurationSource {
 
 public:
 
@@ -30,7 +30,7 @@ public:
             {"EX",       SimulationType::EXPLOSION}
     };
 
-    virtual ~ConfigurationReader() = default;
+    virtual ~ConfigurationSource() = default;
 
     /**
      * Returns the minimal characteristic Length for fragments later created by the Breakup Simulation.
@@ -53,9 +53,9 @@ public:
     virtual size_t getCurrentMaximalGivenID() = 0;
 
     /**
-     * Returns an DataReader which has the ability to return an vector of satellites.
-     * @return DataReader as shared pointer if it is wished to (re-)use in an object-oriented purpose
+     * Returns an DataSource which has the ability to return an vector of satellites.
+     * @return DataSource as shared pointer if it is wished to (re-)use in an object-oriented purpose
      */
-    virtual std::shared_ptr<DataReader> getDataReader() = 0;
+    virtual std::shared_ptr<DataSource> getDataReader() = 0;
 
 };

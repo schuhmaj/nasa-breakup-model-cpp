@@ -11,7 +11,7 @@ double YAMLConfigurationReader::getMinimalCharacteristicLength() {
 SimulationType YAMLConfigurationReader::getTypeOfSimulation() {
     if (_file["simulationType"]) {
         try {
-            SimulationType simulationType = ConfigurationReader::stringToSimulationType.at(
+            SimulationType simulationType = ConfigurationSource::stringToSimulationType.at(
                     _file["simulationType"].as<std::string>());
             return simulationType;
         } catch (std::exception &e) {
@@ -30,7 +30,7 @@ size_t YAMLConfigurationReader::getCurrentMaximalGivenID() {
     }
 }
 
-std::shared_ptr<DataReader> YAMLConfigurationReader::getDataReader() {
+std::shared_ptr<DataSource> YAMLConfigurationReader::getDataReader() {
     std::vector<std::string> fileNames{};
     if (_file["inputSource"] && _file["inputSource"].IsSequence()) {
         for (auto inputSource : _file["inputSource"]) {

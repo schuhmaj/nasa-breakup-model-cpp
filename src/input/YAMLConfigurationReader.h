@@ -2,13 +2,13 @@
 
 #include <utility>
 #include <exception>
-#include "input/ConfigurationReader.h"
+#include "input/ConfigurationSource.h"
 #include "input/YAMLDataReader.h"
 
 /**
  * Reads the breakup simulation configuration data from an YAML file.
  */
-class YAMLConfigurationReader : public ConfigurationReader {
+class YAMLConfigurationReader : public ConfigurationSource {
 
     const YAML::Node _file;
 
@@ -45,11 +45,11 @@ public:
     size_t getCurrentMaximalGivenID() override;
 
     /**
-     * Returns an DataReader which has the ability to return an vector of satellites.
-     * @return DataReader as shared pointer if it is wished to (re-)use in an object-oriented purpose
+     * Returns an DataSource which has the ability to return an vector of satellites.
+     * @return DataSource as shared pointer if it is wished to (re-)use in an object-oriented purpose
      * @throws an Exception if not given because not data == no simulation possible
      */
-    std::shared_ptr<DataReader> getDataReader() override;
+    std::shared_ptr<DataSource> getDataReader() override;
 
 };
 

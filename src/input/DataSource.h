@@ -8,11 +8,11 @@
  * Pure virtual Interface for Data Input.
  * Provides methods to get satellites from an specific input file.
  */
-class DataReader {
+class DataSource {
 
 public:
 
-    virtual ~DataReader() = default;
+    virtual ~DataSource() = default;
 
     /**
      * Returns a satellite collection. Input form varies depending on subclass

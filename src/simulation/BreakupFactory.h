@@ -3,8 +3,8 @@
 #include <memory>
 #include <exception>
 #include <iostream>
-#include "input/ConfigurationReader.h"
-#include "input/DataReader.h"
+#include "input/ConfigurationSource.h"
+#include "input/DataSource.h"
 #include "Breakup.h"
 #include "Explosion.h"
 #include "Collision.h"
@@ -14,13 +14,13 @@
  */
 class BreakupFactory {
 
-    std::shared_ptr<ConfigurationReader> _configurationReader;
+    std::shared_ptr<ConfigurationSource> _configurationReader;
 
-    std::shared_ptr<DataReader> _dataReader;
+    std::shared_ptr<DataSource> _dataReader;
 
 public:
 
-    explicit BreakupFactory(std::shared_ptr<ConfigurationReader> &configurationReader)
+    explicit BreakupFactory(std::shared_ptr<ConfigurationSource> &configurationReader)
             : _configurationReader{configurationReader},
               _dataReader{configurationReader->getDataReader()} {}
 
@@ -29,7 +29,7 @@ public:
      * @param configurationReader - a shared pointer to an input source
      * @return this
      */
-    BreakupFactory &changeConfiguration(const std::shared_ptr<ConfigurationReader> &configurationReader);
+    BreakupFactory &changeConfiguration(const std::shared_ptr<ConfigurationSource> &configurationReader);
 
     /**
      * Creates a new Breakup Simulation with the given input.

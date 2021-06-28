@@ -6,14 +6,14 @@
 #include <utility>
 #include <iostream>
 #include "yaml-cpp/yaml.h"
-#include "input/DataReader.h"
+#include "input/DataSource.h"
 #include "model/Satellite.h"
 #include "model/SatelliteBuilder.h"
 
 /**
  * Reads Satellites from an YAML file.
  */
-class YAMLDataReader : public DataReader {
+class YAMLDataReader : public DataSource {
 
     const std::string _filename;
 
