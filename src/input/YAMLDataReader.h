@@ -15,12 +15,15 @@
  */
 class YAMLDataReader : public DataSource {
 
-    const std::string _filename;
+    const YAML::Node _file;
 
 public:
 
-    explicit YAMLDataReader(std::string filename)
-            : _filename{std::move(filename)} {}
+    explicit YAMLDataReader(const std::string &filename)
+            : _file{YAML::LoadFile(filename)} {}
+
+    explicit YAMLDataReader(std::string &&filename)
+            : _file{YAML::LoadFile(filename)} {}
 
     /**
      * Returns a SatelliteCollection. Satellites are read from the YAML file.<br>

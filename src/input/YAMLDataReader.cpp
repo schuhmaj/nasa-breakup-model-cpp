@@ -3,17 +3,9 @@
 std::vector<Satellite> YAMLDataReader::getSatelliteCollection() {
     std::vector<Satellite> satelliteVector{};
     SatelliteBuilder satelliteBuilder{};
-    YAML::Node file{};
 
-    try {
-        file = YAML::LoadFile(_filename);
-    } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        return satelliteVector;
-    }
-
-    if (file["satellites"] && file["satellites"].IsSequence()) {
-        YAML::Node satellites{file["satellites"]};
+    if (_file["satellites"] && _file["satellites"].IsSequence()) {
+        YAML::Node satellites{_file["satellites"]};
         for (auto satNode : satellites) {
             try {
                 satelliteVector.push_back(parseSatellite(satelliteBuilder, satNode));
