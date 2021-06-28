@@ -19,7 +19,7 @@ const std::map<SatType, std::string> Satellite::satTypeToString{{SatType::SPACEC
                                                                 {SatType::UNKNOWN,     "UNKNOWN"}
 };
 
-void Satellite::keplerToCartesianEA(double a, double e, double i, double W, double w, double EA) {
+void Satellite::setCartesianByKeplerEA(double a, double e, double i, double W, double w, double EA) {
     using util::GRAVITATIONAL_PARAMETER_EARTH;
     double b, n, xper, yper, xdotper, ydotper;
     double R[3][3];
@@ -90,17 +90,17 @@ void Satellite::keplerToCartesianEA(double a, double e, double i, double W, doub
     }
 }
 
-void Satellite::keplerToCartesianMA(double a, double e, double i, double W, double w, double MA) {
+void Satellite::setCartesianByKeplerMA(double a, double e, double i, double W, double w, double MA) {
     double EA = util::meanAnomalyToEccentricAnomaly(MA, e);
-    keplerToCartesianEA(a, e, i, W, w, EA);
+    setCartesianByKeplerEA(a, e, i, W, w, EA);
 }
 
-void Satellite::keplerToCartesianTA(double a, double e, double i, double W, double w, double TA) {
+void Satellite::setCartesianByKeplerTA(double a, double e, double i, double W, double w, double TA) {
     double EA = util::trueAnomalyToEccentricAnomaly(TA, e);
-    keplerToCartesianEA(a, e, i, W, w, EA);
+    setCartesianByKeplerEA(a, e, i, W, w, EA);
 }
 
-std::array<double, 6> Satellite::cartesianToKeplerEA() {
+std::array<double, 6> Satellite::getKeplerEA() {
     using namespace util;
     std::array<double, 6> keplerianElements{};
 
@@ -182,14 +182,14 @@ std::array<double, 6> Satellite::cartesianToKeplerEA() {
     return keplerianElements;
 }
 
-std::array<double, 6> Satellite::cartesianToKeplerMA() {
-    auto kepler = cartesianToKeplerEA();
+std::array<double, 6> Satellite::getKeplerMA() {
+    auto kepler = getKeplerEA();
     kepler[5] = util::eccentricAnomalyToMeanAnomaly(kepler[5], kepler[1]);
     return kepler;
 }
 
-std::array<double, 6> Satellite::cartesianToKeplerTA() {
-    auto kepler = cartesianToKeplerEA();
+std::array<double, 6> Satellite::getKeplerTA() {
+    auto kepler = getKeplerEA();
     kepler[5] = util::eccentricAnomalyToTrueAnomaly(kepler[5], kepler[1]);
     return kepler;
 }

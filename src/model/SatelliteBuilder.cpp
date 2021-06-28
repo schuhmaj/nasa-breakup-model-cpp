@@ -85,7 +85,7 @@ SatelliteBuilder &
 SatelliteBuilder::setKeplerianElementsEA(double a, double e, double i, double W, double w, double EA) {
     _hasVelocity = true;
     _hasPosition = true;
-    _satellite.keplerToCartesianEA(a, e, i, W, w, EA);
+    _satellite.setCartesianByKeplerEA(a, e, i, W, w, EA);
     return *this;
 }
 
@@ -93,7 +93,7 @@ SatelliteBuilder &
 SatelliteBuilder::setKeplerianElementsMA(double a, double e, double i, double W, double w, double MA) {
     _hasVelocity = true;
     _hasPosition = true;
-    _satellite.keplerToCartesianMA(a, e, i, W, w, MA);
+    _satellite.setCartesianByKeplerMA(a, e, i, W, w, MA);
     return *this;
 }
 
@@ -101,7 +101,7 @@ SatelliteBuilder &
 SatelliteBuilder::setKeplerianElementsTA(double a, double e, double i, double W, double w, double TA) {
     _hasVelocity = true;
     _hasPosition = true;
-    _satellite.keplerToCartesianTA(a, e, i, W, w, TA);
+    _satellite.setCartesianByKeplerTA(a, e, i, W, w, TA);
     return *this;
 }
 

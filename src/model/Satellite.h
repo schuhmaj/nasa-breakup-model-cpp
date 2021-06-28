@@ -86,6 +86,7 @@ class Satellite {
      * The cartesian position vector [m]
      * @note Directly given as input parameter
      * @note Derived from the Keplerian elements
+     * @remark Determined by the breakup simulation, more precisely inherited from parent
      */
     std::array<double, 3> _position{};
 
@@ -129,7 +130,7 @@ public:
      * from pykep (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/par2ic.hpp)
      * [23.06.2021]
      */
-    void keplerToCartesianEA(double a, double e, double i, double W, double w, double EA);
+    void setCartesianByKeplerEA(double a, double e, double i, double W, double w, double EA);
 
     /**
      * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
@@ -141,7 +142,7 @@ public:
      * @param w - argument of periapsis (small omega) [rad]
      * @param MA - mean Anomaly [rad]
      */
-    void keplerToCartesianMA(double a, double e, double i, double W, double w, double MA);
+    void setCartesianByKeplerMA(double a, double e, double i, double W, double w, double MA);
 
     /**
      * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
@@ -153,7 +154,7 @@ public:
      * @param w - argument of periapsis (small omega) [rad]
      * @param TA - true Anomaly [rad]
      */
-    void keplerToCartesianTA(double a, double e, double i, double W, double w, double TA);
+    void setCartesianByKeplerTA(double a, double e, double i, double W, double w, double TA);
 
     /**
      * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
@@ -163,7 +164,7 @@ public:
      * @note Code taken and adapted from pykep
      * (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/ic2par.hpp) [25.06.2021]
      */
-    std::array<double, 6> cartesianToKeplerEA();
+    std::array<double, 6> getKeplerEA();
 
     /**
     * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
@@ -171,7 +172,7 @@ public:
     * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
     * w = argument of periapsis [rad]; MA = mean Anomaly [rad]
     */
-    std::array<double, 6> cartesianToKeplerMA();
+    std::array<double, 6> getKeplerMA();
 
     /**
     * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
@@ -179,7 +180,7 @@ public:
     * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
     * w = argument of periapsis [rad]; TA = true Anomaly [rad]
     */
-    std::array<double, 6> cartesianToKeplerTA();
+    std::array<double, 6> getKeplerTA();
 
     /**
      * Compares two Satellites by comparing their IDs.
