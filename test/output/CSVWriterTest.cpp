@@ -9,6 +9,7 @@
 #include <iostream>
 #include "output/CSVWriter.h"
 #include "model/Satellite.h"
+#include "input/CSVReader.h"
 
 class CSVWriterTest : public ::testing::Test {
 
@@ -47,26 +48,6 @@ protected:
 
 };
 
-/**
- * Parses a Line from an CSV file istream and returns the cells stored in a vector.
- * @note Adapted from https://stackoverflow.com/questions/1120140/how-can-i-read-and-parse-csv-files-in-c [22.06.2021]
- * @param istream - the input stream
- * @return a vector containing the cells of the csv line
- */
-std::vector<std::string> getNextCSVLine(std::istream &istream) {
-    std::string line;
-    std::getline(istream, line);
-    std::stringstream lineStream{line};
-
-    std::vector<std::string> result{};
-    std::string cell;
-    while(std::getline(lineStream, cell, ',')) {
-        result.push_back(cell);
-    }
-
-    return result;
-}
-
 TEST_F(CSVWriterTest, FileCreation) {
     CSVWriter csvWriter{_filePath};
 
@@ -82,9 +63,9 @@ TEST_F(CSVWriterTest, HeaderCheck) {
 
     csvWriter.printResult(_satelliteCollection);
 
-    std::ifstream csvFile{_filePath};
+    CSVReader csvReader{_filePath, true};
 
-    auto header = getNextCSVLine(csvFile);
+    auto header = csvReader.getHeader();
 
     ASSERT_EQ(header.at(0), "ID");
     ASSERT_EQ(header.at(1), "Name");
@@ -96,7 +77,6 @@ TEST_F(CSVWriterTest, HeaderCheck) {
     ASSERT_EQ(header.at(7), "Velocity [m/s]");
     ASSERT_EQ(header.at(8), "Position [m]");
 
-    csvFile.close();
 }
 
 TEST_F(CSVWriterTest, DataCheck) {
@@ -104,10 +84,7 @@ TEST_F(CSVWriterTest, DataCheck) {
 
     csvWriter.printResult(_satelliteCollection);
 
-    std::ifstream csvFile{_filePath};
-
-    //Skip Header
-    getNextCSVLine(csvFile);
+    CSVReader csvReader{_filePath, true};
 
     size_t expectedID = 1;
     const std::string expectedName{"DebrisTestFragment"};
@@ -119,23 +96,22 @@ TEST_F(CSVWriterTest, DataCheck) {
     const std::string expectedVelocity{"{1; 2; 3}"};
     const std::string expectedPosition{"{0; 0; 0}"};
 
-
+    auto lines = csvReader.getLines();
+    auto line = lines.begin();
     for (auto &sat : _satelliteCollection) {
-        auto line = getNextCSVLine(csvFile);
-
-        ASSERT_EQ(line.at(0), std::to_string(expectedID));
-        ASSERT_EQ(line.at(1), expectedName);
-        ASSERT_EQ(line.at(2), expectedType);
-        ASSERT_DOUBLE_EQ(std::stod(line.at(3)), expectedCharacteristicLength);
-        ASSERT_DOUBLE_EQ(std::stod(line.at(4)), expectedAM);
-        ASSERT_DOUBLE_EQ(std::stod(line.at(5)), expectedArea);
-        ASSERT_DOUBLE_EQ(std::stod(line.at(6)), expectedMass);
-        ASSERT_EQ(line.at(7), expectedVelocity);
-        ASSERT_EQ(line.at(8), expectedPosition);
+        ASSERT_EQ(line->at(0), std::to_string(expectedID));
+        ASSERT_EQ(line->at(1), expectedName);
+        ASSERT_EQ(line->at(2), expectedType);
+        ASSERT_DOUBLE_EQ(std::stod(line->at(3)), expectedCharacteristicLength);
+        ASSERT_DOUBLE_EQ(std::stod(line->at(4)), expectedAM);
+        ASSERT_DOUBLE_EQ(std::stod(line->at(5)), expectedArea);
+        ASSERT_DOUBLE_EQ(std::stod(line->at(6)), expectedMass);
+        ASSERT_EQ(line->at(7), expectedVelocity);
+        ASSERT_EQ(line->at(8), expectedPosition);
         expectedID += 1;
         expectedArea += 1.0;
         expectedMass += 100.0;
-    }
 
-    csvFile.close();
+        ++line;
+    }
 }
