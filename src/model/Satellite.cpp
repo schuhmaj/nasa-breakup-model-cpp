@@ -6,11 +6,14 @@ std::ostream &operator<<(std::ostream &os, SatType satType) {
 
 const std::map<std::string, SatType> Satellite::stringToSatType{{"SPACECRAFT",  SatType::SPACECRAFT},
                                                                 {"SC",          SatType::SPACECRAFT},
+                                                                {"PAY",          SatType::SPACECRAFT},
                                                                 {"ROCKET_BODY", SatType::ROCKET_BODY},
                                                                 {"RB",          SatType::ROCKET_BODY},
+                                                                {"R/B",          SatType::ROCKET_BODY},
                                                                 {"DEBRIS",      SatType::DEBRIS},
                                                                 {"DEB",         SatType::DEBRIS},
-                                                                {"UNKNOWN",     SatType::UNKNOWN}
+                                                                {"UNKNOWN",     SatType::UNKNOWN},
+                                                                {"UNK",         SatType::UNKNOWN}
 };
 
 const std::map<SatType, std::string> Satellite::satTypeToString{{SatType::SPACECRAFT,  "SPACECRAFT"},

@@ -48,28 +48,28 @@ private:
     bool readCell(std::istream &istream, double &value) {
         std::string cell;
         std::getline(istream, cell, ',');
-        value = std::stod(cell);
+        value = cell.empty() ? 0 : std::stod(cell);
         return true;
     }
 
     bool readCell(std::istream &istream, float &value) {
         std::string cell;
         std::getline(istream, cell, ',');
-        value = std::stof(cell);
+        value = cell.empty() ? 0 : std::stof(cell);
         return true;
     }
 
     bool readCell(std::istream &istream, int &value) {
         std::string cell;
         std::getline(istream, cell, ',');
-        value = std::stoi(cell);
+        value = cell.empty() ? 0 : std::stoi(cell);
         return true;
     }
 
     bool readCell(std::istream &istream, long &value) {
         std::string cell;
         std::getline(istream, cell, ',');
-        value = std::stol(cell);
+        value = cell.empty() ? 0 : std::stol(cell);
         return true;
     }
 
@@ -160,7 +160,7 @@ public:
                 }
             }
         } catch (std::exception &e) {
-            throw std::invalid_argument{"CSV file is corrupt!"};
+            throw std::invalid_argument{e.what()};
         }
 
         return lines;

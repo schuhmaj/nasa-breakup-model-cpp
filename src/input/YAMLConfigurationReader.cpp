@@ -44,10 +44,10 @@ std::shared_ptr<DataSource> YAMLConfigurationReader::getDataReader() {
     } else if (fileNames.size() == 2) {
         //fileName.csv (should be satcat) && fileName.txt (should be tle)
         if (fileNames[0].find(".csv") && fileNames[1].find(".txt")){
-            //TODO
+            return std::make_shared<TLESatcatDataReader>(fileNames[0], fileNames[1]);
         //fileName.tle (should be tle) && fileName.csv (should be satcat)
         } else if (fileNames[0].find(".txt") && fileNames[1].find(".csv")) {
-            //TODO
+            return std::make_shared<TLESatcatDataReader>(fileNames[1], fileNames[0]);
         }
     } else {
         throw std::invalid_argument{"Data file input is not correctly set-up!"};

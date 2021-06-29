@@ -4,6 +4,7 @@
 #include <exception>
 #include "input/ConfigurationSource.h"
 #include "input/YAMLDataReader.h"
+#include "input/TLESatcatDataReader.h"
 
 /**
  * Reads the breakup simulation configuration data from an YAML file.

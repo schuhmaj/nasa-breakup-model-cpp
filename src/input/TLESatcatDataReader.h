@@ -1,9 +1,14 @@
 #pragma once
 
 #include <string>
+#include <map>
+#include <tuple>
+#include <cmath>
 #include "input/DataSource.h"
 #include "input/CSVReader.h"
 #include "input/TLEReader.h"
+#include "model/Satellite.h"
+#include "model/SatelliteBuilder.h"
 
 /**
  * Class which reads data from a tle.txt and a satcat.csv
@@ -12,9 +17,15 @@ class TLESatcatDataReader : public DataSource {
 
     /**
      * Delegation to read the satcat.csv
+     * Important fields for the Breakup Simulation are:<br>
+     * 1-Name, 3-ID, 4-Object-Type, 14-RCS
+     * <br><br>
+     * Otherwise these are all the fields available (in order of appearance):<br>
+     * name, identifier, id, type, statusCode, owner, launchDate, launchSite, decayDate, period,
+     * inclination, apogee, perigee, rcs, dataStatusCode, orbitCenter, OrbitType
      */
     CSVReader<std::string, std::string, size_t,
-    std::string, std::string, std::string, std::string, std::string, std::string,
+    SatType, std::string, std::string, std::string, std::string, std::string,
     double, double, double, double, double,
     std::string, std::string, std::string> _satcatReader;
 
@@ -36,6 +47,14 @@ public:
      * @return a Collection of Satellites
      */
     std::vector<Satellite> getSatelliteCollection() override;
+
+private:
+
+    /**
+     * Returns a mapping of satellites ID to its name, type and Radar Cross Section (RCS) in [m^2]
+     * @return mapping <ID, infos>
+     */
+    std::map<size_t ,std::tuple<std::string, SatType, double>> getSatcatMapping();
 
 };
 
