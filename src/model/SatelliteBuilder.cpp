@@ -82,26 +82,33 @@ SatelliteBuilder &SatelliteBuilder::setPosition(const std::array<double, 3> &pos
 }
 
 SatelliteBuilder &
-SatelliteBuilder::setKeplerianElementsEA(double a, double e, double i, double W, double w, double EA) {
+SatelliteBuilder::setKeplerianElementsEA(const std::array<double, 6> &keplerianElements) {
     _hasVelocity = true;
     _hasPosition = true;
-    _satellite.setCartesianByKeplerEA(a, e, i, W, w, EA);
+    _satellite.setCartesianByKeplerEA(keplerianElements);
     return *this;
 }
 
 SatelliteBuilder &
-SatelliteBuilder::setKeplerianElementsMA(double a, double e, double i, double W, double w, double MA) {
+SatelliteBuilder::setKeplerianElementsMA(const std::array<double, 6> &keplerianElements) {
     _hasVelocity = true;
     _hasPosition = true;
-    _satellite.setCartesianByKeplerMA(a, e, i, W, w, MA);
+    _satellite.setCartesianByKeplerMA(keplerianElements);
     return *this;
 }
 
 SatelliteBuilder &
-SatelliteBuilder::setKeplerianElementsTA(double a, double e, double i, double W, double w, double TA) {
+SatelliteBuilder::setKeplerianElementsTA(const std::array<double, 6> &keplerianElements) {
     _hasVelocity = true;
     _hasPosition = true;
-    _satellite.setCartesianByKeplerTA(a, e, i, W, w, TA);
+    _satellite.setCartesianByKeplerTA(keplerianElements);
+    return *this;
+}
+
+SatelliteBuilder &SatelliteBuilder::setKeplerianElementsTLEFormat(const std::array<double, 6> &keplerianElements) {
+    _hasVelocity = true;
+    _hasPosition = true;
+    _satellite.setCartesianByKeplerTLEFormat(keplerianElements);
     return *this;
 }
 

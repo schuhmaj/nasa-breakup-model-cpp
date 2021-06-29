@@ -49,21 +49,22 @@ Satellite YAMLDataReader::parseSatellite(SatelliteBuilder &satelliteBuilder, con
 void YAMLDataReader::parseKepler(SatelliteBuilder &satelliteBuilder, const YAML::Node &node) {
     if (node["semi-major-axis"] && node["eccentricity"] && node["inclination"]
         && node["longitude-of-the-ascending-node"] && node["argument-of-periapsis"]) {
-        auto a = node["semi-major-axis"].as<double>();
-        auto e = node["eccentricity"].as<double>();
-        auto i = node["inclination"].as<double>();
-        auto W = node["longitude-of-the-ascending-node"].as<double>();
-        auto w = node["argument-of-periapsis"].as<double>();
+        std::array<double, 6> keplerianElements{};
+        keplerianElements[0] = node["semi-major-axis"].as<double>();
+        keplerianElements[1] = node["eccentricity"].as<double>();
+        keplerianElements[2] = node["inclination"].as<double>();
+        keplerianElements[3] = node["longitude-of-the-ascending-node"].as<double>();
+        keplerianElements[4] = node["argument-of-periapsis"].as<double>();
 
         if (node["eccentric-anomaly"]) {
-            auto EA = node["eccentric-anomaly"].as<double>();
-            satelliteBuilder.setKeplerianElementsEA(a, e, i, W, w, EA);
+            keplerianElements[5] = node["eccentric-anomaly"].as<double>();
+            satelliteBuilder.setKeplerianElementsEA(keplerianElements);
         } else if (node["mean-anomaly"]) {
-            auto MA = node["mean-anomaly"].as<double>();
-            satelliteBuilder.setKeplerianElementsMA(a, e, i, W, w, MA);
+            keplerianElements[5] = node["mean-anomaly"].as<double>();
+            satelliteBuilder.setKeplerianElementsMA(keplerianElements);
         } else if (node["true-anomaly"]) {
-            auto TA = node["true-anomaly"].as<double>();
-            satelliteBuilder.setKeplerianElementsTA(a, e, i, W, w, TA);
+            keplerianElements[5] = node["true-anomaly"].as<double>();
+            satelliteBuilder.setKeplerianElementsTA(keplerianElements);
         } else {
             throw std::invalid_argument{"You have to give at least one of the following orbital Anomalies"
                                         "Eccentric Anomaly > Mean Anomaly > True Anomaly [in the order how the"

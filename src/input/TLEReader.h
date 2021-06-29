@@ -4,6 +4,7 @@
 #include <array>
 #include <vector>
 #include <string>
+#include <sstream>
 #include <fstream>
 
 /**
@@ -38,7 +39,7 @@ private:
      * @param istream - the input stream
      * @return a pair of <ID, KeplerElements>
      */
-    std::pair<size_t, std::array<double, 6>> getTwoLine(std::istream &istream);
+    static std::pair<size_t, std::array<double, 6>> getTwoLine(std::istream &istream);
 
 };
 

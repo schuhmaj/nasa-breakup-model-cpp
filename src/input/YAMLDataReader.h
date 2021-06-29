@@ -3,6 +3,7 @@
 #include <fstream>
 #include <exception>
 #include <vector>
+#include <array>
 #include <utility>
 #include <iostream>
 #include "yaml-cpp/yaml.h"

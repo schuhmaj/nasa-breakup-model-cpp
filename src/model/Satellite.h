@@ -159,6 +159,19 @@ public:
     void setCartesianByKeplerTA(const std::array<double, 6> &keplerianElements);
 
     /**
+    * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
+    * This function sets the internal members _velocity and _position to the corresponding values.
+    * @param keplerianElements array holds the arguments in the following order:
+    * @param mm - mean motion [revolutions/day]
+    * @param e - eccentricity
+    * @param i - inclination [rad]
+    * @param W - longitude of the ascending node (big omega) [rad]
+    * @param w - argument of periapsis (small omega) [rad]
+    * @param MA - Mean Anomaly [rad]
+    */
+    void setCartesianByKeplerTLEFormat(const std::array<double, 6> &keplerianElements);
+
+    /**
      * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
      * @return an array consisting of the six Keplerian Elements in the following order [a, e, i, W, w, EA] where
      * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];

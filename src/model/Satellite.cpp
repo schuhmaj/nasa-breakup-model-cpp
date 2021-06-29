@@ -101,13 +101,19 @@ void Satellite::setCartesianByKeplerEA(const std::array<double, 6> &keplerianEle
 void Satellite::setCartesianByKeplerMA(const std::array<double, 6> &keplerianElements) {
     std::array<double, 6> keplerianElementsEA {keplerianElements};
     keplerianElementsEA[5] = util::meanAnomalyToEccentricAnomaly(keplerianElements[5], keplerianElements[1]);
-    setCartesianByKeplerEA(keplerianElementsEA);
+    this->setCartesianByKeplerEA(keplerianElementsEA);
 }
 
 void Satellite::setCartesianByKeplerTA(const std::array<double, 6> &keplerianElements) {
     std::array<double, 6> keplerianElementsEA {keplerianElements};
     keplerianElementsEA[5] = util::trueAnomalyToEccentricAnomaly(keplerianElements[5], keplerianElements[1]);
-    setCartesianByKeplerEA(std::array<double, 6>());
+    this->setCartesianByKeplerEA(keplerianElementsEA);
+}
+
+void Satellite::setCartesianByKeplerTLEFormat(const std::array<double, 6> &keplerianElements) {
+    std::array<double, 6> keplerianElementsMA {keplerianElements};
+    keplerianElementsMA[0] = util::meanMotionToSemiMajorAxis(keplerianElements[0]);
+    this->setCartesianByKeplerMA(keplerianElementsMA);
 }
 
 std::array<double, 6> Satellite::getKeplerEA() {

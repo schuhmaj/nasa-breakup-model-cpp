@@ -19,8 +19,6 @@ class TLESatcatDataReader : public DataSource {
      */
     TLEReader _tleReader;
 
-    //TODO Add map to filter for specific IDs
-
 public:
 
     /**
