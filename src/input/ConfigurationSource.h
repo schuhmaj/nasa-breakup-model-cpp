@@ -4,6 +4,8 @@
 #include <memory>
 #include <iostream>
 #include <map>
+#include <set>
+#include <optional>
 #include "yaml-cpp/yaml.h"
 #include "input/DataSource.h"
 
@@ -57,5 +59,14 @@ public:
      * @return DataSource as shared pointer if it is wished to (re-)use in an object-oriented purpose
      */
     virtual std::shared_ptr<DataSource> getDataReader() = 0;
+
+    /**
+     * Returns a set of IDs. This set defines which Satellites should be used from the satellite collection.
+     * Default implemented: It does not return any Satellites --> no filter
+     * @return optional containing a filter-set or not
+     */
+    virtual std::optional<std::set<size_t>> getIDSelection() {
+        return std::nullopt;
+    }
 
 };
