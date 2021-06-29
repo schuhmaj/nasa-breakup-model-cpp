@@ -119,6 +119,7 @@ public:
     /**
      * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
      * This function sets the internal members _velocity and _position to the corresponding values.
+     * @param keplerianElements array holds the arguments in the following order:
      * @param a - semir-major axis [m]
      * @param e - eccentricity
      * @param i - inclination [rad]
@@ -129,11 +130,12 @@ public:
      * from pykep (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/par2ic.hpp)
      * [23.06.2021]
      */
-    void setCartesianByKeplerEA(double a, double e, double i, double W, double w, double EA);
+    void setCartesianByKeplerEA(const std::array<double, 6> &keplerianElements);
 
     /**
      * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
      * This function sets the internal members _velocity and _position to the corresponding values.
+     * @param keplerianElements array holds the arguments in the following order:
      * @param a - semir-major axis [m]
      * @param e - eccentricity
      * @param i - inclination [rad]
@@ -141,11 +143,12 @@ public:
      * @param w - argument of periapsis (small omega) [rad]
      * @param MA - mean Anomaly [rad]
      */
-    void setCartesianByKeplerMA(double a, double e, double i, double W, double w, double MA);
+    void setCartesianByKeplerMA(const std::array<double, 6> &keplerianElements);
 
     /**
      * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
      * This function sets the internal members _velocity and _position to the corresponding values.
+     * @param keplerianElements array holds the arguments in the following order:
      * @param a - semir-major axis [m]
      * @param e - eccentricity
      * @param i - inclination [rad]
@@ -153,7 +156,7 @@ public:
      * @param w - argument of periapsis (small omega) [rad]
      * @param TA - true Anomaly [rad]
      */
-    void setCartesianByKeplerTA(double a, double e, double i, double W, double w, double TA);
+    void setCartesianByKeplerTA(const std::array<double, 6> &keplerianElements);
 
     /**
      * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.

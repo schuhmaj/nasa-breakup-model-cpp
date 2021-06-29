@@ -19,8 +19,16 @@ const std::map<SatType, std::string> Satellite::satTypeToString{{SatType::SPACEC
                                                                 {SatType::UNKNOWN,     "UNKNOWN"}
 };
 
-void Satellite::setCartesianByKeplerEA(double a, double e, double i, double W, double w, double EA) {
+void Satellite::setCartesianByKeplerEA(const std::array<double, 6> &keplerianElements) {
     using util::GRAVITATIONAL_PARAMETER_EARTH;
+
+    double a = keplerianElements[0];
+    double e = keplerianElements[1];
+    double i = keplerianElements[2];
+    double W = keplerianElements[3];
+    double w = keplerianElements[4];
+    double EA = keplerianElements[5];
+
     double b, n, xper, yper, xdotper, ydotper;
     double R[3][3];
     double cosomg, cosomp, sinomg, sinomp, cosi, sini;
@@ -90,14 +98,16 @@ void Satellite::setCartesianByKeplerEA(double a, double e, double i, double W, d
     }
 }
 
-void Satellite::setCartesianByKeplerMA(double a, double e, double i, double W, double w, double MA) {
-    double EA = util::meanAnomalyToEccentricAnomaly(MA, e);
-    setCartesianByKeplerEA(a, e, i, W, w, EA);
+void Satellite::setCartesianByKeplerMA(const std::array<double, 6> &keplerianElements) {
+    std::array<double, 6> keplerianElementsEA {keplerianElements};
+    keplerianElementsEA[5] = util::meanAnomalyToEccentricAnomaly(keplerianElements[5], keplerianElements[1]);
+    setCartesianByKeplerEA(keplerianElementsEA);
 }
 
-void Satellite::setCartesianByKeplerTA(double a, double e, double i, double W, double w, double TA) {
-    double EA = util::trueAnomalyToEccentricAnomaly(TA, e);
-    setCartesianByKeplerEA(a, e, i, W, w, EA);
+void Satellite::setCartesianByKeplerTA(const std::array<double, 6> &keplerianElements) {
+    std::array<double, 6> keplerianElementsEA {keplerianElements};
+    keplerianElementsEA[5] = util::trueAnomalyToEccentricAnomaly(keplerianElements[5], keplerianElements[1]);
+    setCartesianByKeplerEA(std::array<double, 6>());
 }
 
 std::array<double, 6> Satellite::getKeplerEA() {
