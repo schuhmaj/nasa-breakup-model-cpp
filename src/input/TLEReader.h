@@ -2,7 +2,7 @@
 
 #include <utility>
 #include <array>
-#include <vector>
+#include <map>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -24,13 +24,13 @@ public:
     virtual ~TLEReader() = default;
 
     /**
-     * Returns an vector consisting of pairs of <ID, KeplerianElements> from the TLE file.
+     * Returns a mapping from satellites ID to their Keplerian Elements as read from the TLE file.
      * The Keplerian Elements are sorted in the order:<br>
      * a (semir-major-axis) , e (eccentricity), i (inclination), W (longitude of the ascending node),
      * w (argument of periapsis), MA (mean Anomaly)
-     * @return vector of paris containing <ID, KeplerElements>
+     * @return mapping <ID, KeplerElements>
      */
-    std::vector<std::pair<size_t, std::array<double, 6>>> getIDKepler();
+    std::map<size_t, std::array<double, 6>> getMappingIDKepler();
 
 private:
 

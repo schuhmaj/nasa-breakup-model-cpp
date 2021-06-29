@@ -22,48 +22,42 @@ protected:
 TEST_F(TLEReaderTest, readTLE_01_Test) {
     TLEReader tleReader{"resources/test-tle1.txt"};
 
-    auto id_kepler = tleReader.getIDKepler();
+    auto map = tleReader.getMappingIDKepler();
 
-    ASSERT_EQ(id_kepler.size(), 1);
+    ASSERT_EQ(map.size(), 1);
+    ASSERT_TRUE(map.count(_expectedID_1) == 1);
 
-    auto actualID = std::get<0>(id_kepler.at(0));
-    auto actualKepler = std::get<1>(id_kepler.at(0));
-
-    ASSERT_EQ(actualID, _expectedID_1);
+    auto actualKepler = map[_expectedID_1];
     ASSERT_EQ(actualKepler, _expectedKepler_1);
 }
 
 TEST_F(TLEReaderTest, readTLE_02_Test) {
     TLEReader tleReader{"resources/test-tle2.txt"};
 
-    auto id_kepler = tleReader.getIDKepler();
+    auto map = tleReader.getMappingIDKepler();
 
-    ASSERT_EQ(id_kepler.size(), 1);
+    ASSERT_EQ(map.size(), 1);
+    ASSERT_TRUE(map.count(_expectedID_2) == 1);
 
-    auto actualID = std::get<0>(id_kepler.at(0));
-    auto actualKepler = std::get<1>(id_kepler.at(0));
-
-    ASSERT_EQ(actualID, _expectedID_2);
+    auto actualKepler = map[_expectedID_2];
     ASSERT_EQ(actualKepler, _expectedKepler_2);
 }
 
 TEST_F(TLEReaderTest, readTLE_03_Test) {
     TLEReader tleReader{"resources/test-tle3.txt"};
 
-    auto id_kepler = tleReader.getIDKepler();
+    auto map = tleReader.getMappingIDKepler();
 
-    ASSERT_EQ(id_kepler.size(), 2);
+    ASSERT_EQ(map.size(), 2);
 
-    auto actualID = std::get<0>(id_kepler.at(0));
-    auto actualKepler = std::get<1>(id_kepler.at(0));
+    ASSERT_TRUE(map.count(_expectedID_1) == 1);
 
-    ASSERT_EQ(actualID, _expectedID_1);
+    auto actualKepler = map[_expectedID_1];
     ASSERT_EQ(actualKepler, _expectedKepler_1);
 
-    actualID = std::get<0>(id_kepler.at(1));
-    actualKepler = std::get<1>(id_kepler.at(1));
+    ASSERT_TRUE(map.count(_expectedID_2) == 1);
 
-    ASSERT_EQ(actualID, _expectedID_2);
+    actualKepler = map[_expectedID_2];
     ASSERT_EQ(actualKepler, _expectedKepler_2);
 }
 

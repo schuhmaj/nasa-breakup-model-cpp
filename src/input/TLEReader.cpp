@@ -1,16 +1,17 @@
 #include "TLEReader.h"
 
 
-std::vector<std::pair<size_t, std::array<double, 6>>> TLEReader::getIDKepler() {
-    std::vector<std::pair<size_t, std::array<double, 6>>> result{};
+std::map<size_t, std::array<double, 6>> TLEReader::getMappingIDKepler() {
+    std::map<size_t, std::array<double, 6>> mapping{};
 
     std::ifstream fileStream{_filename};
 
     while (!fileStream.eof()) {
-        result.push_back(getTwoLine(fileStream));
+        auto pair = getTwoLine(fileStream);
+        mapping.insert(pair);
     }
 
-    return result;
+    return mapping;
 }
 
 std::pair<size_t, std::array<double, 6>> TLEReader::getTwoLine(std::istream &istream) {
