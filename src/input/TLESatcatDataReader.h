@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "input/DataSource.h"
 #include "input/CSVReader.h"
 #include "input/TLEReader.h"
@@ -12,7 +13,10 @@ class TLESatcatDataReader : public DataSource {
     /**
      * Delegation to read the satcat.csv
      */
-    CSVReader _satcatReader;
+    CSVReader<std::string, std::string, size_t,
+    std::string, std::string, std::string, std::string, std::string, std::string,
+    double, double, double, double, double,
+    std::string, std::string, std::string> _satcatReader;
 
     /**
      * Delegation to read the tle.txt
@@ -20,6 +24,10 @@ class TLESatcatDataReader : public DataSource {
     TLEReader _tleReader;
 
 public:
+
+    TLESatcatDataReader(const std::string &satcatFilename, const std::string &telFilename)
+            : _satcatReader{satcatFilename, true},
+              _tleReader(telFilename) {}
 
     /**
      * Returns the a SatelliteCollection by reading the given satcat.csv and TLE data.

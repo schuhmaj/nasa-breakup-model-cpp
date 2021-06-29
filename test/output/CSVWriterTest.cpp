@@ -7,6 +7,7 @@
 #include <fstream>
 #include <exception>
 #include <iostream>
+#include <utility>
 #include "output/CSVWriter.h"
 #include "model/Satellite.h"
 #include "input/CSVReader.h"
@@ -63,7 +64,10 @@ TEST_F(CSVWriterTest, HeaderCheck) {
 
     csvWriter.printResult(_satelliteCollection);
 
-    CSVReader csvReader{_filePath, true};
+    CSVReader<size_t, std::string, SatType,
+            double, double, double, double,
+            std::string, std::string>
+            csvReader{_filePath, true};
 
     auto header = csvReader.getHeader();
 
@@ -84,7 +88,9 @@ TEST_F(CSVWriterTest, DataCheck) {
 
     csvWriter.printResult(_satelliteCollection);
 
-    CSVReader csvReader{_filePath, true};
+    CSVReader<size_t, std::string, SatType,
+            double, double, double, double,
+            std::string, std::string> csvReader{_filePath, true};
 
     size_t expectedID = 1;
     const std::string expectedName{"DebrisTestFragment"};
@@ -99,15 +105,15 @@ TEST_F(CSVWriterTest, DataCheck) {
     auto lines = csvReader.getLines();
     auto line = lines.begin();
     for (auto &sat : _satelliteCollection) {
-        ASSERT_EQ(line->at(0), std::to_string(expectedID));
-        ASSERT_EQ(line->at(1), expectedName);
-        ASSERT_EQ(line->at(2), expectedType);
-        ASSERT_DOUBLE_EQ(std::stod(line->at(3)), expectedCharacteristicLength);
-        ASSERT_DOUBLE_EQ(std::stod(line->at(4)), expectedAM);
-        ASSERT_DOUBLE_EQ(std::stod(line->at(5)), expectedArea);
-        ASSERT_DOUBLE_EQ(std::stod(line->at(6)), expectedMass);
-        ASSERT_EQ(line->at(7), expectedVelocity);
-        ASSERT_EQ(line->at(8), expectedPosition);
+        ASSERT_EQ(std::get<0>(*line), expectedID);
+        ASSERT_EQ(std::get<1>(*line), expectedName);
+        ASSERT_EQ(Satellite::satTypeToString.at(std::get<2>(*line)), expectedType);
+        ASSERT_DOUBLE_EQ(std::get<3>(*line), expectedCharacteristicLength);
+        ASSERT_DOUBLE_EQ(std::get<4>(*line), expectedAM);
+        ASSERT_DOUBLE_EQ(std::get<5>(*line), expectedArea);
+        ASSERT_DOUBLE_EQ(std::get<6>(*line), expectedMass);
+        ASSERT_EQ(std::get<7>(*line), expectedVelocity);
+        ASSERT_EQ(std::get<8>(*line), expectedPosition);
         expectedID += 1;
         expectedArea += 1.0;
         expectedMass += 100.0;
