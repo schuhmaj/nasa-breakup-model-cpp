@@ -17,7 +17,11 @@ target_include_directories(breakupModelTest PRIVATE "${PROJECT_SOURCE_DIR}/src")
 #Links target breakupModelTest against gtest_main (entry point, so no own main method is required)
 target_link_libraries(breakupModelTest
         gtest_main
+        yaml-cpp
         )
+
+#Copies the test resources into a directory next to the test executable
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resources" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 include(GoogleTest)
 

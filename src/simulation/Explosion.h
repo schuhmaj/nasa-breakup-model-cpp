@@ -4,5 +4,11 @@
 
 class Explosion : public Breakup {
 
+public:
+
+    using Breakup::Breakup;
+
+    void run() override;
+
 };
 

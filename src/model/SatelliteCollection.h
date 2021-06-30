@@ -22,7 +22,7 @@ public:
      * Creates a new empty SatelliteCollection and tries to reserve memory.
      * @param reserve - how much memory should be reserved
      */
-    SatelliteCollection(long reserve)
+    explicit SatelliteCollection(long reserve)
             : _satellites{} {
         _satellites.reserve(reserve);
     }
@@ -31,7 +31,7 @@ public:
      * Initializes a SatelliteCollection with an already filled vector
      * @param satellites - vector containing the satellites
      */
-    SatelliteCollection(std::vector<Satellite> &satellites)
+    explicit SatelliteCollection(std::vector<Satellite> &satellites)
             : _satellites{satellites} {}
 
 
@@ -77,7 +77,7 @@ public:
      * @param n - the index
      * @return reference to Satellite
      */
-    Satellite& operator[](unsigned long n);
+    Satellite &operator[](unsigned long n);
 
 };
 

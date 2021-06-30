@@ -1,6 +1,8 @@
 #pragma once
 
 #include <array>
+#include <string>
+#include <ostream>
 
 /**
  * Type of a Satellite
@@ -17,10 +19,16 @@ enum class SatType {
 class Satellite {
 
     /**
-     * The ID of the Satellite, must be unique
-     * @note e. g. the NORAD Catalog number
+     * The ID of the Satellite, must be unique e. g. the NORAD Catalog number.
+     * @attention This parameter is a must!
      */
-    size_t _id;
+    size_t _id{0};
+
+    /**
+     * The name of the Satellite, more human readable.
+     * If not given the string will be empty.
+     */
+    std::string _name{};
 
     /**
      * The type of the Satellite. Needed for determining the right equations for breakup.
@@ -29,83 +37,163 @@ class Satellite {
      * and ROCKET_BODY (--> e.g. upper stages) make a difference in what equation is utilised.
      * Furthermore there are the types DEBRIS and UNKNOWN which currently have no special effect.
      */
-    SatType _satType;
+    SatType _satType{SatType::SPACECRAFT};
 
     /**
      * The characteristic Length L_c [m]
+     * @remark Determined by the breakup simulation
      */
-    double _size;
+    double _characteristicLength{};
 
     /**
      * The area-to-mass ratio A/M [m^2/kg]
+     * @remark Determined by the breakup simulation
      */
-    double _areaToMassRatio;
+    double _areaToMassRatio{};
 
     /**
      * The mass m [kg]
+     * @note Determined by input parameter (if mass is well-known)
+     * @note Derived of input parameter by using Equation 1 by using the radius [m]
+     *       calculated with the radar cross section [m^2]
+     * @remark Determined by the breakup simulation by using the area A and the area-to-mass ratio A/M
      */
-    double _mass;
+    double _mass{};
 
     /**
      * The area A [m^2] respectively the radar cross section (RCS) of the satellite
-     * @note Determined by either input (Radar data) or by the L_c (with Equation 8/9)
+     * @note Determined by input parameter (radar cross section, part of satcat)
+     * @remark Determined by the breakup simulation by using the characteristic length L_c (Equation 8/9)
      */
-    double _area;
+    double _area{};
 
     /**
      * The cartesian velocity vector v [m/s^2]
-     * @note Determined with the Keplerian elements from the input or directly given
+     * @note Directly given as input parameter
+     * @note Derived from the Keplerian elements
+     * @remark Determined by the breakup simulation
      */
-    std::array<double, 3> _velocity;
+    std::array<double, 3> _velocity{};
 
     /**
      * The cartesian position vector [m]
-     * @note Determined with the Keplerian elements from the input or directly given
+     * @note Directly given as input parameter
+     * @note Derived from the Keplerian elements
      */
-    std::array<double, 3> _position;
+    std::array<double, 3> _position{};
 
-    /* TODO
+
+    /* TODO Subclass to add Keplerian Elements only if they are given, no memory overhead or Factory/ Builder before?
      * Implement Keplerian Elements --> v, r
      * Not necessarily required for the simulation (only in case of non-catastrophic collision)
      */
 
-
 public:
 
-    /**
-     * Generates a new Satellite with empty (zero-set) values.
-     * TODO Currently unhappy - maybe use a factory? Definitely to refactor, when input is implemented
-     */
-    Satellite(size_t id = 0, SatType satType = SatType::SPACECRAFT, double size = 0.05, double area = 0)
-        : _id{id},
-          _satType{satType},
-          _size{size},
-          _areaToMassRatio{0},
-          _mass{0},
-          _area{area},
-          _velocity{std::array<double, 3>{0, 0, 0}},
-          _position{std::array<double, 3>{0, 0, 0}} {}
+    Satellite() = default;
+
+    explicit Satellite(size_t id)
+        : _id{id} {}
 
 
     /**
      * Compares two Satellites by comparing their IDs.
-     * @param a - Satellite
-     * @param b - Satellite
+     * @param lhs - Satellite
+     * @param rhs - Satellite
      * @return true if thy have the same ID
      */
-    friend bool operator==(const Satellite &a, const Satellite &b) {
-        return a._id == b._id;
+    friend bool operator==(const Satellite &lhs, const Satellite &rhs) {
+        return lhs._id == rhs._id;
     }
 
 
     /**
      * Compares two Satellites by comparing their IDs.
-     * @param a - Satellite
-     * @param b - Satellite
+     * @param lhs - Satellite
+     * @param rhs - Satellite
      * @return true if they do not have the same ID
      */
-    friend bool operator!=(const Satellite &a, const Satellite &b) {
-        return not (a == b);
+    friend bool operator!=(const Satellite &lhs, const Satellite &rhs) {
+        return not (lhs == rhs);
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const Satellite &satellite);
+
+    /*
+     * Getter and Setter
+     */
+
+    size_t getId() const {
+        return _id;
+    }
+
+    void setId(size_t id) {
+        _id = id;
+    }
+
+    const std::string &getName() const {
+        return _name;
+    }
+
+    void setName(const std::string &name) {
+        _name = name;
+    }
+
+    SatType getSatType() const {
+        return _satType;
+    }
+
+    void setSatType(SatType satType) {
+        _satType = satType;
+    }
+
+    double getCharacteristicLength() const {
+        return _characteristicLength;
+    }
+
+    void setCharacteristicLength(double characteristicLength) {
+        _characteristicLength = characteristicLength;
+    }
+
+    double getAreaToMassRatio() const {
+        return _areaToMassRatio;
+    }
+
+    void setAreaToMassRatio(double areaToMassRatio) {
+        _areaToMassRatio = areaToMassRatio;
+    }
+
+    double getMass() const {
+        return _mass;
+    }
+
+    void setMass(double mass) {
+        _mass = mass;
+    }
+
+    double getArea() const {
+        return _area;
+    }
+
+    void setArea(double area) {
+        _area = area;
+    }
+
+    const std::array<double, 3> &getVelocity() const {
+        return _velocity;
+    }
+
+    void setVelocity(const std::array<double, 3> &velocity) {
+        _velocity = velocity;
+    }
+
+    const std::array<double, 3> &getPosition() const {
+        return _position;
+    }
+
+    void setPosition(const std::array<double, 3> &position) {
+        _position = position;
     }
 
 };
+

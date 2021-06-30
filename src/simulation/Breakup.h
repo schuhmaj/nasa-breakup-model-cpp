@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include "model/SatelliteCollection.h"
 
 /**
@@ -8,6 +9,14 @@
  * TODO: Idea is to use the Template Method Pattern to share common properties like A/M functions
  */
 class Breakup {
+
+    /**
+     * The minimal characteristic length. The Breakup Simulation will only produce fragments
+     * greater or equal this size.
+     * It is given in [m]
+     * TODO Better integration program flow!!!!
+     */
+    double _minimalCharacteristicLength{};
 
     /**
      * Contains the input satellites. Normally the size for this collection is either one (explosion) or
@@ -26,16 +35,18 @@ public:
     Breakup() = default;
 
     explicit Breakup(SatelliteCollection &input)
-            : _input{input},
+            : _minimalCharacteristicLength{0.05},
+              _input{input},
+              _output{} {}
+
+    explicit Breakup(SatelliteCollection &&input)
+            : _minimalCharacteristicLength{0.05},
+              _input{input},
               _output{} {}
 
     virtual ~Breakup() = default;
 
-    /**
-     * Runs the simulation
-     * TODO: Probably not virtual
-     */
-    virtual void run() = 0;
+    virtual void run();
 
     /**
      * Return the result of the breakup event
