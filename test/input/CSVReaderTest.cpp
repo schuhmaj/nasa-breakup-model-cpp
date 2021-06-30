@@ -35,5 +35,4 @@ TEST_F(CSVReaderTest, readLines) {
 
     auto lines = satcatReader.getLines();
 
-
 }

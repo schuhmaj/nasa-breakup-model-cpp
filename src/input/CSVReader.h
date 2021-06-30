@@ -134,7 +134,7 @@ public:
                 lines.push_back(t);
             }
         } catch (std::exception &e) {
-            throw e;
+            throw;
         }
 
         return lines;

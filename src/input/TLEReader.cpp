@@ -12,7 +12,7 @@ std::map<size_t, std::array<double, 6>> TLEReader::getMappingIDKepler() {
             mapping.insert(pair);
         }
     } catch (std::exception &e) {
-        throw e;
+        throw;
     }
 
     return mapping;

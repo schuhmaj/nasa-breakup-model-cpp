@@ -114,13 +114,13 @@ SatelliteBuilder &SatelliteBuilder::setKeplerianElementsTLEFormat(const std::arr
 
 Satellite &SatelliteBuilder::getResult() {
     if (!_hasID) {
-        throw std::invalid_argument{"Satellite has no ID!"};
+        throw std::runtime_error{"Satellite has no ID!"};
     }
     if (!_hasMass) {
-        throw std::invalid_argument{"Satellite has no mass or way to derive the mass!"};
+        throw std::runtime_error{"Satellite has no mass or way to derive the mass!"};
     }
     if (!_hasVelocity) {
-        throw std::invalid_argument{"Satellite has no velocity or way to derive the velocity!"};
+        throw std::runtime_error{"Satellite has no velocity or way to derive the velocity!"};
     }
     return _satellite;
 }
