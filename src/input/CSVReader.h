@@ -100,10 +100,8 @@ public:
 
         //Read row by row
         try {
-            while (!fileStream.eof()) {
-                if (this->nextLine(fileStream, t)) {
-                    lines.push_back(t);
-                }
+            while (this->nextLine(fileStream, t)) {
+                lines.push_back(t);
             }
         } catch (std::exception &e) {
             throw std::invalid_argument{e.what()};
