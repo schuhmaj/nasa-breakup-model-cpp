@@ -65,7 +65,7 @@ A "data.yaml" should have the following form (for example):
       satType: ROCKET_BODY          #Another satellite type
       area: 3.5                     #Either mass or area is a must
                                     #Mass in [kg], Area (Radar Cross Section) in [m^2]
-      kepler                        #Either velocity (+ position) or
+      kepler:                       #Either velocity (+ position) or
         semi-major-axis: 1.0        #Keplerian Elements
         eccentricity: 2.0
         inclination: 3.0
