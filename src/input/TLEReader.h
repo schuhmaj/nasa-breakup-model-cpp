@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <filesystem>
 
 /**
  * Provides the functionality to parse a TLE (Two-Line-Format).
@@ -14,12 +15,21 @@
  */
 class TLEReader {
 
-    const std::string _filename;
+    const std::string _filepath;
 
 public:
 
-    explicit TLEReader(std::string filename)
-        : _filename(std::move(filename)) {}
+    /**
+     * Constructs are new TLE Reader.
+     * @param filepath
+     * @throws an exception if the file does not exists
+     */
+    explicit TLEReader(std::string filepath)
+        : _filepath(std::move(filepath)) {
+        if (!std::filesystem::exists(_filepath)) {
+            throw std::runtime_error{"The TLE file does not exists!"};
+        }
+    }
 
     virtual ~TLEReader() = default;
 
@@ -29,6 +39,7 @@ public:
      * a (semir-major-axis) , e (eccentricity), i (inclination), W (longitude of the ascending node),
      * w (argument of periapsis), MA (mean Anomaly)
      * @return mapping <ID, KeplerElements>
+     * @throws an exception if the TLE is malformed or any other issues are encountered during the parsing
      */
     std::map<size_t, std::array<double, 6>> getMappingIDKepler();
 
@@ -38,6 +49,7 @@ private:
      * Parses the next two lines of the given istream.
      * @param istream - the input stream
      * @return a pair of <ID, KeplerElements>
+     * @throws an exception if the TLE is malformed or any other issues are encountered during the parsing
      */
     static std::pair<size_t, std::array<double, 6>> getTwoLine(std::istream &istream);
 

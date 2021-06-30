@@ -66,11 +66,11 @@ void YAMLDataReader::parseKepler(SatelliteBuilder &satelliteBuilder, const YAML:
             keplerianElements[5] = node["true-anomaly"].as<double>();
             satelliteBuilder.setKeplerianElementsTA(keplerianElements);
         } else {
-            throw std::invalid_argument{"You have to give at least one of the following orbital Anomalies"
+            throw std::runtime_error{"You have to give at least one of the following orbital Anomalies"
                                         "Eccentric Anomaly > Mean Anomaly > True Anomaly [in the order how the"
                                         "program will prioritize an anomaly if multiple are given]"};
         }
     } else {
-        throw std::invalid_argument{"The Keplerian Elements are not fully given!"};
+        throw std::runtime_error{"The Keplerian Elements are not fully given!"};
     }
 }

@@ -15,9 +15,19 @@ class YAMLConfigurationReader : public ConfigurationSource {
 
 public:
 
+    /**
+     * Creates a new YAML Configuration Reader.
+     * @param filename
+     * @throws an exception if the file is malformed or cannot be loaded
+     */
     explicit YAMLConfigurationReader(const std::string &filename)
         : _file{YAML::LoadFile(filename)} {}
 
+    /**
+     * Creates a new YAML Configuration Reader.
+     * @param filename
+     * @throws an exception if the file is malformed or cannot be loaded
+     */
     explicit YAMLConfigurationReader(std::string &&filename)
             : _file{YAML::LoadFile(filename)} {}
 

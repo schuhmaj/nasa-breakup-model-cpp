@@ -20,9 +20,19 @@ class YAMLDataReader : public DataSource {
 
 public:
 
+    /**
+     * Creates a new YAML Data Reader.
+     * @param filename
+     * @throws an exception if the file is malformed or cannot be loaded
+     */
     explicit YAMLDataReader(const std::string &filename)
             : _file{YAML::LoadFile(filename)} {}
 
+    /**
+    * Creates a new YAML Data Reader.
+    * @param filename
+    * @throws an exception if the file is malformed or cannot be loaded
+    */
     explicit YAMLDataReader(std::string &&filename)
             : _file{YAML::LoadFile(filename)} {}
 

@@ -50,5 +50,5 @@ std::shared_ptr<DataSource> YAMLConfigurationReader::getDataReader() {
             return std::make_shared<TLESatcatDataReader>(fileNames[1], fileNames[0]);
         }
     }
-    throw std::invalid_argument{"Data file input is not correctly set-up!"};
+    throw std::runtime_error{"Data file input is not correctly set-up!"};
 }

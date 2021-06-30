@@ -25,9 +25,9 @@ class TLESatcatDataReader : public DataSource {
      * inclination, apogee, perigee, rcs, dataStatusCode, orbitCenter, OrbitType
      */
     CSVReader<std::string, std::string, size_t,
-    SatType, std::string, std::string, std::string, std::string, std::string,
-    double, double, double, double, double,
-    std::string, std::string, std::string> _satcatReader;
+            SatType, std::string, std::string, std::string, std::string, std::string,
+            double, double, double, double, double,
+            std::string, std::string, std::string> _satcatReader;
 
     /**
      * Delegation to read the tle.txt
@@ -36,9 +36,28 @@ class TLESatcatDataReader : public DataSource {
 
 public:
 
+    /**
+     * Creates a new TLE Satcat Data Reader.
+     * @param satcatFilename
+     * @param telFilename
+     * @throws if one file does not exists this constructor will "rethrow" the exception
+     */
     TLESatcatDataReader(const std::string &satcatFilename, const std::string &telFilename)
             : _satcatReader{satcatFilename, true},
               _tleReader(telFilename) {}
+
+    /**
+     * Creates a new TLE Satcat Data Reader.
+     * @param satcatFilename
+     * @param telFilename
+     * @throws if one file does not exists this constructor will "rethrow" the exception
+     */
+    TLESatcatDataReader(const CSVReader<std::string, std::string, size_t,
+            SatType, std::string, std::string, std::string, std::string, std::string,
+            double, double, double, double, double,
+            std::string, std::string, std::string> &csvReader, const TLEReader &tleReader)
+            : _satcatReader{csvReader},
+              _tleReader{tleReader} {}
 
     /**
      * Returns the a SatelliteCollection by reading the given satcat.csv and TLE data.
@@ -54,7 +73,7 @@ private:
      * Returns a mapping of satellites ID to its name, type and Radar Cross Section (RCS) in [m^2]
      * @return mapping <ID, infos>
      */
-    std::map<size_t ,std::tuple<std::string, SatType, double>> getSatcatMapping();
+    std::map<size_t, std::tuple<std::string, SatType, double>> getSatcatMapping();
 
 };
 

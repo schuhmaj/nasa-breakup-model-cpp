@@ -4,8 +4,22 @@ std::vector<Satellite> TLESatcatDataReader::getSatelliteCollection() {
     std::vector<Satellite> satellites{};
     SatelliteBuilder satelliteBuilder{};
 
-    auto mappingSatcat = this->getSatcatMapping();
-    auto mappingTLE = _tleReader.getMappingIDKepler();
+    std::map<size_t, std::tuple<std::string, SatType, double>> mappingSatcat;
+    std::map<size_t, std::array<double, 6>> mappingTLE;
+
+    try {
+        mappingSatcat = this->getSatcatMapping();
+    } catch (std::exception &e) {
+        std::cerr << e.what();
+        std::cerr << "The satcat.csv file (or similar name) was not parsed correctly. There might be issues with the data!";
+    }
+
+    try {
+        mappingTLE = _tleReader.getMappingIDKepler();
+    } catch (std::exception &e) {
+        std::cerr << e.what();
+        std::cerr << "The tle.txt file (or similar name) was not parsed correctly. There might be issues with the data!";
+    }
 
     satellites.reserve(std::max(mappingSatcat.size(), mappingTLE.size()));
 

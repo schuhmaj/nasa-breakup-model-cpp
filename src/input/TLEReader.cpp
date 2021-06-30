@@ -4,11 +4,15 @@
 std::map<size_t, std::array<double, 6>> TLEReader::getMappingIDKepler() {
     std::map<size_t, std::array<double, 6>> mapping{};
 
-    std::ifstream fileStream{_filename};
+    std::ifstream fileStream{_filepath};
 
-    while (!fileStream.eof()) {
-        auto pair = getTwoLine(fileStream);
-        mapping.insert(pair);
+    try {
+        while (!fileStream.eof()) {
+            auto pair = getTwoLine(fileStream);
+            mapping.insert(pair);
+        }
+    } catch (std::exception &e) {
+        throw e;
     }
 
     return mapping;
@@ -22,6 +26,9 @@ std::pair<size_t, std::array<double, 6>> TLEReader::getTwoLine(std::istream &ist
     //Goto Line 2
     do {
         std::getline(istream, line);
+        if (line.empty()) {
+            throw std::runtime_error{"Malformed TLE file! There was one empty line!"};
+        }
     } while (line.rfind('2', 0) != 0);
 
     //ID

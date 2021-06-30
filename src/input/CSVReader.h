@@ -7,6 +7,7 @@
 #include <sstream>
 #include <exception>
 #include <tuple>
+#include <filesystem>
 #include "model/Satellite.h"
 
 /**
@@ -19,15 +20,25 @@
 template<typename ...T>
 class CSVReader {
 
-    const std::string _filename;
+    const std::string _filepath;
 
     bool _hasHeader;
 
 public:
 
-    CSVReader(std::string filename, bool hasHeader)
-            : _filename(std::move(filename)),
-              _hasHeader(hasHeader) {}
+    /**
+     * Constructs a new CSV Reader.
+     * @param filepath
+     * @param hasHeader
+     * @throws an exception if the file does not exists
+     */
+    CSVReader(std::string filepath, bool hasHeader)
+            : _filepath(std::move(filepath)),
+              _hasHeader(hasHeader) {
+        if (!std::filesystem::exists(_filepath)) {
+            throw std::runtime_error{"The CSV file does not exists!"};
+        }
+    }
 
     virtual ~CSVReader() = default;
 
@@ -103,10 +114,11 @@ public:
     /**
      * Returns the lines of the CSV file in a vector. Each line is tokenized into an tuple with the corresponding types.
      * @return vector of tokenized lines
+     * @throws an exception if issues are encountered during parsing
      */
     std::vector<std::tuple<T...>> getLines() {
         //Open fileStream stream
-        std::ifstream fileStream{_filename};
+        std::ifstream fileStream{_filepath};
         std::vector<std::tuple<T...>> lines{};
         std::tuple<T...> t;
 
@@ -116,13 +128,13 @@ public:
             std::getline(fileStream, line);
         }
 
-        //Read row by row
+        //Read row by row, if issues appear rethrow the exception
         try {
             while (this->nextLine(fileStream, t)) {
                 lines.push_back(t);
             }
         } catch (std::exception &e) {
-            throw std::invalid_argument{e.what()};
+            throw e;
         }
 
         return lines;
@@ -136,18 +148,20 @@ public:
     std::array<std::string, sizeof...(T)> getHeader() {
         if (_hasHeader) {
             std::array<std::string, sizeof...(T)> header{};
-            std::ifstream fileStream{_filename};
+            std::ifstream fileStream{_filepath};
             std::string line;
             std::getline(fileStream, line);
             std::stringstream lineStream{line};
-            for (size_t i = 0; i < sizeof...(T); ++i){
-                std::string cell;
-                std::getline(lineStream, cell, ',');
-                header[i] = cell;
+            std::string cell;
+
+            auto headerIt = header.begin();
+            while (std::getline(lineStream, cell, ',')) {
+                *headerIt = cell;
+                ++headerIt;
             }
             return header;
         } else {
-            throw std::invalid_argument{"The CSV file has no header!"};
+            throw std::runtime_error{"The CSV file has no header!"};
         }
     }
 };
