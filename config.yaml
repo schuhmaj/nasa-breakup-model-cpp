@@ -3,3 +3,4 @@ minimalCharacteristicLength: 0.05 #minimal L_c in [m]
 simulationType: COLLISION         #COLLISION or EXPLOSION
 currentMaxID: 48514               #Derived from satcat.csv
 inputSource: ["../data.yaml"]     #Alternative: ["../satcat.csv", "../tle.txt"]
+filterForIDs: [123, 456]          #List of IDs of the satellites which should be used

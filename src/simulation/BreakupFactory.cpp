@@ -8,6 +8,8 @@ BreakupFactory &BreakupFactory::changeConfiguration(const std::shared_ptr<Config
 std::unique_ptr<Breakup> BreakupFactory::getBreakup() const {
     auto satelliteVector{_dataReader->getSatelliteCollection()};
 
+    applyFilter(satelliteVector);
+
     switch (_configurationReader->getTypeOfSimulation()) {
         case SimulationType::EXPLOSION:
             if (satelliteVector.size() == 1) {

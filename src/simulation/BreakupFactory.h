@@ -65,4 +65,19 @@ private:
         return std::make_unique<Collision>(satelliteVector, _configurationReader->getMinimalCharacteristicLength(),
                                            _configurationReader->getCurrentMaximalGivenID());
     }
+
+    /**
+     * Applies the Filter from the Configuration Source, if any is given.
+     * @param satelliteVector - this vector will be modified!
+     */
+    inline void applyFilter(std::vector<Satellite> &satelliteVector) const {
+        auto filterSet = _configurationReader->getIDSelection();
+        if (filterSet.has_value()) {
+            satelliteVector.erase(std::remove_if(satelliteVector.begin(), satelliteVector.end(),
+                                                 [&filterSet](Satellite &sat) {
+                                                     return filterSet->count(sat.getId()) == 1;
+                                                 }),
+                                  satelliteVector.end());
+        }
+    }
 };

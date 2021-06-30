@@ -52,3 +52,14 @@ std::shared_ptr<DataSource> YAMLConfigurationReader::getDataReader() {
     }
     throw std::runtime_error{"Data file input is not correctly set-up!"};
 }
+
+std::optional<std::set<size_t>> YAMLConfigurationReader::getIDSelection() {
+    if (_file["filterForIDs"] && _file["filterForIDs"].IsSequence()) {
+        std::set<size_t> filterSet{};
+        for (auto id : _file["filterForIDs"]) {
+            filterSet.insert(id.as<size_t>());
+        }
+        return std::make_optional(filterSet);
+    }
+    return std::nullopt;
+}
