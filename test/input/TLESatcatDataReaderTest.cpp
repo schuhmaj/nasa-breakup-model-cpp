@@ -107,7 +107,8 @@ TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionEverythingIn) {
 
 TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionOneMissingInTLE) {
     _expectedSatellites.erase(std::remove_if(_expectedSatellites.begin(), _expectedSatellites.end(),
-                                             [](Satellite &sat) {return sat.getId() == 3;}));
+                                             [](Satellite &sat) {return sat.getId() == 3;}),
+                              _expectedSatellites.end());
     //The TLE file is not well-formed, but good enough for this test case
     TLESatcatDataReader tleSatcatDataReader{"resources/testShrinkedSatcat.csv", "resources/test-tle5.txt"};
 
