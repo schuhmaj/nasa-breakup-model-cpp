@@ -11,9 +11,6 @@
 
 /**
  * Provides the functionality to read an CSV file into an container of tuples.
- *
- * @related For further information about the Idea. Code is partly adapted from here
- * https://stackoverflow.com/questions/34314806/parsing-a-c-string-into-a-tuple [accessed 29.06.2021]
  */
 template<typename ...T>
 class CSVReader {
@@ -55,6 +52,8 @@ private:
      * @tparam I - index sequence (packed as long as parameter list T)
      * @param lineStream - a CSV line/ row
      * @param tuple the tuple to be filled
+     * @related For further information about this Idea. Code is adapted from here
+     * https://stackoverflow.com/questions/34314806/parsing-a-c-string-into-a-tuple [accessed 29.06.2021]
      */
     template<typename Tuple, typename std::size_t... I>
     void getTuple(std::istream &lineStream, Tuple &tuple, std::index_sequence<I...>) {
