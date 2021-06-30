@@ -225,14 +225,14 @@ namespace util {
      */
     template<typename T, size_t N>
     std::ostream &operator<<(std::ostream &os, const std::array<T, N> &array) {
-        os << "{";
+        os << "[";
         auto it = array.begin();
         auto end = array.end() - 1;
         while (it != end) {
-            os << *it << "; ";
+            os << *it << " ";
             ++it;
         }
-        os << *it << "}";
+        os << *it << "]";
         return os;
     }
 

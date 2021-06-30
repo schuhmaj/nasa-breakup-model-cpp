@@ -1,7 +1,7 @@
 #pragma once
 
 #include <utility>
-#include <vector>
+#include <array>
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -46,7 +46,22 @@ private:
         std::string cell;
         std::getline(istream, cell, ',');
         std::stringstream cellStream {cell};
+        cellStream.unsetf(std::ios_base::skipws);
         cellStream >> value;
+        return true;
+    }
+
+    /**
+    * Parses one cell of the CSV line file stream to a type string. Fixes the problematic of whitespace
+    * consumption with the default >> operator for strings.
+    * @param istream - the line stream
+    * @param value - the value extracted (non-const)
+    * @return true to not cause any issues in getTuple
+    */
+    bool parseCell(std::istream &istream, std::string &value) {
+        std::string cell;
+        std::getline(istream, cell, ',');
+        value = cell;
         return true;
     }
 
@@ -118,9 +133,9 @@ public:
      * @return vector of strings
      * @throws an exception if the CSV file does not have an header
      */
-    std::vector<std::string> getHeader() {
+    std::array<std::string, sizeof...(T)> getHeader() {
         if (_hasHeader) {
-            std::vector<std::string> header{};
+            std::array<std::string, sizeof...(T)> header{};
             std::ifstream fileStream{_filename};
             std::string line;
             std::getline(fileStream, line);
@@ -128,7 +143,7 @@ public:
             for (size_t i = 0; i < sizeof...(T); ++i){
                 std::string cell;
                 std::getline(lineStream, cell, ',');
-                header.push_back(cell);
+                header[i] = cell;
             }
             return header;
         } else {

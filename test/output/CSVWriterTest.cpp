@@ -99,8 +99,8 @@ TEST_F(CSVWriterTest, DataCheck) {
     double expectedArea = 1.0;
     double expectedMass = 100.0;
     double expectedAM = 1.0 / 100.0;
-    const std::string expectedVelocity{"{1; 2; 3}"};
-    const std::string expectedPosition{"{0; 0; 0}"};
+    const std::string expectedVelocity{"[1 2 3]"};
+    const std::string expectedPosition{"[0 0 0]"};
 
     auto lines = csvReader.getLines();
     auto line = lines.begin();
