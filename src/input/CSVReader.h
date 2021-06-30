@@ -11,12 +11,8 @@
 
 /**
  * Provides the functionality to read an CSV file into an container of tuples.
- * Generally the following types are implemented to be paresd from a CSV file:
- * double, float, int, long, size_t, char, std::string, SatType
  *
- * @note Add more types by overloading the function readCell
- * @attention Any type is implemented via static_cast which might lead to issues!
- * @related For further information, about the Idea. Code partly adapted from here
+ * @related For further information about the Idea. Code is partly adapted from here
  * https://stackoverflow.com/questions/34314806/parsing-a-c-string-into-a-tuple [accessed 29.06.2021]
  */
 template<typename ...T>
@@ -37,71 +33,21 @@ public:
 
 private:
 
+    /**
+     * Parses one cell of the CSV line file stream to a type V by using its >> operator.
+     * @tparam V - the value to be extracted, should have an >> operator overload
+     * @param istream - the line stream
+     * @param value - the value extracted (non-const)
+     * @return true to not cause any issues in getTuple
+     */
     template<typename V>
-    bool readCell(std::istream &istream, V &value) {
+    bool parseCell(std::istream &istream, V &value) {
         std::string cell;
         std::getline(istream, cell, ',');
-        value = static_cast<V>(cell);
+        std::stringstream cellStream {cell};
+        cellStream >> value;
         return true;
     }
-
-    bool readCell(std::istream &istream, double &value) {
-        std::string cell;
-        std::getline(istream, cell, ',');
-        value = cell.empty() ? 0 : std::stod(cell);
-        return true;
-    }
-
-    bool readCell(std::istream &istream, float &value) {
-        std::string cell;
-        std::getline(istream, cell, ',');
-        value = cell.empty() ? 0 : std::stof(cell);
-        return true;
-    }
-
-    bool readCell(std::istream &istream, int &value) {
-        std::string cell;
-        std::getline(istream, cell, ',');
-        value = cell.empty() ? 0 : std::stoi(cell);
-        return true;
-    }
-
-    bool readCell(std::istream &istream, long &value) {
-        std::string cell;
-        std::getline(istream, cell, ',');
-        value = cell.empty() ? 0 : std::stol(cell);
-        return true;
-    }
-
-    bool readCell(std::istream &istream, size_t &value) {
-        std::string cell;
-        std::getline(istream, cell, ',');
-        std::stringstream stream{cell};
-        stream >> value;
-        return true;
-    }
-
-    bool readCell(std::istream &istream, char &value) {
-        std::string cell;
-        std::getline(istream, cell, ',');
-        value = cell[0];
-        return true;
-    }
-
-    bool readCell(std::istream &istream, std::string &value) {
-        std::string cell;
-        std::getline(istream, cell, ',');
-        value = cell;
-        return true;
-    }
-
-    bool readCell(std::istream &istream, SatType &value) {
-        std::string cell;
-        std::getline(istream, cell, ',');
-        value = Satellite::stringToSatType.at(cell);
-        return true;
-    }
-
 
     /**
      * Creates the tuple for a given lineStream.
@@ -112,7 +58,7 @@ private:
      */
     template<typename Tuple, typename std::size_t... I>
     void getTuple(std::istream &lineStream, Tuple &tuple, std::index_sequence<I...>) {
-        std::initializer_list<bool>{readCell(lineStream, std::get<I>(tuple)) ...};
+        std::initializer_list<bool>{parseCell(lineStream, std::get<I>(tuple)) ...};
     }
 
     /**

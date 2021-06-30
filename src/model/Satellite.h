@@ -3,7 +3,7 @@
 #include <array>
 #include <map>
 #include <string>
-#include <ostream>
+#include <iostream>
 #include <utility>
 #include <cmath>
 #include "util/UtilityKepler.h"
@@ -18,6 +18,8 @@ enum class SatType {
 };
 
 std::ostream &operator<<(std::ostream &os, SatType satType);
+
+std::istream &operator>>(std::istream &istream, SatType &satType);
 
 
 /**

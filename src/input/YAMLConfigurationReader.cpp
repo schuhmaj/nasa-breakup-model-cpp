@@ -49,7 +49,6 @@ std::shared_ptr<DataSource> YAMLConfigurationReader::getDataReader() {
         } else if (fileNames[0].find(".txt") && fileNames[1].find(".csv")) {
             return std::make_shared<TLESatcatDataReader>(fileNames[1], fileNames[0]);
         }
-    } else {
-        throw std::invalid_argument{"Data file input is not correctly set-up!"};
     }
+    throw std::invalid_argument{"Data file input is not correctly set-up!"};
 }

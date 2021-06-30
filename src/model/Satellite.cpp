@@ -4,6 +4,13 @@ std::ostream &operator<<(std::ostream &os, SatType satType) {
     return os << Satellite::satTypeToString.at(satType);
 }
 
+std::istream &operator>>(std::istream &istream, SatType &satType) {
+    std::string string;
+    istream >> string;
+    satType = Satellite::stringToSatType.at(string);
+    return istream;
+}
+
 const std::map<std::string, SatType> Satellite::stringToSatType{{"SPACECRAFT",  SatType::SPACECRAFT},
                                                                 {"SC",          SatType::SPACECRAFT},
                                                                 {"PAY",          SatType::SPACECRAFT},
