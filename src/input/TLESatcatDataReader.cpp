@@ -27,17 +27,19 @@ std::vector<Satellite> TLESatcatDataReader::getSatelliteCollection() {
     // --> No missing data possible (but not necessarily wrong information
     for (auto const& [id, keplerDataTLE] : mappingTLE) {
         try {
-            auto &dataSatcat = mappingSatcat[id];
-            satellites.push_back(
-                    satelliteBuilder
-                            .reset()
-                            .setID(id)
-                            .setName(std::get<0>(dataSatcat))
-                            .setSatType(std::get<1>(dataSatcat))
-                            .setMassByArea(std::get<2>(dataSatcat))
-                            .setKeplerianElementsTLEFormat(keplerDataTLE)
-                            .getResult()
-            );
+            if (mappingSatcat.count(id) != 0) {
+                auto &dataSatcat = mappingSatcat[id];
+                satellites.push_back(
+                        satelliteBuilder
+                                .reset()
+                                .setID(id)
+                                .setName(std::get<0>(dataSatcat))
+                                .setSatType(std::get<1>(dataSatcat))
+                                .setMassByArea(std::get<2>(dataSatcat))
+                                .setKeplerianElementsTLEFormat(keplerDataTLE)
+                                .getResult()
+                );
+            }
         } catch (std::exception &e) {
             std::cerr << e.what();
         }
