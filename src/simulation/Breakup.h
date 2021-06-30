@@ -134,7 +134,7 @@ protected:
      * @param debrisName - the name for the fragments
      * @param position - position of the fragment, derived from the one parent (explosion) or from first parent (collision)
      */
-    virtual void inline
+    virtual void
     createFragments(size_t fragmentCount, const std::string &debrisName, const std::array<double, 3> &position);
 
     /**
