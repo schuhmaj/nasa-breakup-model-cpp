@@ -11,6 +11,10 @@
 
 /**
  * Provides the functionality to read an CSV file into an container of tuples.
+ * Every Type argument represents the type of a column. If the file has an header and the corresponding argument was set
+ * to true in the constructor, the header can be read as strings by using getHeader().
+ *
+ * @example CSVReader{int, std::string, double} reads in rows of the kind "1234,Hello World,3.33"
  */
 template<typename ...T>
 class CSVReader {
