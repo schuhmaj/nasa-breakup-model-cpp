@@ -142,7 +142,7 @@ TEST_F(SatelliteBuilderTest, Expection_No_ID) {
                     .setMass(10)
                     .setVelocity(_array000)
                     .getResult(),
-            std::invalid_argument
+            std::runtime_error
     ) << "No exception was thrown although the satellite is invalid and has no ID";
 }
 
@@ -157,7 +157,7 @@ TEST_F(SatelliteBuilderTest, Expection_No_Mass) {
                     .setSatType(SatType::UNKNOWN)
                     .setVelocity(_array000)
                     .getResult(),
-            std::invalid_argument
+            std::runtime_error
     ) << "No exception was thrown although the satellite is invalid and has no mass";
 }
 
@@ -172,6 +172,6 @@ TEST_F(SatelliteBuilderTest, Expection_No_Velocity) {
                     .setMass(10)
                     .setSatType(SatType::UNKNOWN)
                     .getResult(),
-            std::invalid_argument
+            std::runtime_error
     ) << "No exception was thrown although the satellite is invalid and has no velocity";
 }
