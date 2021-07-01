@@ -6,7 +6,7 @@
 #include <map>
 #include <set>
 #include <optional>
-#include "yaml-cpp/yaml.h"
+#include <exception>
 #include "input/DataSource.h"
 
 /**
