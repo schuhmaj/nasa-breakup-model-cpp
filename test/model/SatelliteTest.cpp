@@ -3,6 +3,8 @@
 #include "model/Satellite.h"
 #include <array>
 
+
+
 /**
  * Ensure that that all arguments are correctly set-up (set to zero expect ID)
  */

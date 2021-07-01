@@ -78,7 +78,7 @@ class Satellite {
 
     /**
      * The cartesian velocity vector v [m/s^2]
-     * @note Directly given as input parameter
+     * @note Directly given as input parameter, e.g. the velocity Orbital State Vector
      * @note Derived from the Keplerian elements
      * @remark Determined by the breakup simulation
      */
@@ -86,7 +86,7 @@ class Satellite {
 
     /**
      * The cartesian position vector [m]
-     * @note Directly given as input parameter
+     * @note Directly given as input parameter, e.g. the position Orbital State Vector
      * @note Derived from the Keplerian elements
      * @remark Determined by the breakup simulation, more precisely inherited from parent
      */
