@@ -108,6 +108,30 @@ in the TLE optionally in first and second row in the beginning (example: 25544).
 ### Output
 The simulation will produce a CSV file.
 
+## Library
+The Breakup Simulation can be used directly from any C++ project
+without the need of file input, etc.
+To create a new Breakup Simulation just follow these four steps:
+    
+1. Create a new RuntimeInputSource and define the parameter
+   (use the SatelliteBuilder to easier create new Satellites
+   and get feedback about the completeness)
+2. Give this RuntimeInputSource to the BreakupFactory
+3. Create your Breakup Simulation
+4. Run and get the Result!
+
+Example:
+
+```cpp
+    //RuntimeInput via the RuntimeInputSource Object (minmial Config: minL_c = 0.05 + inputSatellites)
+    auto configurationSource = std::shared_ptr<ConfigurationSource>{new RuntimeInputSource(0.05, satellites)};
+    //Give the BreakupFactory its configuration object (YMALConfigurationReader or RuntimeInputSource or your own derived source)
+    BreakupFactory breakupFactory{configurationSource};
+    //Create the Breakup Simulation
+    auto breakup = breakupFactory.getBreakup();
+    //Run it and get the result via breakup.getResult();
+    breakup->run();
+```
 ## Testing
 The tests use the framework GoogleTest and
 can simply be run by executing in the build directory:
