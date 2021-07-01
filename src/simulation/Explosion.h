@@ -8,7 +8,12 @@ public:
 
     using Breakup::Breakup;
 
-    void run() override;
+private:
+    void generateFragments() override;
+
+    void characteristicLengthDistribution() override;
+
+    void deltaVelocityDistribution() override;
 
 };
 

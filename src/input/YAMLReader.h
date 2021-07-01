@@ -2,10 +2,10 @@
 
 #include <fstream>
 #include <exception>
+#include <vector>
 #include "yaml-cpp/yaml.h"
 #include "InputReader.h"
 #include "model/Satellite.h"
-#include "model/SatelliteCollection.h"
 #include "model/SatelliteBuilder.h"
 
 /**
@@ -27,7 +27,7 @@ public:
      * satellites! A valid satellite is a satellites which has every date needed to run the simulation with it.<br>
      * @return a SatelliteCollection
      */
-    SatelliteCollection getSatelliteCollection() override;
+    std::vector<Satellite> getSatelliteCollection() override;
 
 private:
 

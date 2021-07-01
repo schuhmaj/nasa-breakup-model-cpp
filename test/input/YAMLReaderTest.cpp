@@ -2,7 +2,6 @@
 
 #include <array>
 #include "input/YAMLReader.h"
-#include "model/SatelliteCollection.h"
 
 
 class YAMLReaderTest : public ::testing::Test {
@@ -52,7 +51,7 @@ protected:
  */
 TEST_F(YAMLReaderTest, getSatelliteCollectionTest) {
     YAMLReader yamlReader{"resources/getSatelliteCollectionTest.yaml"};
-    SatelliteCollection satelliteCollection = yamlReader.getSatelliteCollection();
+    auto satelliteCollection = yamlReader.getSatelliteCollection();
 
     ASSERT_EQ(satelliteCollection.size(), 4);
 

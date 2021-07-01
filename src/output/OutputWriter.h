@@ -1,18 +1,31 @@
 #pragma once
 
-#include "model/SatelliteCollection.h"
+#include <vector>
+#include <string>
+#include "model/Satellite.h"
+#include "simulation/Breakup.h"
 
 /**
- * Interface for Output
- * TODO: Maybe start already writing during calculation as second thread?
- * To be evaluated
+ * Interface for Output (Pure virtual).
  */
 class OutputWriter {
+
+public:
 
     OutputWriter() = default;
 
     virtual ~OutputWriter() = default;
 
-    virtual void printResult(SatelliteCollection &satelliteCollection) = 0;
+    /**
+     * Prints the Satellites to an output source.
+     * @param satelliteCollection
+     */
+    virtual void printResult(const std::vector<Satellite> &satelliteCollection) = 0;
+
+    /**
+     * Prints the result Satellites to an output source.
+     * @param breakup
+     */
+    virtual void printResult(const Breakup &breakup) = 0;
 
 };

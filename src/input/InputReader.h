@@ -1,8 +1,10 @@
 #pragma once
 
 #include <string>
+#include <utility>
+#include <vector>
 #include <iostream>
-#include "model/SatelliteCollection.h"
+#include "model/Satellite.h"
 
 /**
  * Interface for Input. Provides methods to get satellites from an specific input file.
@@ -15,11 +17,8 @@ protected:
 
 public:
 
-    explicit InputReader(const std::string &filename)
-            : _filename{filename} {}
-
-    explicit InputReader(std::string &&filename)
-            : _filename{filename} {}
+    explicit InputReader(std::string filename)
+            : _filename{std::move(filename)} {}
 
     virtual ~InputReader() = default;
 
@@ -27,7 +26,7 @@ public:
      * Returns a satellite collection. Input form varies depending on subclass
      * @return SatelliteCollection
      */
-    virtual SatelliteCollection getSatelliteCollection() = 0;
+    virtual std::vector<Satellite> getSatelliteCollection() = 0;
 
 };
 

@@ -4,10 +4,10 @@ satellites:
   - name: "Iridium 33"
     id: 24946
     satType: SPACECRAFT
-    mass: 700.0
-    velocity: [1.0, 1.0, 1.0]
+    mass: 560.0
+    velocity: [11700.0, 0.0, 0.0]
   - name: "Kosmos 2251"
     id: 22675
     satType: SPACECRAFT
-    mass: 900.0
-    velocity: [2.0, 2.0, 2.0]
+    mass: 950.0
+    velocity: [0.0, 0.0, 0.0]
