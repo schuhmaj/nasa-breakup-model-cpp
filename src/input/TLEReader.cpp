@@ -33,17 +33,17 @@ std::pair<size_t, std::array<double, 6>> TLEReader::getTwoLine(std::istream &ist
 
     //ID
     id = std::stoul(line.substr(2, 5));
-    //Mean Motion
+    //Mean Motion [rev/day]
     keplerElements[0] = std::stod(line.substr(52, 11));
     //Eccentricity
     keplerElements[1] = std::stod("0." + line.substr(26, 7));
-    //Inclination
+    //Inclination [deg]
     keplerElements[2] = std::stod(line.substr(8, 8));
-    //RAAN
+    //RAAN [deg]
     keplerElements[3] = std::stod(line.substr(17, 8));
-    //Argument of Perigee
+    //Argument of Perigee [deg]
     keplerElements[4] = std::stod(line.substr(34, 8));
-    //Mean Anomaly
+    //Mean Anomaly [deg]
     keplerElements[5] = std::stod(line.substr(43, 8));
 
     return std::make_pair(id, keplerElements);

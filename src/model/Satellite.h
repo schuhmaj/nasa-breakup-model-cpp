@@ -7,6 +7,7 @@
 #include <utility>
 #include <cmath>
 #include "util/UtilityKepler.h"
+#include "util/UtilityFunctions.h"
 #include "util/UtilityContainer.h"
 
 /**
@@ -166,10 +167,10 @@ public:
     * @param keplerianElements array holds the arguments in the following order:
     * @param mm - mean motion [revolutions/day]
     * @param e - eccentricity
-    * @param i - inclination [rad]
-    * @param W - longitude of the ascending node (big omega) [rad]
-    * @param w - argument of periapsis (small omega) [rad]
-    * @param MA - Mean Anomaly [rad]
+    * @param i - inclination [deg]
+    * @param W - longitude of the ascending node (big omega) [deg]
+    * @param w - argument of periapsis (small omega) [deg]
+    * @param MA - Mean Anomaly [deg]
     */
     void setCartesianByKeplerTLEFormat(const std::array<double, 6> &keplerianElements);
 

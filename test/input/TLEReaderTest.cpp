@@ -10,10 +10,12 @@ class TLEReaderTest : public ::testing::Test {
 protected:
 
     size_t _expectedID_1 = 25544;
+    //TLE Format Kepler
     std::array<double, 6> _expectedKepler_1 = {15.72125391, 0.0006703, 51.6416,
                                             247.4627, 130.5360, 325.0288};
 
     size_t _expectedID_2 = 48808;
+    //TLE Format Kepler
     std::array<double, 6> _expectedKepler_2 = {1.00272877, 0.0000694, 0.0541,
                                             226.6478, 252.0694, 256.3446};
 

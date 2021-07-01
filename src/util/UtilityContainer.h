@@ -169,12 +169,27 @@ namespace util {
     }
 
     /**
-     * Returns the cross product of two cartesian vectors.
-     * @tparam T - a number
-     * @param lhs - left vector
-     * @param rhs - right vector
-     * @return cross product
+     * Applies the euclidean norm/ L2-norm to a Container (e.g. a vector)
+     * @tparam Container - must be iterable
+     * @param container - e.g. a vector
+     * @return an double containing the L2 norm
      */
+    template<typename Container>
+    double euclideanNorm(const Container &container) {
+        double  sum = 0;
+        for (auto &el : container) {
+            sum += el * el;
+        }
+        return std::sqrt(sum);
+    }
+
+    /**
+    * Returns the cross product of two cartesian vectors.
+    * @tparam T - a number
+    * @param lhs - left vector
+    * @param rhs - right vector
+    * @return cross product
+    */
     template<typename T>
     std::array<T, 3> cross(const std::array<T, 3> &lhs, const std::array<T, 3> &rhs) {
         std::array<T, 3> result{};
@@ -195,24 +210,6 @@ namespace util {
     T dot(const std::array<T, 3> &lhs, const std::array<T, 3> &rhs) {
         std::array<T, 3> result = lhs * rhs;
         return std::accumulate(result.begin(), result.end(), 0);
-    }
-
-    /**
-     * Applies the euclidean norm/ L2-norm to a Container (e.g. a vector)
-     * @tparam Container - must be iterable
-     * @param container - e.g. a vector
-     * @return an double containing the L2 norm
-     */
-    template<typename Container>
-    double euclideanNorm(const Container &container) {
-        return std::sqrt(
-                std::accumulate(
-                        std::begin(container),
-                        std::end(container),
-                        0,
-                        [](const double acc, const double x) -> double { return acc + x * x; }
-                )
-        );
     }
 
     /**

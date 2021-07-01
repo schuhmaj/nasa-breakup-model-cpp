@@ -123,6 +123,10 @@ void Satellite::setCartesianByKeplerTA(const std::array<double, 6> &keplerianEle
 void Satellite::setCartesianByKeplerTLEFormat(const std::array<double, 6> &keplerianElements) {
     std::array<double, 6> keplerianElementsMA {keplerianElements};
     keplerianElementsMA[0] = util::meanMotionToSemiMajorAxis(keplerianElements[0]);
+    keplerianElementsMA[2] = util::degToRad(keplerianElements[0]);
+    keplerianElementsMA[3] = util::degToRad(keplerianElements[0]);
+    keplerianElementsMA[4] = util::degToRad(keplerianElements[0]);
+    keplerianElementsMA[5] = util::degToRad(keplerianElements[0]);
     this->setCartesianByKeplerMA(keplerianElementsMA);
 }
 
@@ -157,10 +161,6 @@ std::array<double, 6> Satellite::getKeplerEA() {
     /// 4 - We compute evett: the eccentricity vector
     R0 = euclideanNorm(_position);
     Dum_Vec = cross(_velocity, h);
-    /*TODO Remove when tested and solution right
-    for (i = 0; i < 3; i++)
-        evett[i] = Dum_Vec[i] / GRAVITATIONAL_PARAMETER_EARTH - _position[i] / R0;
-    */
     evett = Dum_Vec / GRAVITATIONAL_PARAMETER_EARTH - _position / R0;
 
     /// The eccentricity is calculated and stored as the second orbital element
@@ -176,13 +176,13 @@ std::array<double, 6> Satellite::getKeplerEA() {
     temp = dot(n, evett);
     keplerianElements[4] = acos(temp / keplerianElements[1]);
     if (evett[2] < 0) {
-        keplerianElements[4] = 2 * M_PI - keplerianElements[4];
+        keplerianElements[4] = 2 * PI - keplerianElements[4];
     }
 
     /// Argument of longitude is calculated and stored as the fourth orbital element
     keplerianElements[3] = acos(n[0]);
     if (n[1] < 0) {
-        keplerianElements[3] = 2 * M_PI - keplerianElements[3];
+        keplerianElements[3] = 2 * PI - keplerianElements[3];
     }
 
     temp = dot(evett, _position);
@@ -193,7 +193,7 @@ std::array<double, 6> Satellite::getKeplerEA() {
     temp = dot(_position, _velocity);
 
     if (temp < 0.0) {
-        ni = 2 * M_PI - ni;
+        ni = 2 * PI - ni;
     }
 
     /// Eccentric anomaly or the gudermannian is calculated and stored as the sixth orbital element
