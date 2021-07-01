@@ -208,8 +208,7 @@ namespace util {
     */
     template<typename T>
     T dot(const std::array<T, 3> &lhs, const std::array<T, 3> &rhs) {
-        std::array<T, 3> result = lhs * rhs;
-        return std::accumulate(result.begin(), result.end(), 0);
+        return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
     }
 
     /**

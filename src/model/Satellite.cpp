@@ -32,13 +32,13 @@ const std::map<SatType, std::string> Satellite::satTypeToString{{SatType::SPACEC
 void Satellite::setCartesianByKeplerEA(const std::array<double, 6> &keplerianElements) {
     using util::GRAVITATIONAL_PARAMETER_EARTH;
 
-    double a = keplerianElements[0];
-    double e = keplerianElements[1];
-    double i = keplerianElements[2];
-    double W = keplerianElements[3];
-    double w = keplerianElements[4];
-    double EA = keplerianElements[5];
-
+    auto &E = keplerianElements;
+    double a = E[0];
+    double e = E[1];
+    double i = E[2];
+    double omg = E[3];
+    double omp = E[4];
+    double EA = E[5];
     double b, n, xper, yper, xdotper, ydotper;
     double R[3][3];
     double cosomg, cosomp, sinomg, sinomp, cosi, sini;
@@ -63,7 +63,7 @@ void Satellite::setCartesianByKeplerEA(const std::array<double, 6> &keplerianEle
     } else // EA is the Gudermannian
     {
         b = -a * sqrt(e * e - 1);
-        n = sqrt(-GRAVITATIONAL_PARAMETER_EARTH / (a * a * a));
+        n = sqrt((- GRAVITATIONAL_PARAMETER_EARTH) / (a * a * a));
 
         dNdZeta = e * (1 + tan(EA) * tan(EA)) - (0.5 + 0.5 * pow(tan(0.5 * EA + M_PI_4), 2)) / tan(0.5 * EA + M_PI_4);
 
@@ -76,10 +76,10 @@ void Satellite::setCartesianByKeplerEA(const std::array<double, 6> &keplerianEle
 
     // 2 - We then built the rotation matrix from perifocal reference frame to inertial
 
-    cosomg = cos(W);
-    cosomp = cos(w);
-    sinomg = sin(W);
-    sinomp = sin(w);
+    cosomg = cos(omg);
+    cosomp = cos(omp);
+    sinomg = sin(omg);
+    sinomp = sin(omp);
     cosi = cos(i);
     sini = sin(i);
 
@@ -98,12 +98,14 @@ void Satellite::setCartesianByKeplerEA(const std::array<double, 6> &keplerianEle
     double temp[3] = {xper, yper, 0.0};
     double temp2[3] = {xdotper, ydotper, 0};
 
+    auto &r0 = _position;
+    auto &v0 = _velocity;
     for (int j = 0; j < 3; j++) {
-        _position[j] = 0.0;
-        _velocity[j] = 0.0;
+        r0[j] = 0.0;
+        v0[j] = 0.0;
         for (int k = 0; k < 3; k++) {
-            _position[j] += R[j][k] * temp[k];
-            _velocity[j] += R[j][k] * temp2[k];
+            r0[j] += R[j][k] * temp[k];
+            v0[j] += R[j][k] * temp2[k];
         }
     }
 }
@@ -205,6 +207,9 @@ std::array<double, 6> Satellite::getKeplerEA() {
                                           * tan(ni /
                                                 2.0)); // algebraic equivalent of kepler's equation in terms of the Gudermannian
     }
+    if (keplerianElements[5] < 0) {
+        keplerianElements[5] += 2 * PI;
+    }
     return keplerianElements;
 }
 
@@ -218,13 +223,4 @@ std::array<double, 6> Satellite::getKeplerTA() {
     auto kepler = getKeplerEA();
     kepler[5] = util::eccentricAnomalyToTrueAnomaly(kepler[5], kepler[1]);
     return kepler;
-}
-
-std::ostream &operator<<(std::ostream &os, const Satellite &satellite) {
-    //TODO Rework later
-    return os << "ID:\t" << satellite._id << "\n"
-              << "Name:\t" << satellite._name << "\n"
-              << "L_c:\t" << satellite._characteristicLength << "\n"
-              << "M:\t" << satellite._mass << "\n"
-              << "A/M:\t" << satellite._areaToMassRatio << "\n";
 }

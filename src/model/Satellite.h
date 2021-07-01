@@ -221,8 +221,6 @@ public:
         return not(lhs == rhs);
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const Satellite &satellite);
-
     /*
      * Getter and Setter
      */
