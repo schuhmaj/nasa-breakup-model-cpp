@@ -14,7 +14,7 @@
  */
 class BreakupFactory {
 
-    std::shared_ptr<ConfigurationSource> _configurationReader;
+    std::shared_ptr<ConfigurationSource> _configurationSource;
 
     double _minimalCharacteristicLength;
 
@@ -28,13 +28,13 @@ class BreakupFactory {
 
 public:
 
-    explicit BreakupFactory(const std::shared_ptr<ConfigurationSource> &configurationReader)
-            : _configurationReader{configurationReader},
-              _minimalCharacteristicLength{configurationReader->getMinimalCharacteristicLength()},
-              _simulationType{configurationReader->getTypeOfSimulation()},
-              _currentMaximalGivenID{configurationReader->getCurrentMaximalGivenID()},
-              _idFilter{configurationReader->getIDFilter()},
-              _satellites{configurationReader->getDataReader()->getSatelliteCollection()} {}
+    explicit BreakupFactory(const std::shared_ptr<ConfigurationSource> &configurationSource)
+            : _configurationSource{configurationSource},
+              _minimalCharacteristicLength{configurationSource->getMinimalCharacteristicLength()},
+              _simulationType{configurationSource->getTypeOfSimulation()},
+              _currentMaximalGivenID{configurationSource->getCurrentMaximalGivenID()},
+              _idFilter{configurationSource->getIDFilter()},
+              _satellites{configurationSource->getDataReader()->getSatelliteCollection()} {}
 
     /**
      * Adds an input source for the satellites.
