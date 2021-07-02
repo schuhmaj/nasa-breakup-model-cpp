@@ -100,7 +100,7 @@ public:
         return *this;
     }
 
-    std::optional<std::set<size_t>> getIDSelection() override {
+    std::optional<std::set<size_t>> getIDFilter() override {
         return _idFilter;
     }
 

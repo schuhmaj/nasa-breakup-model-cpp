@@ -44,7 +44,7 @@ The given yaml-file should look like this:
     inputSource: ["../data.yaml"]     #Path to input file(s) - One of the following:
                                       #1) ["data.yaml"]
                                       #2) ["satcat.csv", "tle.txt"]
-    filterForIDs: [1, 2]              #Only the satellites with these IDs will be
+    idFilter: [1, 2]                  #Only the satellites with these IDs will be
                                       #recognized by the simulation.
                                       #If not given, no filter is applied
 ```    

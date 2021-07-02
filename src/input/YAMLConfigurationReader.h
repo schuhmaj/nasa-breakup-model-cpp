@@ -66,7 +66,7 @@ public:
      * Returns the ID selection for the filter if given. Else an empty optional is returned.
      * @return filter or empty
      */
-    std::optional<std::set<size_t>> getIDSelection() override;
+    std::optional<std::set<size_t>> getIDFilter() override;
 
 };
 

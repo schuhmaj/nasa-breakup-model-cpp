@@ -65,7 +65,7 @@ public:
      * Default implemented: It does not return any Satellites --> no filter
      * @return optional containing a filter-set or not
      */
-    virtual std::optional<std::set<size_t>> getIDSelection() {
+    virtual std::optional<std::set<size_t>> getIDFilter() {
         return std::nullopt;
     }
 
