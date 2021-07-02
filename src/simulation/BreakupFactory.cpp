@@ -1,6 +1,6 @@
 #include "BreakupFactory.h"
 
-BreakupFactory &BreakupFactory::changeConfiguration(const std::shared_ptr<ConfigurationSource> &configurationReader) {
+BreakupFactory &BreakupFactory::reconfigure(const std::shared_ptr<ConfigurationSource> &configurationReader) {
     _configurationReader = configurationReader;
     return *this;
 }

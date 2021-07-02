@@ -29,7 +29,7 @@ public:
      * @param configurationReader - a shared pointer to an input source
      * @return this
      */
-    BreakupFactory &changeConfiguration(const std::shared_ptr<ConfigurationSource> &configurationReader);
+    BreakupFactory &reconfigure(const std::shared_ptr<ConfigurationSource> &configurationReader);
 
     /**
      * Creates a new Breakup Simulation with the given input.
