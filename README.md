@@ -66,14 +66,14 @@ A "data.yaml" should have the following form (for example):
       area: 3.5                     #Either mass or area is a must
                                     #Mass in [kg], Area (Radar Cross Section) in [m^2]
       kepler:                       #Either velocity (+ position) or
-        semi-major-axis: 1.0        #Keplerian Elements
-        eccentricity: 2.0
-        inclination: 3.0
-        longitude-of-the-ascending-node: 4.0
-        argument-of-periapsis: 5.0
-        true-anomaly: 6.0           #You don't have to give all three of them to the simulation
-        eccentric-anomaly: 7.0      #But one of them is a must.
-        mean-anomaly: 8.0           #The program ignores if multipe anomalies are given
+        semi-major-axis: 6798505.86 #Keplerian Elements
+        eccentricity: 0.0002215     #Angles should be given in [rad]
+        inclination: 0.9013735469   #semi-major-axis in [m]
+        longitude-of-the-ascending-node: 4.724103630312
+        argument-of-periapsis: 2.237100203348
+        true-anomaly: (double)      #You don't have to give all three of them to the simulation
+        eccentric-anomaly: (double) #But one of them is a must.
+        mean-anomaly: 0.2405604761  #The program ignores if multipe anomalies are given
                                     #expect one.The precedence is: Eccentric > Mean > True
     - ...
 ```
