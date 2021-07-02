@@ -2,16 +2,18 @@
 
 BreakupFactory &BreakupFactory::reconfigure(const std::shared_ptr<ConfigurationSource> &configurationReader) {
     _configurationReader = configurationReader;
-    _dataReader = configurationReader->getDataReader();
+    _minimalCharacteristicLength = configurationReader->getMinimalCharacteristicLength();
+    _simulationType = configurationReader->getTypeOfSimulation();
+    _currentMaximalGivenID = configurationReader->getCurrentMaximalGivenID();
+    _idFilter = configurationReader->getIDFilter();
+    _satellites = configurationReader->getDataReader()->getSatelliteCollection();
     return *this;
 }
 
 std::unique_ptr<Breakup> BreakupFactory::getBreakup() const {
-    auto satelliteVector{_dataReader->getSatelliteCollection()};
+    auto satelliteVector = this->applyFilter();
 
-    applyFilter(satelliteVector);
-
-    switch (_configurationReader->getTypeOfSimulation()) {
+    switch (_simulationType) {
         case SimulationType::EXPLOSION:
             if (satelliteVector.size() == 1) {
                 return createExplosion(satelliteVector);
