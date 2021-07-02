@@ -58,3 +58,43 @@ TEST_F(SatelliteTest, KeplerConversionTest) {
         EXPECT_NEAR(actualKepler[i], expectedKepler[i], 0.0001);
     }
 }
+
+class SatelliteKeplerTest : public ::testing::TestWithParam<std::array<double, 6>> {
+
+};
+
+std::vector<std::array<double, 6>> getKeplerMAValues() {
+    std::vector<std::array<double, 6>> values{};
+
+    //Why is the 0. value not in the vector?
+    //If eccentricity is zero and inclination too, then W and w have no influence/ are not unique
+    std::array<double, 6> kepler{{6800000.0, 0.0, 0.0,
+                                         0.0, 0.0, 1.5708}};
+
+    for (unsigned int i = 0; i < 50; ++i) {
+        kepler[0] += 100000;        //+100km
+        kepler[1] += 0.01;          //+0.01 eccentricity
+        kepler[2] += 0.0349066;     //+2 deg inclination
+        kepler[3] += 0.0174533;     //+1 deg RAAN
+        kepler[4] += 0.00872665;    //+0.5 deg argument of perigee
+        values.push_back(kepler);
+    }
+
+    return values;
+}
+
+TEST_P(SatelliteKeplerTest, KeplerConversionTest) {
+    std::array<double, 6> expectedKepler = GetParam();
+    Satellite sat{1};
+
+    sat.setCartesianByKeplerMA(expectedKepler);
+
+    auto actualKepler = sat.getKeplerMA();
+
+    for (unsigned int i = 0; i < 6; ++i) {
+        EXPECT_NEAR(actualKepler[i], expectedKepler[i], 0.0001) << "i = " << i;
+    }
+}
+
+INSTANTIATE_TEST_SUITE_P(KeplerArgumentParam, SatelliteKeplerTest,
+                         ::testing::ValuesIn(getKeplerMAValues()));
