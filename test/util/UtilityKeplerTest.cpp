@@ -10,6 +10,9 @@ class UtilityKeplerTest01 : public ::testing::TestWithParam<double> {
 
 };
 
+/**
+ * Conversion Test Mean Anomaly <--> Eccentric Anomaly
+ */
 TEST_P(UtilityKeplerTest01, meanAnomalyToEccentricAnomaly){
     using namespace util;
     double eccentricity = 0.5;
@@ -23,6 +26,9 @@ TEST_P(UtilityKeplerTest01, meanAnomalyToEccentricAnomaly){
     ASSERT_DOUBLE_EQ(actualMeanAnomaly, expectedMeanAnomaly);
 }
 
+/**
+ * Conversion Test True Anomaly <--> Eccentric Anomaly
+ */
 TEST_P(UtilityKeplerTest01, trueAnomalyToEccentricAnomaly){
     using namespace util;
     double eccentricity = 0.5;
@@ -54,10 +60,31 @@ std::vector<double> radValues() {
 INSTANTIATE_TEST_SUITE_P(DoubleParam, UtilityKeplerTest01,
                          ::testing::ValuesIn(radValues()));
 
+class UtilityKeplerTest02 : public ::testing::TestWithParam<double> {
 
-TEST(UtilityKeplerTest02, meanMotionToSemiMajorAxisConversion) {
+};
+
+/**
+ * Returns a vector containing double values.
+ * @return an vector containing 50 values from ]0.0; 125.0]
+ */
+std::vector<double> meanMotionValues() {
+    std::vector<double> val{};
+    val.reserve(50);
+    double d = 2.5;
+    while (d <= 125.0) {
+        val.push_back(d);
+        d += 2.5;
+    }
+    return val;
+}
+
+/**
+ * Conversion Mean Motion --> Semi Major Axis
+ */
+TEST_P(UtilityKeplerTest02, meanMotionToSemiMajorAxisConversion) {
     using namespace util;
-    double  meanMotion = 15.72125391;
+    double  meanMotion = GetParam();
 
     double expectedSemiMajorAxis = std::pow(GRAVITATIONAL_PARAMETER_EARTH, 1.0/3.0) / std::pow(2 * PI * meanMotion / 86400.0, 2.0/3.0);
 
@@ -65,3 +92,6 @@ TEST(UtilityKeplerTest02, meanMotionToSemiMajorAxisConversion) {
 
     ASSERT_NEAR(actualSemiMajorAxis, expectedSemiMajorAxis, 0.1);
 }
+
+INSTANTIATE_TEST_SUITE_P(DoubleParam, UtilityKeplerTest02,
+                         ::testing::ValuesIn(meanMotionValues()));
