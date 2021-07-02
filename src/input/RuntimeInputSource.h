@@ -10,15 +10,15 @@
  */
 class RuntimeInputSource : public ConfigurationSource, public DataSource {
 
-    double _minimalCharacteristicLength;
+    const double _minimalCharacteristicLength;
 
-    SimulationType _simulationType
+    const SimulationType _simulationType
 
-    size_t _currentMaximalGivenID;
+    const size_t _currentMaximalGivenID;
 
-    std::optional<std::set<size_t>> _idFilter;
+    const std::optional<std::set<size_t>> _idFilter;
 
-    std::vector<Satellite> _satellites;
+    const std::vector<Satellite> _satellites;
 
 public:
 
