@@ -2,6 +2,7 @@
 
 BreakupFactory &BreakupFactory::reconfigure(const std::shared_ptr<ConfigurationSource> &configurationReader) {
     _configurationReader = configurationReader;
+    _dataReader = configurationReader->getDataReader();
     return *this;
 }
 
