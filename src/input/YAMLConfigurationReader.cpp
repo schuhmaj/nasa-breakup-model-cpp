@@ -63,3 +63,11 @@ std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() {
     }
     return std::nullopt;
 }
+
+bool YAMLConfigurationReader::getOutputWithKepler() {
+    if (_file["keplerOutput"]) {
+        return _file["keplerOutput"].as<bool>();
+    } else {
+        return false;
+    }
+}

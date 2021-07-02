@@ -132,7 +132,7 @@ void Satellite::setCartesianByKeplerTLEFormat(const std::array<double, 6> &keple
     this->setCartesianByKeplerMA(keplerianElementsMA);
 }
 
-std::array<double, 6> Satellite::getKeplerEA() {
+std::array<double, 6> Satellite::getKeplerEA() const{
     using namespace util;
     std::array<double, 6> keplerianElements{};
 
@@ -213,13 +213,13 @@ std::array<double, 6> Satellite::getKeplerEA() {
     return keplerianElements;
 }
 
-std::array<double, 6> Satellite::getKeplerMA() {
+std::array<double, 6> Satellite::getKeplerMA() const{
     auto kepler = getKeplerEA();
     kepler[5] = util::eccentricAnomalyToMeanAnomaly(kepler[5], kepler[1]);
     return kepler;
 }
 
-std::array<double, 6> Satellite::getKeplerTA() {
+std::array<double, 6> Satellite::getKeplerTA() const{
     auto kepler = getKeplerEA();
     kepler[5] = util::eccentricAnomalyToTrueAnomaly(kepler[5], kepler[1]);
     return kepler;

@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
         breakUpSimulation->run();
 
         //Prints the the output to a CSV file
-        auto output = std::unique_ptr<OutputWriter>{new CSVWriter{"result.csv"}};
+        auto output = std::unique_ptr<OutputWriter>{new CSVWriter{"result.csv", configurationSource->getOutputWithKepler()}};
         output->printResult(*breakUpSimulation);
     } catch (std::exception &e) {
         std::cerr << e.what();

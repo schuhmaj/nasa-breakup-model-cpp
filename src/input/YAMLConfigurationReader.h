@@ -68,5 +68,7 @@ public:
      */
     std::optional<std::set<size_t>> getIDFilter() override;
 
+    bool getOutputWithKepler() override;
+
 };
 

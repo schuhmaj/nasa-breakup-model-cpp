@@ -182,7 +182,7 @@ public:
      * @note Code taken and adapted from pykep
      * (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/ic2par.hpp) [25.06.2021]
      */
-    std::array<double, 6> getKeplerEA();
+    std::array<double, 6> getKeplerEA() const;
 
     /**
     * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
@@ -190,7 +190,7 @@ public:
     * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
     * w = argument of periapsis [rad]; MA = mean Anomaly [rad]
     */
-    std::array<double, 6> getKeplerMA();
+    std::array<double, 6> getKeplerMA() const;
 
     /**
     * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
@@ -198,7 +198,7 @@ public:
     * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
     * w = argument of periapsis [rad]; TA = true Anomaly [rad]
     */
-    std::array<double, 6> getKeplerTA();
+    std::array<double, 6> getKeplerTA() const;
 
     /**
      * Compares two Satellites by comparing their IDs.

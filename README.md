@@ -47,6 +47,8 @@ The given yaml-file should look like this:
     idFilter: [1, 2]                  #Only the satellites with these IDs will be
                                       #recognized by the simulation.
                                       #If not given, no filter is applied
+    keplerOutput: True                #Parameter is optional and only reasonable
+                                      #if the input contains Kepler based data
 ```    
 A "data.yaml" should have the following form (for example):
 

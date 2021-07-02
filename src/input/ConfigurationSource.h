@@ -69,4 +69,13 @@ public:
         return std::nullopt;
     }
 
+    /**
+     * Returns true if the Output should include the Keplerian Elements.
+     * Default implemented: returns false.
+     * @return true if Kepler Output is wished.
+     */
+    virtual bool getOutputWithKepler() {
+        return false;
+    }
+
 };
