@@ -12,7 +12,7 @@ class RuntimeInputSource : public ConfigurationSource, public DataSource {
 
     const double _minimalCharacteristicLength;
 
-    const SimulationType _simulationType
+    const SimulationType _simulationType;
 
     const size_t _currentMaximalGivenID;
 
