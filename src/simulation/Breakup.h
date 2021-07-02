@@ -196,7 +196,7 @@ private:
 
 public:
 
-    const double getMinimalCharacteristicLength() const {
+    double getMinimalCharacteristicLength() const {
         return _minimalCharacteristicLength;
     }
 
