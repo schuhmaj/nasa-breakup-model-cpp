@@ -1,6 +1,6 @@
-#include "BreakupFactory.h"
+#include "BreakupBuilder.h"
 
-BreakupFactory &BreakupFactory::reconfigure(const std::shared_ptr<ConfigurationSource> &configurationSource) {
+BreakupBuilder &BreakupBuilder::reconfigure(const std::shared_ptr<ConfigurationSource> &configurationSource) {
     _configurationSource = configurationSource;
     _minimalCharacteristicLength = configurationSource->getMinimalCharacteristicLength();
     _simulationType = configurationSource->getTypeOfSimulation();
@@ -10,42 +10,42 @@ BreakupFactory &BreakupFactory::reconfigure(const std::shared_ptr<ConfigurationS
     return *this;
 }
 
-BreakupFactory &BreakupFactory::reloadConfigurationSource() {
+BreakupBuilder &BreakupBuilder::reloadConfigurationSource() {
     this->reconfigure(_configurationSource);
     return *this;
 }
 
-BreakupFactory &BreakupFactory::setMinimalCharacteristicLength(double minimalCharacteristicLength) {
+BreakupBuilder &BreakupBuilder::setMinimalCharacteristicLength(double minimalCharacteristicLength) {
     _minimalCharacteristicLength = minimalCharacteristicLength;
     return *this;
 }
 
-BreakupFactory &BreakupFactory::setSimulationType(SimulationType simulationType) {
+BreakupBuilder &BreakupBuilder::setSimulationType(SimulationType simulationType) {
     _simulationType = simulationType;
     return *this;
 }
 
-BreakupFactory &BreakupFactory::setCurrentMaximalGivenID(size_t currentMaximalGivenID) {
+BreakupBuilder &BreakupBuilder::setCurrentMaximalGivenID(size_t currentMaximalGivenID) {
     _currentMaximalGivenID = currentMaximalGivenID;
     return *this;
 }
 
-BreakupFactory &BreakupFactory::setIDFilter(const std::optional<std::set<size_t>> &idFilter) {
+BreakupBuilder &BreakupBuilder::setIDFilter(const std::optional<std::set<size_t>> &idFilter) {
     _idFilter = idFilter;
     return *this;
 }
 
-BreakupFactory &BreakupFactory::setDataSource(const std::vector<Satellite> &satellites) {
+BreakupBuilder &BreakupBuilder::setDataSource(const std::vector<Satellite> &satellites) {
     _satellites = satellites;
     return *this;
 }
 
-BreakupFactory &BreakupFactory::setDataSource(const std::shared_ptr<DataSource> &dataSource) {
+BreakupBuilder &BreakupBuilder::setDataSource(const std::shared_ptr<DataSource> &dataSource) {
     _satellites = dataSource->getSatelliteCollection();
     return *this;
 }
 
-std::unique_ptr<Breakup> BreakupFactory::getBreakup() const {
+std::unique_ptr<Breakup> BreakupBuilder::getBreakup() const {
     auto satelliteVector = this->applyFilter();
 
     switch (_simulationType) {

@@ -12,7 +12,7 @@
 /**
  * Interface to easily create a Breakup Simulation.
  */
-class BreakupFactory {
+class BreakupBuilder {
 
     std::shared_ptr<ConfigurationSource> _configurationSource;
 
@@ -28,7 +28,7 @@ class BreakupFactory {
 
 public:
 
-    explicit BreakupFactory(const std::shared_ptr<ConfigurationSource> &configurationSource)
+    explicit BreakupBuilder(const std::shared_ptr<ConfigurationSource> &configurationSource)
             : _configurationSource{configurationSource},
               _minimalCharacteristicLength{configurationSource->getMinimalCharacteristicLength()},
               _simulationType{configurationSource->getTypeOfSimulation()},
@@ -41,49 +41,49 @@ public:
      * @param configurationReader - a shared pointer to an input source
      * @return this
      */
-    BreakupFactory &reconfigure(const std::shared_ptr<ConfigurationSource> &configurationReader);
+    BreakupBuilder &reconfigure(const std::shared_ptr<ConfigurationSource> &configurationReader);
 
     /**
      * Reloads the ConfigurationSource. This can mean e. g. to re-read the underlying file or similar actions.
      * This method is then useful if you have previously overridden some settings by the "set"-Methods.
      * @return this
      */
-    BreakupFactory &reloadConfigurationSource();
+    BreakupBuilder &reloadConfigurationSource();
 
     /**
      * Overrides/ Re-Sets the Minimal Characteristic Length L_c in [m] to a specific value.
      * @param minimalCharacteristicLength in [m] as double
      * @return this
      */
-    BreakupFactory &setMinimalCharacteristicLength(double minimalCharacteristicLength);
+    BreakupBuilder &setMinimalCharacteristicLength(double minimalCharacteristicLength);
 
     /**
      * Overrides/ Re-Sets the Simulation Type to a specific value.
      * @param simulationType - Explosion, Collision, Unknown
      * @return this
      */
-    BreakupFactory &setSimulationType(SimulationType simulationType);
+    BreakupBuilder &setSimulationType(SimulationType simulationType);
 
     /**
      * Overrides/ Re-Sets the currentMaximalGivenID (e.g. maximal given NORAD Catalog ID) to a specific value.
      * @param currentMaximalGivenID - size_t
      * @return this
      */
-    BreakupFactory &setCurrentMaximalGivenID(size_t currentMaximalGivenID);
+    BreakupBuilder &setCurrentMaximalGivenID(size_t currentMaximalGivenID);
 
     /**
      * Overrides/ Re-Sets the ID Filter and sets it to a new set.
      * @param idFilter - contains the IDs of satellites which should be used, the rest is discarded
      * @return this
      */
-    BreakupFactory &setIDFilter(const std::optional<std::set<size_t>> &idFilter);
+    BreakupBuilder &setIDFilter(const std::optional<std::set<size_t>> &idFilter);
 
     /**
      * Overrides/ Re-Sets the Data Source to a specific Satellite vector
      * @param satellites - vector of satellites
      * @return this
      */
-    BreakupFactory &setDataSource(const std::vector<Satellite> &satellites);
+    BreakupBuilder &setDataSource(const std::vector<Satellite> &satellites);
 
     /**
      * Overrides/ Re-Sets the Data Source and calls the method getSatelliteCollection on it to set the internal
@@ -91,7 +91,7 @@ public:
      * @param dataSource - a pointer to an DataSource
      * @return this
      */
-    BreakupFactory &setDataSource(const std::shared_ptr<DataSource> &dataSource);
+    BreakupBuilder &setDataSource(const std::shared_ptr<DataSource> &dataSource);
 
     /**
      * Creates a new Breakup Simulation with the given input.

@@ -116,7 +116,7 @@ To create a new Breakup Simulation just follow these four steps:
 1. Create a new RuntimeInputSource and define the parameter
    (use the SatelliteBuilder to easier create new Satellites
    and get feedback about the completeness)
-2. Give this RuntimeInputSource to the BreakupFactory
+2. Give this RuntimeInputSource to the BreakupBuilder
 3. Create your Breakup Simulation
 4. Run and get the Result!
 
@@ -125,8 +125,8 @@ Example:
 ```cpp
     //RuntimeInput via the RuntimeInputSource Object (minmial Config: minL_c = 0.05 + inputSatellites)
     auto configurationSource = std::shared_ptr<ConfigurationSource>{new RuntimeInputSource(0.05, satellites)};
-    //Give the BreakupFactory its configuration object (YMALConfigurationReader or RuntimeInputSource or your own derived source)
-    BreakupFactory breakupFactory{configurationSource};
+    //Give the BreakupBuilder its configuration object (YMALConfigurationReader or RuntimeInputSource or your own derived source)
+    BreakupBuilder breakupFactory{configurationSource};
     //Create the Breakup Simulation
     auto breakup = breakupFactory.getBreakup();
     //Run it and get the result via breakup.getResult();
