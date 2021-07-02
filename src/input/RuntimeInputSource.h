@@ -65,6 +65,24 @@ public:
               _idFilter{std::move(idFilter)},
               _satellites{std::move(satellites)} {}
 
+    /**
+     * Constructs a new Runtime Source with all parameters available.
+     * Here you give the RuntimeInputSource another DataSource like an TLESatcatReader or a YAMLDataReader to configure
+     * settings via this object but with advantage of file input.
+     * @param minimalCharacteristicLength - double
+     * @param simulationType - type of simulation --> strong definition, error handling possible
+     * @param currentMaximalGivenId - maximal given NORAD Catalog ID
+     * @param idFilter - filter which satellites to use
+     * @param dataSource - a DataSource like TLESatcatReader or YAMLDataReader
+     */
+    RuntimeInputSource(double minimalCharacteristicLength, SimulationType simulationType, size_t currentMaximalGivenId,
+                       std::optional<std::set<size_t>> idFilter, const std::shared_ptr<DataSource>& dataSource)
+            : _minimalCharacteristicLength{minimalCharacteristicLength},
+              _simulationType{simulationType},
+              _currentMaximalGivenID{currentMaximalGivenId},
+              _idFilter{std::move(idFilter)},
+              _satellites{dataSource->getSatelliteCollection()} {}
+
 
     double getMinimalCharacteristicLength() override {
         return _minimalCharacteristicLength;
