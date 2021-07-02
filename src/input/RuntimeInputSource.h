@@ -35,6 +35,21 @@ public:
               _satellites{std::move(satellites)} {}
 
     /**
+     * Constructs a new Runtime Source with four parameters available (all expect Filter)
+     * @param minimalCharacteristicLength - double
+     * @param simulationType - type of simulation --> strong definition, error handling possible
+     * @param currentMaximalGivenId - maximal given NORAD Catalog ID
+     * @param satellites - satellite vector
+     */
+    RuntimeInputSource(double minimalCharacteristicLength, SimulationType simulationType, size_t currentMaximalGivenId,
+                       std::vector<Satellite> satellites)
+            : _minimalCharacteristicLength{minimalCharacteristicLength},
+              _simulationType{simulationType},
+              _currentMaximalGivenID{currentMaximalGivenId},
+              _idFilter{std::nullopt},
+              _satellites{std::move(satellites)} {}
+
+    /**
      * Constructs a new Runtime Source with all parameters available.
      * @param minimalCharacteristicLength - double
      * @param simulationType - type of simulation --> strong definition, error handling possible
