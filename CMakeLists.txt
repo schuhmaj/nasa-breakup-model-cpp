@@ -9,6 +9,9 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 #Incorporate yaml-cpp into the project
 include(yaml)
 
+#Incorporate spdlog into the project
+include(spdlog)
+
 #Also include the cpp files
 file(GLOB_RECURSE SRC
         "${PROJECT_SOURCE_DIR}/src/*.h"
@@ -22,7 +25,9 @@ target_include_directories(breakupModel PRIVATE "${PROJECT_SOURCE_DIR}/src")
 
 #Links the executable against the yaml-cpp
 target_link_libraries(breakupModel
-        yaml-cpp)
+        yaml-cpp
+        spdlog
+        )
 
 #Enables CTest, must be in the top-level CMakeList.txt, otherwise it won't work
 enable_testing()

@@ -18,6 +18,7 @@ target_include_directories("${PROJECT_NAME}Test" PRIVATE "${PROJECT_SOURCE_DIR}/
 target_link_libraries(breakupModelTest
         gtest_main
         yaml-cpp
+        spdlog
         )
 
 #Copies the test resources into a directory next to the test executable
