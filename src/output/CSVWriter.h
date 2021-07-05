@@ -6,32 +6,41 @@
 #include <string>
 #include <exception>
 #include <utility>
+#include <memory>
 #include "model/Satellite.h"
 #include "util/UtilityContainer.h"
+#include "spdlog/async.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 class CSVWriter : public OutputWriter {
 
-    const std::string _filename{"breakupResult.csv"};
+    std::shared_ptr<spdlog::logger> _logger;
 
-    bool _withKepler{false};
+    bool _withKepler;
 
 public:
 
     using OutputWriter::OutputWriter;
 
-    explicit CSVWriter(std::string filename)
-            : _filename{std::move(filename)} {}
+    CSVWriter() : CSVWriter("breakupResult.csv") {}
 
-    CSVWriter(std::string filename, bool withKepler)
-            : _filename{std::move(filename)},
-              _withKepler{withKepler} {}
+    explicit CSVWriter(const std::string &filename) : CSVWriter(filename, false) {}
 
+    CSVWriter(const std::string &filename, bool withKepler)
+            : _logger{spdlog::basic_logger_mt<spdlog::async_factory>("CSVWriter_" + filename, filename)},
+              _withKepler{withKepler} {
+        _logger->set_pattern("%v");
+    }
 
     void printResult(const std::vector<Satellite> &satelliteCollection) override;
 
     void printResult(const Breakup &breakup) override;
 
 private:
+
+    void printStandard(const std::vector<Satellite> &satelliteCollection) const;
+
+    void printKepler(const std::vector<Satellite> &satelliteCollection) const;
 
     void csvLine(std::ostream &ostream, const Satellite &satellite);
 
