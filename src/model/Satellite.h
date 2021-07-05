@@ -218,7 +218,7 @@ public:
      * @return true if they do not have the same ID
      */
     friend bool operator!=(const Satellite &lhs, const Satellite &rhs) {
-        return not(lhs == rhs);
+        return !(lhs == rhs);
     }
 
     /*
