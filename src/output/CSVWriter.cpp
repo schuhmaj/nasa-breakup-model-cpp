@@ -19,6 +19,7 @@ void CSVWriter::printStandard(const std::vector<Satellite> &satelliteCollection)
     for (const auto &sat : satelliteCollection) {
         auto &v = sat.getVelocity();
         auto &p = sat.getPosition();
+        //For ??? reasons the overload operator<< for arrays (in UtilityContainer) does not work here
         _logger->info("{},{},{},{},{},{},{},[{} {} {}],[{} {} {}]", sat.getId(), sat.getName(), sat.getSatType(),
                       sat.getCharacteristicLength(), sat.getAreaToMassRatio(), sat.getArea(), sat.getMass(),
                       v[0], v[1], v[2], p[0], p[1], p[2]);
@@ -34,6 +35,7 @@ void CSVWriter::printKepler(const std::vector<Satellite> &satelliteCollection) c
         auto &v = sat.getVelocity();
         auto &p = sat.getPosition();
         auto kepler = sat.getKeplerMA();
+        //For ??? reasons the overload operator<< for arrays (in UtilityContainer) does not work here
         _logger->info("{},{},{},{},{},{},{},[{} {} {}],[{} {} {}],{},{},{},{},{},{}", sat.getId(), sat.getName(), sat.getSatType(),
                       sat.getCharacteristicLength(), sat.getAreaToMassRatio(), sat.getArea(), sat.getMass(),
                       v[0], v[1], v[2], p[0], p[1], p[2],
