@@ -11,6 +11,7 @@
 
 /**
  * Creates vtk file of the given input.
+ * Can be visualized e.g. with ParaView.
  */
 class VTKWriter : public OutputWriter {
 
@@ -57,12 +58,12 @@ private:
     template<typename T>
     void printProperty(const std::string &name, const std::function<std::array<T, 3>(const Satellite &satellite)> &property,
                        const std::vector<Satellite> &satelliteCollection) {
-        _logger->info(R"(<DataArray Name="{}" NumberOfComponents="3" format="ascii" type="Float32">)", name);
+        _logger->info(R"(        <DataArray Name="{}" NumberOfComponents="3" format="ascii" type="Float32">)", name);
         for (const auto &sat : satelliteCollection) {
             const auto &array = property(sat);
             _logger->info("          {} {} {}", array[0], array[1], array[2]);
         }
-        _logger->info(R"(</DataArray>)");
+        _logger->info(R"(        </DataArray>)");
     }
 
     /**
@@ -70,6 +71,11 @@ private:
      * @param size - the number of points
      */
     void printHeader(size_t size);
+
+    /**
+     * Prints the separator between point properties and point position in cell.
+     */
+    void printSeparator();
 
     /**
      * Prints the Footer of the VTK file.

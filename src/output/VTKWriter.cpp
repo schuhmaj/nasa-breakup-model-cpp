@@ -1,14 +1,22 @@
 #include "VTKWriter.h"
 
 void VTKWriter::printResult(const std::vector<Satellite> &satelliteCollection) {
+    //Header
     this->printHeader(satelliteCollection.size());
 
+    //Point properties
     this->printProperty<double>("mass", &Satellite::getMass, satelliteCollection);
     this->printProperty<double>("area", &Satellite::getArea, satelliteCollection);
     this->printProperty<double>("area-to-mass", &Satellite::getAreaToMassRatio, satelliteCollection);
     this->printProperty<double>("velocity", &Satellite::getVelocity, satelliteCollection);
+
+    //Separator between point and point-to-cell data
+    this->printSeparator();
+
+    //Point properties related to cell (position)
     this->printProperty<double>("position", &Satellite::getPosition, satelliteCollection);
 
+    //Footer
     this->printFooter();
 }
 
@@ -18,6 +26,12 @@ void VTKWriter::printHeader(size_t size) {
     _logger->info(R"(  <UnstructuredGrid>)");
     _logger->info(R"(    <Piece NumberOfCells="0" NumberOfPoints="{}">)", size);
     _logger->info(R"(      <PointData>)");
+}
+
+void VTKWriter::printSeparator() {
+    _logger->info(R"(      </PointData>)");
+    _logger->info(R"(      <CellData/>)");
+    _logger->info(R"(      <Points>)");
 }
 
 void VTKWriter::printFooter() {

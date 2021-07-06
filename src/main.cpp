@@ -7,6 +7,7 @@
 #include "input/YAMLConfigurationReader.h"
 #include "simulation/BreakupBuilder.h"
 #include "output/CSVWriter.h"
+#include "output/VTKWriter.h"
 
 int main(int argc, char *argv[]) {
 
@@ -34,8 +35,10 @@ int main(int argc, char *argv[]) {
         breakUpSimulation->run();
 
         //Prints the the output to a CSV file
-        auto output = std::unique_ptr<OutputWriter>{new CSVWriter{"result.csv", configurationSource->getOutputWithKepler()}};
-        output->printResult(*breakUpSimulation);
+        auto csv = std::unique_ptr<OutputWriter>{new CSVWriter{"result.csv", configurationSource->getOutputWithKepler()}};
+        csv->printResult(*breakUpSimulation);
+        auto vtk = std::unique_ptr<OutputWriter>{new VTKWriter{"result.vtu"}};
+        vtk->printResult(*breakUpSimulation);
     } catch (std::exception &e) {
         std::cerr << e.what();
     }
