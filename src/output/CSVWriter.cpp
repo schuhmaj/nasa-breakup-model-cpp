@@ -26,7 +26,6 @@ void CSVWriter::printStandard(const std::vector<Satellite> &satelliteCollection)
 }
 
 void CSVWriter::printKepler(const std::vector<Satellite> &satelliteCollection) const {
-    using util::operator<<;
     _logger->info("ID,Name,Satellite Type,Characteristic Length [m],A/M [m^2/kg],Area [m^2],Mass [kg],"
                   "Velocity [m/s],Position [m],"
                   "Semi-Major-Axis [m],Eccentricity,Inclination [rad],Longitude of the ascending node [rad],"
