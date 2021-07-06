@@ -50,10 +50,11 @@ private:
 
     /**
      * Prints a property of the points.
-     * @tparam T - the number type (double, float, int, etc.)
+     * @tparam Property - the type of the property
+     * @tparam Data - the class which contains this property
      * @param name - name of the property, e.g. mass
      * @param property - the property (normally a getter of an satellite), here return value cartesian vector
-     * @param satelliteCollection - the data
+     * @param dataCollection - the data
      * @related I do not use the >> overload because of ADL (https://en.cppreference.com/w/cpp/language/adl)
      */
     template<typename Property, typename Data>
