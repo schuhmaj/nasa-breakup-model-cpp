@@ -43,9 +43,5 @@ private:
 
     void printKepler(const std::vector<Satellite> &satelliteCollection) const;
 
-    void csvLine(std::ostream &ostream, const Satellite &satellite);
-
-    void csvHeader(std::ostream &ostream) const;
-
 };
 
