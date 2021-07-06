@@ -24,8 +24,11 @@ public:
 
     /**
      * Prints the result Satellites to an output source.
+     * Default implemented.
      * @param breakup
      */
-    virtual void printResult(const Breakup &breakup) = 0;
+    virtual void printResult(const Breakup &breakup) {
+        this->printResult(breakup.getResult());
+    }
 
 };

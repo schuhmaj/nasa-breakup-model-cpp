@@ -52,8 +52,6 @@ public:
 
     void printResult(const std::vector<Satellite> &satelliteCollection) override;
 
-    void printResult(const Breakup &breakup) override;
-
 private:
 
     /**

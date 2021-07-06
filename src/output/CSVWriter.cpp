@@ -8,10 +8,6 @@ void CSVWriter::printResult(const std::vector<Satellite> &satelliteCollection) {
     }
 }
 
-void CSVWriter::printResult(const Breakup &breakup) {
-    this->printResult(breakup.getResult());
-}
-
 void CSVWriter::printStandard(const std::vector<Satellite> &satelliteCollection) const {
     _logger->info(
             "ID,Name,Satellite Type,Characteristic Length [m],A/M [m^2/kg],Area [m^2],Mass [kg],"
