@@ -11,6 +11,7 @@
 #include "util/UtilityContainer.h"
 #include "spdlog/async.h"
 #include "spdlog/sinks/basic_file_sink.h"
+#include "spdlog/fmt/ostr.h"
 
 class CSVWriter : public OutputWriter {
 
@@ -27,7 +28,7 @@ public:
     explicit CSVWriter(const std::string &filename) : CSVWriter(filename, false) {}
 
     CSVWriter(const std::string &filename, bool withKepler)
-            : _logger{spdlog::basic_logger_mt<spdlog::async_factory>("CSVWriter_" + filename, filename)},
+            : _logger{spdlog::basic_logger_mt<spdlog::async_factory>("CSVWriter_" + filename, filename, true)},
               _withKepler{withKepler} {
         _logger->set_pattern("%v");
     }
