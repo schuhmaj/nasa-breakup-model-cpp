@@ -32,17 +32,18 @@ private:
 
     /**
      * Prints a property of the points.
-     * @tparam T - the number type (double, float, int, etc.)
+     * @tparam Property - the type of the property
+     * @tparam Data - the class which contains this property
      * @param name - name of the property, e.g. mass
      * @param property - the property (normally a getter of an satellite)
-     * @param satelliteCollection - the data
+     * @param dataCollection - the data
      */
-    template<typename T>
-    void printProperty(const std::string &name, const std::function<T(const Satellite &satellite)> &property,
-                       const std::vector<Satellite> &satelliteCollection) {
+    template<typename Property, typename Data>
+    void printProperty(const std::string &name, const std::function<Property(const Data &data)> &property,
+                       const std::vector<Data> &dataCollection) {
         _logger->info(R"(        <DataArray Name="{}" NumberOfComponents="1" format="ascii" type="Float32">)", name);
-        for (const auto &sat : satelliteCollection) {
-            _logger->info("          {}", property(sat));
+        for (const auto &date : dataCollection) {
+            _logger->info("          {}", property(date));
         }
         _logger->info(R"(        </DataArray>)");
     }
@@ -55,12 +56,12 @@ private:
      * @param satelliteCollection - the data
      * @related I do not use the >> overload because of ADL (https://en.cppreference.com/w/cpp/language/adl)
      */
-    template<typename T>
-    void printProperty(const std::string &name, const std::function<std::array<T, 3>(const Satellite &satellite)> &property,
-                       const std::vector<Satellite> &satelliteCollection) {
+    template<typename Property, typename Data>
+    void printProperty(const std::string &name, const std::function<std::array<Property, 3>(const Data &data)> &property,
+                       const std::vector<Data> &dataCollection) {
         _logger->info(R"(        <DataArray Name="{}" NumberOfComponents="3" format="ascii" type="Float32">)", name);
-        for (const auto &sat : satelliteCollection) {
-            const auto &array = property(sat);
+        for (const auto &date : dataCollection) {
+            const auto &array = property(date);
             _logger->info("          {} {} {}", array[0], array[1], array[2]);
         }
         _logger->info(R"(        </DataArray>)");
