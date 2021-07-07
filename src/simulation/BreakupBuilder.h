@@ -113,34 +113,18 @@ private:
      * @param satelliteVector - std::vector<Satellite>
      * @return a Explosion
      */
-    inline std::unique_ptr<Breakup> createExplosion(std::vector<Satellite> &satelliteVector) const {
-        return std::make_unique<Explosion>(satelliteVector, _minimalCharacteristicLength, _currentMaximalGivenID);
-    }
+    std::unique_ptr<Breakup> createExplosion(std::vector<Satellite> &satelliteVector) const;
 
     /**
      * Creates a Collision Simulation.
      * @param satelliteVector - std::vector<Satellite>
      * @return a Collision
      */
-    inline std::unique_ptr<Breakup> createCollision(std::vector<Satellite> &satelliteVector) const {
-        return std::make_unique<Collision>(satelliteVector, _minimalCharacteristicLength, _currentMaximalGivenID);
-    }
+    std::unique_ptr<Breakup> createCollision(std::vector<Satellite> &satelliteVector) const;
 
     /**
      * Returns an vector containing only the satellites given in the filterSet.
      * @return a modified satellite vector
      */
-    inline std::vector<Satellite> applyFilter() const {
-        if (_idFilter.has_value()) {
-            std::vector<Satellite> satellitesFiltered{_satellites};
-            satellitesFiltered.erase(std::remove_if(satellitesFiltered.begin(), satellitesFiltered.end(),
-                                                 [&](Satellite &sat) {
-                                                     return _idFilter->count(sat.getId()) == 1;
-                                                 }),
-                                     satellitesFiltered.end());
-            return satellitesFiltered;
-        } else {
-            return _satellites;
-        }
-    }
+    std::vector<Satellite> applyFilter() const;
 };

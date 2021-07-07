@@ -73,3 +73,25 @@ std::unique_ptr<Breakup> BreakupBuilder::getBreakup() const {
             }
     }
 }
+
+std::unique_ptr<Breakup> BreakupBuilder::createExplosion(std::vector<Satellite> &satelliteVector) const  {
+    return std::make_unique<Explosion>(satelliteVector, _minimalCharacteristicLength, _currentMaximalGivenID);
+}
+
+std::unique_ptr<Breakup> BreakupBuilder::createCollision(std::vector<Satellite> &satelliteVector) const {
+    return std::make_unique<Collision>(satelliteVector, _minimalCharacteristicLength, _currentMaximalGivenID);
+}
+
+std::vector<Satellite> BreakupBuilder::applyFilter() const {
+    if (_idFilter.has_value()) {
+        std::vector<Satellite> satellitesFiltered{_satellites};
+        satellitesFiltered.erase(std::remove_if(satellitesFiltered.begin(), satellitesFiltered.end(),
+                                                [&](Satellite &sat) {
+                                                    return _idFilter->count(sat.getId()) == 1;
+                                                }),
+                                 satellitesFiltered.end());
+        return satellitesFiltered;
+    } else {
+        return _satellites;
+    }
+}
