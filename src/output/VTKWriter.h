@@ -55,7 +55,7 @@ private:
      * @param name - name of the property, e.g. mass
      * @param property - the property (normally a getter of an satellite), here return value cartesian vector
      * @param dataCollection - the data
-     * @related I do not use the >> overload because of ADL (https://en.cppreference.com/w/cpp/language/adl)
+     * @related I do not use the << overload because of ADL (https://en.cppreference.com/w/cpp/language/adl)
      */
     template<typename Property, typename Data>
     void printProperty(const std::string &name, const std::function<std::array<Property, 3>(const Data &data)> &property,
