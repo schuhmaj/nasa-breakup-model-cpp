@@ -48,8 +48,12 @@ The given yaml-file should look like this:
     idFilter: [1, 2]                  #Only the satellites with these IDs will be
                                       #recognized by the simulation.
                                       #If not given, no filter is applied
-    keplerOutput: True                #Parameter is optional and only reasonable
-                                      #if the input contains Kepler based data
+    outputTarget: ["result.csv", "result.vtu"]  #List containing the wished output files
+    outputKepler: True                #If given the CSV output contains Kepler elements
+    outputCSVPattern: "IL"            #Superpasses outputKepler (which is ignored if given)
+                                      #When given the implementation switchs
+                                      #to the CSVPatternWriter (more time-costly)
+                                      #and produces a custom CSV
 ```    
 A "data.yaml" should have the following form (for example):
 

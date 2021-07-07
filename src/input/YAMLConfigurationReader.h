@@ -6,6 +6,9 @@
 #include "input/OutputConfigurationSource.h"
 #include "input/YAMLDataReader.h"
 #include "input/TLESatcatDataReader.h"
+#include "output/CSVWriter.h"
+#include "output/CSVPatternWriter.h"
+#include "output/VTKWriter.h"
 
 /**
  * Reads the breakup simulation configuration data from an YAML file.
@@ -73,7 +76,7 @@ public:
      * Reads in the which Output is wished by the YAML file.
      * @return a vector containing the Outputs according to the YAML file
      */
-    std::vector<std::shared_ptr<OutputWriter>> getOutputs() override;
+    std::vector<std::shared_ptr<OutputWriter>> getOutputTargets() override;
 
 };
 

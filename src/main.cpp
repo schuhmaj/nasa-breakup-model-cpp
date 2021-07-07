@@ -35,11 +35,11 @@ int main(int argc, char *argv[]) {
         auto breakUpSimulation = breakupBuilder.getBreakup();
         breakUpSimulation->run();
 
-        //Prints the the output to a CSV file
-        auto csv = std::unique_ptr<OutputWriter>{new CSVWriter{"result.csv"}};
-        csv->printResult(*breakUpSimulation);
-        auto vtk = std::unique_ptr<OutputWriter>{new VTKWriter{"result.vtu"}};
-        vtk->printResult(*breakUpSimulation);
+        //Prints the the output to files defined by the OutputConfigurationSource aka the YAMLConfigurationReader
+        auto outputTargets = configSource->getOutputTargets();
+        for (auto &out : outputTargets) {
+            out->printResult(*breakUpSimulation);
+        }
     } catch (std::exception &e) {
         std::cerr << e.what();
     }

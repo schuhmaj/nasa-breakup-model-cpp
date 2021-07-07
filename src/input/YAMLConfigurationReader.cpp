@@ -64,6 +64,28 @@ std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() {
     return std::nullopt;
 }
 
-std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputs() {
-    return std::vector<std::shared_ptr<OutputWriter>>();
+std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputTargets() {
+    std::vector<std::shared_ptr<OutputWriter>> outputs{};
+    if (_file["outputTarget"] && _file["outputTarget"].IsSequence()) {
+        for (auto outputFile : _file["outputTarget"]) {
+            std::string filename{outputFile.as<std::string>()};
+            if (filename.substr(filename.size()-3) == "csv") {
+                if (_file["outputCSVPattern"]) {
+                    auto pattern = _file["outputCSVPattern"].as<std::string>();
+                    outputs.push_back(std::shared_ptr<OutputWriter>(new CSVPatternWriter(filename, pattern)));
+                } else {
+                    bool kepler = false;
+                    if (_file["outputKepler"]) {
+                        kepler = _file["outputKepler"].as<bool>();
+                    }
+                    outputs.push_back(std::shared_ptr<OutputWriter>(new CSVWriter(filename, kepler)));
+                }
+            } else if (filename.substr(filename.size()-3) == "vtu") {
+                outputs.push_back(std::shared_ptr<OutputWriter>(new VTKWriter(filename)));
+            } else {
+                throw std::runtime_error{"Invalid output target inside the YAML file!"};
+            }
+        }
+    }
+    return outputs;
 }

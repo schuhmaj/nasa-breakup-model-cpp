@@ -12,9 +12,9 @@ class OutputConfigurationSource {
 public:
 
     /**
-     * Returns a vector of pointers to OutputSources defined by a given configuration source.
-     * @return OutputSources
+     * Returns a vector of pointers to OutputTargets defined by a given configuration source.
+     * @return OutputTargets
      */
-    virtual std::vector<std::shared_ptr<OutputWriter>> getOutputs () = 0;
+    virtual std::vector<std::shared_ptr<OutputWriter>> getOutputTargets () = 0;
 
 };
