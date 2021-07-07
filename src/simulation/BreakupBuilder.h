@@ -3,7 +3,7 @@
 #include <memory>
 #include <exception>
 #include <iostream>
-#include "input/ConfigurationSource.h"
+#include "input/InputConfigurationSource.h"
 #include "input/DataSource.h"
 #include "Breakup.h"
 #include "Explosion.h"
@@ -14,7 +14,7 @@
  */
 class BreakupBuilder {
 
-    std::shared_ptr<ConfigurationSource> _configurationSource;
+    std::shared_ptr<InputConfigurationSource> _configurationSource;
 
     double _minimalCharacteristicLength;
 
@@ -28,7 +28,7 @@ class BreakupBuilder {
 
 public:
 
-    explicit BreakupBuilder(const std::shared_ptr<ConfigurationSource> &configurationSource)
+    explicit BreakupBuilder(const std::shared_ptr<InputConfigurationSource> &configurationSource)
             : _configurationSource{configurationSource},
               _minimalCharacteristicLength{configurationSource->getMinimalCharacteristicLength()},
               _simulationType{configurationSource->getTypeOfSimulation()},
@@ -41,10 +41,10 @@ public:
      * @param configurationReader - a shared pointer to an input source
      * @return this
      */
-    BreakupBuilder &reconfigure(const std::shared_ptr<ConfigurationSource> &configurationReader);
+    BreakupBuilder &reconfigure(const std::shared_ptr<InputConfigurationSource> &configurationReader);
 
     /**
-     * Reloads the ConfigurationSource. This can mean e. g. to re-read the underlying file or similar actions.
+     * Reloads the InputConfigurationSource. This can mean e. g. to re-read the underlying file or similar actions.
      * This method is then useful if you have previously overridden some settings by the "set"-Methods.
      * @return this
      */

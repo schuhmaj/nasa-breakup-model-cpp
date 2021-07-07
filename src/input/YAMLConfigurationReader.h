@@ -2,14 +2,15 @@
 
 #include <utility>
 #include <exception>
-#include "input/ConfigurationSource.h"
+#include "input/InputConfigurationSource.h"
+#include "input/OutputConfigurationSource.h"
 #include "input/YAMLDataReader.h"
 #include "input/TLESatcatDataReader.h"
 
 /**
  * Reads the breakup simulation configuration data from an YAML file.
  */
-class YAMLConfigurationReader : public ConfigurationSource {
+class YAMLConfigurationReader : public InputConfigurationSource, public OutputConfigurationSource {
 
     const YAML::Node _file;
 
@@ -68,7 +69,11 @@ public:
      */
     std::optional<std::set<size_t>> getIDFilter() override;
 
-    bool getOutputWithKepler() override;
+    /**
+     * Reads in the which Output is wished by the YAML file.
+     * @return a vector containing the Outputs according to the YAML file
+     */
+    std::vector<std::shared_ptr<OutputWriter>> getOutputs() override;
 
 };
 

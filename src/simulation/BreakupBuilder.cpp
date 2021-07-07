@@ -1,6 +1,6 @@
 #include "BreakupBuilder.h"
 
-BreakupBuilder &BreakupBuilder::reconfigure(const std::shared_ptr<ConfigurationSource> &configurationSource) {
+BreakupBuilder &BreakupBuilder::reconfigure(const std::shared_ptr<InputConfigurationSource> &configurationSource) {
     _configurationSource = configurationSource;
     _minimalCharacteristicLength = configurationSource->getMinimalCharacteristicLength();
     _simulationType = configurationSource->getTypeOfSimulation();

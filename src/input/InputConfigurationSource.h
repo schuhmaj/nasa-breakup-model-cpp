@@ -21,7 +21,7 @@ enum class SimulationType {
  * Provides methods to get config data, like minimal L_c, type of simulation, maximal given NORAD-ID or
  * the source file(s) for Satellite Data.
  */
-class ConfigurationSource {
+class InputConfigurationSource {
 
 public:
 
@@ -32,7 +32,7 @@ public:
             {"EX",       SimulationType::EXPLOSION}
     };
 
-    virtual ~ConfigurationSource() = default;
+    virtual ~InputConfigurationSource() = default;
 
     /**
      * Returns the minimal characteristic Length for fragments later created by the Breakup Simulation.
@@ -65,17 +65,6 @@ public:
      * Default implemented: It does not return any Satellites --> no filter
      * @return optional containing a filter-set or not
      */
-    virtual std::optional<std::set<size_t>> getIDFilter() {
-        return std::nullopt;
-    }
-
-    /**
-     * Returns true if the Output should include the Keplerian Elements.
-     * Default implemented: returns false.
-     * @return true if Kepler Output is wished.
-     */
-    virtual bool getOutputWithKepler() {
-        return false;
-    }
+    virtual std::optional<std::set<size_t>> getIDFilter() = 0;
 
 };

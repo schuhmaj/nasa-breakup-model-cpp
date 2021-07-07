@@ -11,7 +11,7 @@ double YAMLConfigurationReader::getMinimalCharacteristicLength() {
 SimulationType YAMLConfigurationReader::getTypeOfSimulation() {
     if (_file["simulationType"]) {
         try {
-            SimulationType simulationType = ConfigurationSource::stringToSimulationType.at(
+            SimulationType simulationType = InputConfigurationSource::stringToSimulationType.at(
                     _file["simulationType"].as<std::string>());
             return simulationType;
         } catch (std::exception &e) {
@@ -64,10 +64,6 @@ std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() {
     return std::nullopt;
 }
 
-bool YAMLConfigurationReader::getOutputWithKepler() {
-    if (_file["keplerOutput"]) {
-        return _file["keplerOutput"].as<bool>();
-    } else {
-        return false;
-    }
+std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputs() {
+    return std::vector<std::shared_ptr<OutputWriter>>();
 }

@@ -22,11 +22,12 @@ int main(int argc, char *argv[]) {
     //The fileName of the YAML file
     std::string fileName{argv[1]};
 
-    //Load an Configuration Reader which contains the necessary config + data for the BreakupBuilder
-    auto configurationSource = std::shared_ptr<ConfigurationSource>{new YAMLConfigurationReader{fileName}};
+    //Load an Configuration Source containing the input arguments required for the BreakupBuilder
+    //The YAMLConfigurationReader as a special case is also able to load the Configuration for Output
+    auto configSource = std::make_shared<YAMLConfigurationReader>(fileName);
 
     //The SimulationFactory which builds our breakup simulation
-    BreakupBuilder breakupBuilder{configurationSource};
+    BreakupBuilder breakupBuilder{configSource};
 
     //Create and run the simulation or catch an exception in case something is wrong with the simulation
     try {
@@ -35,7 +36,7 @@ int main(int argc, char *argv[]) {
         breakUpSimulation->run();
 
         //Prints the the output to a CSV file
-        auto csv = std::unique_ptr<OutputWriter>{new CSVWriter{"result.csv", configurationSource->getOutputWithKepler()}};
+        auto csv = std::unique_ptr<OutputWriter>{new CSVWriter{"result.csv"}};
         csv->printResult(*breakUpSimulation);
         auto vtk = std::unique_ptr<OutputWriter>{new VTKWriter{"result.vtu"}};
         vtk->printResult(*breakUpSimulation);

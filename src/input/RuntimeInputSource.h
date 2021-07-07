@@ -2,13 +2,13 @@
 
 #include <utility>
 
-#include "input/ConfigurationSource.h"
+#include "input/InputConfigurationSource.h"
 #include "input/DataSource.h"
 
 /**
  * A object which defines all parameters needed for the Simulation.
  */
-class RuntimeInputSource : public ConfigurationSource, public DataSource {
+class RuntimeInputSource : public InputConfigurationSource, public DataSource {
 
     const double _minimalCharacteristicLength;
 
