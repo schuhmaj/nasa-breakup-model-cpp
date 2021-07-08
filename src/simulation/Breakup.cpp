@@ -18,13 +18,8 @@ void Breakup::run() {
 
 }
 
-Breakup &Breakup::setSeed(unsigned long seed) {
+Breakup &Breakup::setSeed(unsigned long seed = std::random_device{}()) {
     _randomNumberGenerator = std::mt19937{seed};
-    return *this;
-}
-
-Breakup &Breakup::setRandom() {
-    _randomNumberGenerator = std::mt19937{std::random_device{}()};
     return *this;
 }
 
