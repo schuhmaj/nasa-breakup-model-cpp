@@ -113,7 +113,7 @@ via their IDs. You find the IDs in the satcat in the third row (NORAD_CAT_ID) an
 in the TLE optionally in first and second row in the beginning (example: 25544).
 
 ### Output
-The simulation will produce a CSV file.
+The simulation can produce depending on the configuration CSV and VTK files.
 
 ## Library
 The Breakup Simulation can be used directly from any C++ project
