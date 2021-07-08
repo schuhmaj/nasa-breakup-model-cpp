@@ -133,9 +133,9 @@ Example:
     //RuntimeInput via the RuntimeInputSource Object (minmial Config: minL_c = 0.05 + inputSatellites)
     auto configurationSource = std::shared_ptr<InputConfigurationSource>{new RuntimeInputSource(0.05, satellites)};
     //Give the BreakupBuilder its configuration object (YMALConfigurationReader or RuntimeInputSource or your own derived source)
-    BreakupBuilder breakupFactory{configurationSource};
+    BreakupBuilder breakupBuilder{configurationSource};
     //Create the Breakup Simulation
-    auto breakup = breakupFactory.getBreakup();
+    auto breakup = breakupBuilder.getBreakup();
     //Run it and get the result via breakup.getResult();
     breakup->run();
 ```
