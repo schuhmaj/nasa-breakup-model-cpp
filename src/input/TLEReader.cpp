@@ -1,7 +1,7 @@
 #include "TLEReader.h"
 
 
-std::map<size_t, std::array<double, 6>> TLEReader::getMappingIDKepler() {
+std::map<size_t, std::array<double, 6>> TLEReader::getMappingIDKepler() const {
     std::map<size_t, std::array<double, 6>> mapping{};
 
     std::ifstream fileStream{_filepath};

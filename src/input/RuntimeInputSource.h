@@ -84,27 +84,27 @@ public:
               _satellites{dataSource->getSatelliteCollection()} {}
 
 
-    double getMinimalCharacteristicLength() override {
+    double getMinimalCharacteristicLength() const override {
         return _minimalCharacteristicLength;
     }
 
-    SimulationType getTypeOfSimulation() override {
+    SimulationType getTypeOfSimulation() const override {
         return _simulationType;
     }
 
-    size_t getCurrentMaximalGivenID() override {
+    size_t getCurrentMaximalGivenID() const override {
         return _currentMaximalGivenID;
     }
 
-    std::shared_ptr<DataSource> getDataReader() override {
+    std::shared_ptr<DataSource> getDataReader() const override {
         return *this;
     }
 
-    std::optional<std::set<size_t>> getIDFilter() override {
+    std::optional<std::set<size_t>> getIDFilter() const override {
         return _idFilter;
     }
 
-    std::vector<Satellite> getSatelliteCollection() override {
+    std::vector<Satellite> getSatelliteCollection() const override {
         return _satellites;
     }
 };

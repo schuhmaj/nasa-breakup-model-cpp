@@ -16,6 +16,9 @@
  */
 class YAMLDataReader : public DataSource {
 
+    /**
+     * The root node of the YAML file
+     */
     const YAML::Node _file;
 
 public:
@@ -46,7 +49,7 @@ public:
      * satellites! A valid satellite is a satellites which has every date needed to run the simulation with it.<br>
      * @return a SatelliteCollection
      */
-    std::vector<Satellite> getSatelliteCollection() override;
+    std::vector<Satellite> getSatelliteCollection() const override;
 
 private:
 

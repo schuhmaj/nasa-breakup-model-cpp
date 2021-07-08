@@ -38,33 +38,33 @@ public:
      * Returns the minimal characteristic Length for fragments later created by the Breakup Simulation.
      * @return double
      */
-    virtual double getMinimalCharacteristicLength() = 0;
+    virtual double getMinimalCharacteristicLength() const = 0;
 
     /**
      * Returns explicitly the type to use for the simulation. The Data Input should than have the corresponding
      * reasonable amount of satellites (EXPLOSION --> 1 satellite, COLLISION --> 2 satellites)
      * @return SimulationType
      */
-    virtual SimulationType getTypeOfSimulation() = 0;
+    virtual SimulationType getTypeOfSimulation() const = 0;
 
     /**
      * Returns the current Maximal Given (NORAD-Catalog) ID. This is later required for the breakup simulation
      * to determine the IDs of the fragments.
      * @return size_t
      */
-    virtual size_t getCurrentMaximalGivenID() = 0;
+    virtual size_t getCurrentMaximalGivenID() const = 0;
 
     /**
      * Returns an DataSource which has the ability to return an vector of satellites.
      * @return DataSource as shared pointer if it is wished to (re-)use in an object-oriented purpose
      */
-    virtual std::shared_ptr<DataSource> getDataReader() = 0;
+    virtual std::shared_ptr<DataSource> getDataReader() const = 0;
 
     /**
      * Returns a set of IDs. This set defines which Satellites should be used from the satellite collection.
      * Default implemented: It does not return any Satellites --> no filter
      * @return optional containing a filter-set or not
      */
-    virtual std::optional<std::set<size_t>> getIDFilter() = 0;
+    virtual std::optional<std::set<size_t>> getIDFilter() const = 0;
 
 };

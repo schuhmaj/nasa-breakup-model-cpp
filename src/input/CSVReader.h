@@ -53,7 +53,7 @@ private:
      * @return true to not cause any issues in getTuple
      */
     template<typename V>
-    bool parseCell(std::istream &istream, V &value) {
+    bool parseCell(std::istream &istream, V &value) const {
         std::string cell;
         std::getline(istream, cell, ',');
         std::stringstream cellStream {cell};
@@ -69,7 +69,7 @@ private:
     * @param value - the value extracted (non-const)
     * @return true to not cause any issues in getTuple
     */
-    bool parseCell(std::istream &istream, std::string &value) {
+    bool parseCell(std::istream &istream, std::string &value) const {
         std::string cell;
         std::getline(istream, cell, ',');
         value = cell;
@@ -86,7 +86,7 @@ private:
      * https://stackoverflow.com/questions/34314806/parsing-a-c-string-into-a-tuple [accessed 29.06.2021]
      */
     template<typename Tuple, typename std::size_t... I>
-    void getTuple(std::istream &lineStream, Tuple &tuple, std::index_sequence<I...>) {
+    void getTuple(std::istream &lineStream, Tuple &tuple, std::index_sequence<I...>) const {
         std::initializer_list<bool>{parseCell(lineStream, std::get<I>(tuple)) ...};
     }
 
@@ -98,7 +98,7 @@ private:
      * @return success of parsing a new element
      */
     template<typename Tuple>
-    bool nextLine(std::istream &fileStream, Tuple &tuple) {
+    bool nextLine(std::istream &fileStream, Tuple &tuple) const {
         std::string line;
         std::getline(fileStream, line);
         if (!line.empty()) {
@@ -116,7 +116,7 @@ public:
      * @return vector of tokenized lines
      * @throws an exception if issues are encountered during parsing
      */
-    std::vector<std::tuple<T...>> getLines() {
+    std::vector<std::tuple<T...>> getLines() const {
         //Open fileStream stream
         std::ifstream fileStream{_filepath};
         std::vector<std::tuple<T...>> lines{};
@@ -145,7 +145,7 @@ public:
      * @return vector of strings
      * @throws an exception if the CSV file does not have an header
      */
-    std::array<std::string, sizeof...(T)> getHeader() {
+    std::array<std::string, sizeof...(T)> getHeader() const {
         if (_hasHeader) {
             std::array<std::string, sizeof...(T)> header{};
             std::ifstream fileStream{_filepath};

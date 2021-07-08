@@ -1,6 +1,6 @@
 #include "YAMLDataReader.h"
 
-std::vector<Satellite> YAMLDataReader::getSatelliteCollection() {
+std::vector<Satellite> YAMLDataReader::getSatelliteCollection() const  {
     std::vector<Satellite> satelliteVector{};
     SatelliteBuilder satelliteBuilder{};
 

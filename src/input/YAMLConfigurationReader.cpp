@@ -1,6 +1,6 @@
 #include "YAMLConfigurationReader.h"
 
-double YAMLConfigurationReader::getMinimalCharacteristicLength() {
+double YAMLConfigurationReader::getMinimalCharacteristicLength() const {
     if (_file["minimalCharacteristicLength"]) {
         return _file["minimalCharacteristicLength"].as<double>();
     } else {
@@ -8,7 +8,7 @@ double YAMLConfigurationReader::getMinimalCharacteristicLength() {
     }
 }
 
-SimulationType YAMLConfigurationReader::getTypeOfSimulation() {
+SimulationType YAMLConfigurationReader::getTypeOfSimulation() const {
     if (_file["simulationType"]) {
         try {
             SimulationType simulationType = InputConfigurationSource::stringToSimulationType.at(
@@ -22,7 +22,7 @@ SimulationType YAMLConfigurationReader::getTypeOfSimulation() {
     }
 }
 
-size_t YAMLConfigurationReader::getCurrentMaximalGivenID() {
+size_t YAMLConfigurationReader::getCurrentMaximalGivenID() const {
     if (_file["currentMaxID"]) {
         return _file["currentMaxID"].as<size_t>();
     } else {
@@ -30,7 +30,7 @@ size_t YAMLConfigurationReader::getCurrentMaximalGivenID() {
     }
 }
 
-std::shared_ptr<DataSource> YAMLConfigurationReader::getDataReader() {
+std::shared_ptr<DataSource> YAMLConfigurationReader::getDataReader() const {
     std::vector<std::string> fileNames{};
     if (_file["inputSource"] && _file["inputSource"].IsSequence()) {
         for (auto inputSource : _file["inputSource"]) {
@@ -53,7 +53,7 @@ std::shared_ptr<DataSource> YAMLConfigurationReader::getDataReader() {
     throw std::runtime_error{"Data file input is not correctly set-up!"};
 }
 
-std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() {
+std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() const {
     if (_file["idFilter"] && _file["idFilter"].IsSequence()) {
         std::set<size_t> filterSet{};
         for (auto id : _file["idFilter"]) {
@@ -64,7 +64,7 @@ std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() {
     return std::nullopt;
 }
 
-std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputTargets() {
+std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputTargets() const {
     std::vector<std::shared_ptr<OutputWriter>> outputs{};
     if (_file["outputTarget"] && _file["outputTarget"].IsSequence()) {
         for (auto outputFile : _file["outputTarget"]) {

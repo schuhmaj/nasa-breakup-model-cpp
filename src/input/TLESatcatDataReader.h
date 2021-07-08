@@ -65,7 +65,7 @@ public:
      * by using the unique ID of each satellite.
      * @return a Collection of Satellites
      */
-    std::vector<Satellite> getSatelliteCollection() override;
+    std::vector<Satellite> getSatelliteCollection() const override;
 
 private:
 
@@ -73,7 +73,7 @@ private:
      * Returns a mapping of satellites ID to its name, type and Radar Cross Section (RCS) in [m^2]
      * @return mapping <ID, infos>
      */
-    std::map<size_t, std::tuple<std::string, SatType, double>> getSatcatMapping();
+    std::map<size_t, std::tuple<std::string, SatType, double>> getSatcatMapping() const;
 
 };
 

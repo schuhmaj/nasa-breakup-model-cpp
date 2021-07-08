@@ -1,6 +1,6 @@
 #include "TLESatcatDataReader.h"
 
-std::vector<Satellite> TLESatcatDataReader::getSatelliteCollection() {
+std::vector<Satellite> TLESatcatDataReader::getSatelliteCollection() const {
     std::vector<Satellite> satellites{};
     SatelliteBuilder satelliteBuilder{};
 
@@ -47,7 +47,7 @@ std::vector<Satellite> TLESatcatDataReader::getSatelliteCollection() {
     return satellites;
 }
 
-std::map<size_t, std::tuple<std::string, SatType, double>> TLESatcatDataReader::getSatcatMapping() {
+std::map<size_t, std::tuple<std::string, SatType, double>> TLESatcatDataReader::getSatcatMapping() const {
     std::map<size_t, std::tuple<std::string, SatType, double>> mapping{};
 
     //If the mapping should contain more infos --> Here's the code to change that

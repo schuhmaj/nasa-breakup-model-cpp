@@ -41,7 +41,7 @@ public:
      * @attention If not given by the YAML, 0.05 [m] is returned as default value.
      * @return double
      */
-    double getMinimalCharacteristicLength() override;
+    double getMinimalCharacteristicLength() const override;
 
     /**
      * Returns explicitly the type to use for the simulation. The Data Input should than have the corresponding
@@ -49,7 +49,7 @@ public:
      * @attention If not given UNKNOWN is returned and the type will be derived from the number of satellites
      * @return SimulationType
      */
-    SimulationType getTypeOfSimulation() override;
+    SimulationType getTypeOfSimulation() const override;
 
     /**
     * Returns the current Maximal Given (NORAD-Catalog) ID. This is later required for the breakup simulation
@@ -57,26 +57,26 @@ public:
     * @attention If not given 0 is returned as default value (might lead to problems in the afternoon)
     * @return size_t
     */
-    size_t getCurrentMaximalGivenID() override;
+    size_t getCurrentMaximalGivenID() const override;
 
     /**
      * Returns an DataSource which has the ability to return an vector of satellites.
      * @return DataSource as shared pointer if it is wished to (re-)use in an object-oriented purpose
      * @throws an Exception if not given because not data == no simulation possible
      */
-    std::shared_ptr<DataSource> getDataReader() override;
+    std::shared_ptr<DataSource> getDataReader() const override;
 
     /**
      * Returns the ID selection for the filter if given. Else an empty optional is returned.
      * @return filter or empty
      */
-    std::optional<std::set<size_t>> getIDFilter() override;
+    std::optional<std::set<size_t>> getIDFilter() const override;
 
     /**
      * Reads in the which Output is wished by the YAML file.
      * @return a vector containing the Outputs according to the YAML file
      */
-    std::vector<std::shared_ptr<OutputWriter>> getOutputTargets() override;
+    std::vector<std::shared_ptr<OutputWriter>> getOutputTargets() const override;
 
 };
 

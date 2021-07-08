@@ -18,7 +18,7 @@ public:
      * Returns a satellite collection. Input form varies depending on subclass
      * @return SatelliteCollection
      */
-    virtual std::vector<Satellite> getSatelliteCollection() = 0;
+    virtual std::vector<Satellite> getSatelliteCollection() const = 0;
 
 };
 

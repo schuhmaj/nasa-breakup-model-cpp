@@ -41,7 +41,7 @@ public:
      * @return mapping <ID, KeplerElements>
      * @throws an exception if the TLE is malformed or any other issues are encountered during the parsing
      */
-    std::map<size_t, std::array<double, 6>> getMappingIDKepler();
+    std::map<size_t, std::array<double, 6>> getMappingIDKepler() const;
 
 private:
 
