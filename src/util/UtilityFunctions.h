@@ -11,6 +11,12 @@ namespace util {
     constexpr double PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
 
     /**
+    * PI multiplied by 2 with enough precision
+    * (and as constexpr with no preprocessor magic)
+    */
+    constexpr double PI2 = 6.2831853071795864769252867665590057683943387987502116419498891846;
+
+    /**
      * PI divided by 4 with enough precision
      * (and as constexpr with no preprocessor magic)
      */

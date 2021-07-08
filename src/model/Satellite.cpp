@@ -145,72 +145,74 @@ std::array<double, 6> Satellite::getKeplerEA() const {
     std::array<double, 3> n{};
     std::array<double, 3> evett{};
 
-    double p = 0.0;
-    double temp = 0.0;
-    double R0, ni;
-    int i;
+    double p, temp, R0, ni;
 
-    /// 1 - We compute h: the orbital angular momentum vector
+    // 1 - We compute h: the orbital angular momentum vector
     h = cross(_position, _velocity);
 
-    /// 2 - We compute p: the orbital parameter
+    // 2 - We compute p: the orbital parameter
     p = dot(h, h) / GRAVITATIONAL_PARAMETER_EARTH; // h^2 / mu
 
-    /// 3 - We compute n: the vector of the node line
-    /// This operation is singular when inclination is zero, in which case the orbital parameters
-    /// are not defined
+    // 3 - We compute n: the vector of the node line
+    // This operation is singular when inclination is zero, in which case the orbital parameters
+    // are not defined
     n = cross(k, h);
-    n = n / euclideanNorm(n); // vers(x, y) = unit vector of y -> x
+    // vers(x, y) = unit vector of y -> x
+    n = n / euclideanNorm(n);
 
-    /// 4 - We compute evett: the eccentricity vector
+    // 4 - We compute evett: the eccentricity vector
     R0 = euclideanNorm(_position);
     Dum_Vec = cross(_velocity, h);
     evett = Dum_Vec / GRAVITATIONAL_PARAMETER_EARTH - _position / R0;
 
-    /// The eccentricity is calculated and stored as the second orbital element
+    // The eccentricity is calculated and stored as the second orbital element
     keplerianElements[1] = euclideanNorm(evett);
 
-    /// The semi-major axis (positive quantity) is calculated and stored as the first orbital element
-    keplerianElements[0] = std::abs(p / (1 - keplerianElements[1] * keplerianElements[1]));
+    // The semi-major axis (positive quantity) is calculated and stored as the first orbital element
+    keplerianElements[0] = std::abs(p / (1.0 - keplerianElements[1] * keplerianElements[1]));
 
-    /// Inclination is calculated and stored as the third orbital element
-    keplerianElements[2] = acos(h[2] / euclideanNorm(h));
+    // Inclination is calculated and stored as the third orbital element
+    keplerianElements[2] = std::acos(h[2] / euclideanNorm(h));
 
-    /// Argument of pericentrum is calculated and stored as the fifth orbital element
+    // Argument of pericentrum is calculated and stored as the fifth orbital element
     temp = dot(n, evett);
-    keplerianElements[4] = acos(temp / keplerianElements[1]);
-    if (evett[2] < 0) {
-        keplerianElements[4] = 2 * PI - keplerianElements[4];
+    keplerianElements[4] = std::acos(temp / keplerianElements[1]);
+    if (evett[2] < 0.0) {
+        keplerianElements[4] = PI2 - keplerianElements[4];
     }
 
-    /// Argument of longitude is calculated and stored as the fourth orbital element
-    keplerianElements[3] = acos(n[0]);
-    if (n[1] < 0) {
-        keplerianElements[3] = 2 * PI - keplerianElements[3];
+    // Argument of longitude is calculated and stored as the fourth orbital element
+    keplerianElements[3] = std::acos(n[0]);
+    if (n[1] < 0.0) {
+        keplerianElements[3] = PI2 - keplerianElements[3];
     }
 
     temp = dot(evett, _position);
 
-    /// 4 - We compute ni: the true anomaly (in 0, 2*PI)
-    ni = acos(temp / keplerianElements[1] / R0);
+    // 4 - We compute ni: the true anomaly (in 0, 2*PI)
+    ni = std::acos(temp / keplerianElements[1] / R0);
 
     temp = dot(_position, _velocity);
 
     if (temp < 0.0) {
-        ni = 2 * PI - ni;
+        ni = PI2 - ni;
     }
 
-    /// Eccentric anomaly or the gudermannian is calculated and stored as the sixth orbital element
+    // Eccentric anomaly or the gudermannian is calculated and stored as the sixth orbital element
+    // algebraic equivalent of kepler's equation (else case: in terms of the Gudermannian)
+    const double tanNi_2 = std::tan(ni / 2.0);
+    double root;
     if (keplerianElements[1] < 1.0) {
-        keplerianElements[5] = 2.0 * atan(sqrt((1 - keplerianElements[1]) / (1 + keplerianElements[1])) *
-                                          tan(ni / 2.0)); // algebraic kepler's equation
+        root = (1.0 - keplerianElements[1]) / (1.0 + keplerianElements[1]);
+
     } else {
-        keplerianElements[5] = 2.0 * atan(sqrt((keplerianElements[1] - 1) / (keplerianElements[1] + 1))
-                                          * tan(ni /
-                                                2.0)); // algebraic equivalent of kepler's equation in terms of the Gudermannian
+        root = (keplerianElements[1] - 1.0) / (keplerianElements[1] + 1.0);
     }
-    if (keplerianElements[5] < 0) {
-        keplerianElements[5] += 2 * PI;
+    keplerianElements[5] = 2.0 * atan(sqrt(root) * tanNi_2);
+
+    //We only want positive angles
+    if (keplerianElements[5] < 0.0) {
+        keplerianElements[5] += PI2;
     }
     return keplerianElements;
 }
