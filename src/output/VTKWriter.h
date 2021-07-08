@@ -8,6 +8,7 @@
 #include "spdlog/async.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/fmt/ostr.h"
+#include "spdlog/spdlog.h"
 
 /**
  * Creates vtk file of the given input.
@@ -26,7 +27,23 @@ public:
         _logger->set_pattern("%v");
     }
 
+    /**
+    * De-Registers the logger of the VTKWriter, to ensure that a similar VTKWriter can be constructed once again.
+    */
+    ~VTKWriter() override{
+        spdlog::drop(_logger->name());
+    }
+
     void printResult(const std::vector<Satellite> &satelliteCollection) override;
+
+    /**
+    * Function required for testing the logger.
+    * Flushes immediately the content, to be called after printResult(...)
+    * Kills the advantage of asynchronous logging!
+    */
+    void flush() {
+        _logger->flush();
+    }
 
 private:
 

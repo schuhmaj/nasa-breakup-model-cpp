@@ -40,3 +40,4 @@ void CSVWriter::printKepler(const std::vector<Satellite> &satelliteCollection) c
                       kepler[0], kepler[1], kepler[2], kepler[3], kepler[4], kepler[5]);
     }
 }
+

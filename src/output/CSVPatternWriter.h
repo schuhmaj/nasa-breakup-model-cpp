@@ -14,6 +14,7 @@
 #include "spdlog/async.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/fmt/ostr.h"
+#include "spdlog/spdlog.h"
 
 class CSVPatternWriter : public OutputWriter {
 
@@ -29,6 +30,11 @@ class CSVPatternWriter : public OutputWriter {
 
 public:
 
+    /**
+     * Creates a new CSVPatternWriter to a file.
+     * @param filename - string
+     * @param pattern - the pattern (have a look at the headerMap, which char has which meaning)
+     */
     explicit CSVPatternWriter(const std::string &filename, const std::string &pattern)
             : _logger{spdlog::basic_logger_mt<spdlog::async_factory>("CSVPatternWriter_" + filename, filename, true)},
               _myToDo{} {
@@ -39,5 +45,22 @@ public:
         }
     }
 
+    /**
+    * De-Registers the logger of the CSVPatternWriter, to ensure that a similar CSVPatternWriter
+     * can be constructed once again.
+    */
+    ~CSVPatternWriter() override{
+        spdlog::drop(_logger->name());
+    }
+
     void printResult(const std::vector<Satellite> &satelliteCollection) override;
+
+    /**
+    * Function required for testing the logger.
+    * Flushes immediately the content, to be called after printResult(...)
+    * Kills the advantage of asynchronous logging!
+    */
+    void flush() {
+        _logger->flush();
+    }
 };

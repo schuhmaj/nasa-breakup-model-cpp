@@ -54,8 +54,6 @@ TEST_F(CSVWriterTest, FileCreation) {
 
     CSVWriter csvWriter{_filePath};
 
-    csvWriter.printResult(_satelliteCollection);
-
     ASSERT_TRUE(std::filesystem::exists(_filePath)) << "A CSV file should have been generated!";
 }
 
@@ -63,6 +61,7 @@ TEST_F(CSVWriterTest, HeaderCheck) {
     CSVWriter csvWriter{_filePath};
 
     csvWriter.printResult(_satelliteCollection);
+    csvWriter.flush();
 
     CSVReader<size_t, std::string, SatType,
             double, double, double, double,
@@ -87,6 +86,7 @@ TEST_F(CSVWriterTest, DataCheck) {
     CSVWriter csvWriter{_filePath};
 
     csvWriter.printResult(_satelliteCollection);
+    csvWriter.flush();
 
     CSVReader<size_t, std::string, SatType,
             double, double, double, double,
