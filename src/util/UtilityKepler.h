@@ -99,7 +99,9 @@ namespace util {
     inline double meanMotionToSemiMajorAxis(double meanMotion) {
         //GRAVITATIONAL_PARAMETER_EARTH^(1/3)
         static constexpr double thirdRoot = 73594.59595000199;
-        return thirdRoot / std::pow(2.0 * PI * meanMotion / 86400.0, 2.0 / 3.0);
+        static constexpr double twoThird = 2.0 / 3.0;
+
+        return thirdRoot / std::pow(2.0 * PI * meanMotion / 86400.0, twoThird);
     }
 
 }
