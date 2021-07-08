@@ -7,11 +7,7 @@ std::vector<Satellite> YAMLDataReader::getSatelliteCollection() const  {
     if (_file["satellites"] && _file["satellites"].IsSequence()) {
         YAML::Node satellites{_file["satellites"]};
         for (auto satNode : satellites) {
-            try {
-                satelliteVector.push_back(parseSatellite(satelliteBuilder, satNode));
-            } catch (const std::exception& e) {
-                std::cerr << e.what();
-            }
+            satelliteVector.push_back(parseSatellite(satelliteBuilder, satNode));
         }
     }
     return satelliteVector;
@@ -66,11 +62,13 @@ void YAMLDataReader::parseKepler(SatelliteBuilder &satelliteBuilder, const YAML:
             keplerianElements[5] = node["true-anomaly"].as<double>();
             satelliteBuilder.setKeplerianElementsTA(keplerianElements);
         } else {
-            throw std::runtime_error{"You have to give at least one of the following orbital Anomalies"
+            throw std::runtime_error{"One satellite input is incomplete!"
+                                        "You have to give at least one of the following orbital Anomalies"
                                         "Eccentric Anomaly > Mean Anomaly > True Anomaly [in the order how the"
                                         "program will prioritize an anomaly if multiple are given]"};
         }
     } else {
-        throw std::runtime_error{"The Keplerian Elements are not fully given!"};
+        throw std::runtime_error{"One satellite input is incomplete!"
+                                 "The Keplerian Elements are not fully given!"};
     }
 }
