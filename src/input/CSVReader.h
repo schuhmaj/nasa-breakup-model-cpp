@@ -40,7 +40,7 @@ public:
         }
     }
 
-    virtual ~CSVReader() = default;
+    ~CSVReader() = default;
 
 
 private:
