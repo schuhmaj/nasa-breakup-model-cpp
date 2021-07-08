@@ -15,12 +15,12 @@ SimulationType YAMLConfigurationReader::getTypeOfSimulation() const {
                     _file["simulationType"].as<std::string>());
             return simulationType;
         } catch (std::exception &e) {
-            SPDLOG_WARN("The simulation type could not be parsed from the YAML Configuration file!"
+            SPDLOG_WARN("The simulation type could not be parsed from the YAML Configuration file! "
                         "SimulationType therefore UNKNOWN!");
             return SimulationType::UNKNOWN;
         }
     } else {
-        SPDLOG_WARN("The simulation was not given in the YAML Configuration file!"
+        SPDLOG_WARN("The simulation was not given in the YAML Configuration file! "
                     "SimulationType therefore UNKNOWN!");
         return SimulationType::UNKNOWN;
     }
@@ -30,7 +30,7 @@ size_t YAMLConfigurationReader::getCurrentMaximalGivenID() const {
     if (_file["currentMaxID"]) {
         return _file["currentMaxID"].as<size_t>();
     } else {
-        SPDLOG_WARN("The current maximal given ID was not given in the YAML Configuration file!"
+        SPDLOG_WARN("The current maximal given ID was not given in the YAML Configuration file! "
                     "The simulation therefore will assume zero!");
         return 0;
     }

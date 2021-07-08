@@ -52,10 +52,24 @@ std::unique_ptr<Breakup> BreakupBuilder::getBreakup() const {
         case SimulationType::EXPLOSION:
             if (satelliteVector.size() == 1) {
                 return createExplosion(satelliteVector);
+            } else {
+                std::stringstream message{};
+                message << "No Breakup Simulation was created!\n"
+                        << "You defined SimulationType: EXPLOSION\n"
+                        << "The input contained after applying the filter " << satelliteVector.size() << " satellites\n"
+                        << "But it should contain 1 satellite!";
+                throw std::runtime_error{message.str()};
             }
         case SimulationType::COLLISION:
             if (satelliteVector.size() == 2) {
                 return createCollision(satelliteVector);
+            } else {
+                std::stringstream message{};
+                message << "No Breakup Simulation was created!\n"
+                        << "You defined SimulationType: COLLISION\n"
+                        << "The input contained after applying the filter " << satelliteVector.size() << " satellites\n"
+                        << "But it should contain 2 satellites!";
+                throw std::runtime_error{message.str()};
             }
         default:
             if (satelliteVector.size() == 1) {

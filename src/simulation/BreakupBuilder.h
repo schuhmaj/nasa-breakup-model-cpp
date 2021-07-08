@@ -3,6 +3,7 @@
 #include <memory>
 #include <exception>
 #include <iostream>
+#include <sstream>
 #include "input/InputConfigurationSource.h"
 #include "input/DataSource.h"
 #include "Breakup.h"
