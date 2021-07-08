@@ -6,9 +6,15 @@ namespace util {
 
     /**
      * PI with enough precision for future computers :)
-     * (and as constexpr and no preprocessor magic)
+     * (and as constexpr with no preprocessor magic)
      */
     constexpr double PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
+
+    /**
+     * PI divided by 4 with enough precision
+     * (and as constexpr with no preprocessor magic)
+     */
+    constexpr double PI_4 = 0.7853981633974483096156608458198757210492923498437764552437361480;
 
     /**
      * Density of Aluminium in [kg/m^3]
