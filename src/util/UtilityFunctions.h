@@ -11,16 +11,6 @@ namespace util {
     constexpr double PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
 
     /**
-     * PI divided by 180
-     */
-    constexpr double DivPI180 = PI / 180.0;
-
-    /**
-     * PI multiplied by 180
-     */
-    constexpr double Div180PI = 180.0 / PI;
-
-    /**
      * Density of Aluminium in [kg/m^3]
      */
     constexpr double ALUMINIUM_DENSITY = 2698.9;
@@ -60,8 +50,10 @@ namespace util {
     * @return mass in [kg]
     */
     inline double calculateSphereMass(double characteristicLength) {
+        static constexpr double MultPI4_3 = 4.0 / 3.0 * PI;
+
         double radius = characteristicLength / 2.0;
-        return 4.0 / 3.0 * PI * (radius * radius * radius) * calculateDensity(characteristicLength);
+        return MultPI4_3 * (radius * radius * radius) * calculateDensity(characteristicLength);
     }
 
     /**
@@ -70,7 +62,9 @@ namespace util {
     * @return diameter/ characteristic Length in [m]
     */
     inline double calculateCharacteristicLengthFromMass(double mass) {
-        return std::pow((6 * mass) / (92.937 * PI), 1 / 2.26);
+        static constexpr double Mul92_937PI = 92.937 * PI;
+        static constexpr double Inv2_26 = 1.0 / 2.26;
+        return std::pow((6 * mass) / (Mul92_937PI), Inv2_26);
     }
 
     /**
@@ -95,6 +89,7 @@ namespace util {
      * @return angle in [rad]
      */
     inline double degToRad(double angle) {
+        static constexpr double DivPI180 = PI / 180.0;
         return angle * DivPI180;
     }
 
@@ -104,6 +99,7 @@ namespace util {
      * @return angle in [deg]
      */
     inline double radToDeg(double angle) {
+        static constexpr double Div180PI = 180.0 / PI;
         return angle * Div180PI;
     }
 
