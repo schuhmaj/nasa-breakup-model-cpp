@@ -18,8 +18,20 @@ enum class SatType {
     SPACECRAFT, ROCKET_BODY, DEBRIS, UNKNOWN
 };
 
+/**
+ * Maps the SatType to a String according to Satellite::satTypeToString which is then given to the ostream.
+ * @param os - ostream
+ * @param satType - SatType
+ * @return os
+ */
 std::ostream &operator<<(std::ostream &os, SatType satType);
 
+/**
+ * Reads in a string and maps this string to a SatType according to Satellite::stringToSatType.
+ * @param istream - istream
+ * @param satType - SatType
+ * @return istream
+ */
 std::istream &operator>>(std::istream &istream, SatType &satType);
 
 
