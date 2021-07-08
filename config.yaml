@@ -3,8 +3,8 @@ minimalCharacteristicLength: 0.05           #minimal L_c in [m]
 simulationType: COLLISION                   #COLLISION or EXPLOSION
 currentMaxID: 48514                         #Derived from satcat.csv
 inputSource: ["../data.yaml"]               #Alternative: ["../satcat.csv", "../tle.txt"]
-#idFilter: [123, 456]                       #List of IDs of the satellites which should be used
+#idFilter: [123, 456]                       #Optional: IDs of satellites to use (two for collision, one for explosion)
 outputTarget: ["result.csv", "result.vtu"]  #List containing the wished output files
-#outputKepler: True                          #If given the CSV output contains Kepler elements
-#outputCSVPattern: "IL"                      #Superpasses outputKepler-option; if this is given the implementation switchs
+#outputKepler: True                         #If given the CSV output contains Kepler elements
+#outputCSVPattern: "IL"                     #Superpasses outputKepler-option; if this is given the implementation switchs
                                             #to the CSVPatternWriter (more time-costly) and produces a custom CSV
