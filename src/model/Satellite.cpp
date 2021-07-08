@@ -138,10 +138,10 @@ std::array<double, 6> Satellite::getKeplerEA() const{
 
     std::array<double, 3> k = {0.0, 0.0, 1.0};
     // build generic arrays to size - init values don't matter:
-    std::array<double, 3> h = {0.0, 0.0, 0.0};
-    std::array<double, 3> Dum_Vec = {0.0, 0.0, 0.0};
-    std::array<double, 3> n = {0.0, 0.0, 0.0};
-    std::array<double, 3> evett = {0.0, 0.0, 0.0};
+    std::array<double, 3> h{};
+    std::array<double, 3> Dum_Vec{};
+    std::array<double, 3> n{};
+    std::array<double, 3> evett{};
 
     double p = 0.0;
     double temp = 0.0;
