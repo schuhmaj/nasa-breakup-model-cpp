@@ -13,7 +13,22 @@
  * (Expressive) Return type for getTypeOfSimulation.
  */
 enum class SimulationType {
-    COLLISION, EXPLOSION, UNKNOWN
+    /**
+     * Describes a Simulation Breakup Event.
+     */
+    COLLISION,
+
+    /**
+     * Describes a Explosion Breakup Event.
+     */
+    EXPLOSION,
+
+    /**
+     * Simulation Type unknown and not defined by the user.
+     * The processing BreakupBuilder will try to derive the Type from the number of satellites in the input (with
+     * warning).
+     */
+    UNKNOWN
 };
 
 /**
