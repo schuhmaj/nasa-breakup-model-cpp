@@ -9,6 +9,17 @@ namespace util {
      * (and as constexpr and no preprocessor magic)
      */
     constexpr double PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
+
+    /**
+     * PI divided by 180
+     */
+    constexpr double DivPI180 = PI / 180.0;
+
+    /**
+     * PI multiplied by 180
+     */
+    constexpr double Div180PI = 180.0 / PI;
+
     /**
      * Density of Aluminium in [kg/m^3]
      */
@@ -84,7 +95,7 @@ namespace util {
      * @return angle in [rad]
      */
     inline double degToRad(double angle) {
-        return angle * PI / 180.0;
+        return angle * DivPI180;
     }
 
     /**
@@ -93,7 +104,7 @@ namespace util {
      * @return angle in [deg]
      */
     inline double radToDeg(double angle) {
-        return angle * 180 / PI;
+        return angle * Div180PI;
     }
 
 }
