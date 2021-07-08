@@ -104,7 +104,7 @@ The format specification can also be read there.
 
 Notice that if you decide to take the satcat + TLE approach that the satellite(s)
 which should explode (collide) must be present in both files. The mapping is done
-via their IDs. You find the IDs in the satcat in the third row (NORAD_CAT_ID) and
+via their IDs. You find the IDs in the satcat in the third column (NORAD_CAT_ID) and
 in the TLE optionally in first and second row in the beginning (example: 25544).
 
 ### Output
