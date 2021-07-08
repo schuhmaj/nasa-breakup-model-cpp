@@ -47,6 +47,7 @@ private:
 
     /**
      * Parses one cell of the CSV line file stream to a type V by using its >> operator.
+     * The getLine overhead fixes the problematic of ',' consumption.
      * @tparam V - the value to be extracted, should have an >> operator overload
      * @param istream - the line stream
      * @param value - the value extracted (non-const)
