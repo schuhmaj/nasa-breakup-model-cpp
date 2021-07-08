@@ -50,9 +50,9 @@ protected:
 };
 
 TEST_F(CSVWriterTest, FileCreation) {
-    CSVWriter csvWriter{_filePath};
-
     ASSERT_FALSE(std::filesystem::exists(_filePath)) << "File should not yet exist!";
+
+    CSVWriter csvWriter{_filePath};
 
     csvWriter.printResult(_satelliteCollection);
 
