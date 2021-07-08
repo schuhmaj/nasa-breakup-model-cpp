@@ -64,6 +64,7 @@ public:
      * Neither of the two of them contains all necessary information. So this method also merges the information
      * by using the unique ID of each satellite.
      * @return a Collection of Satellites
+     * @throws a runtime_error if satcat or tle is corrupt
      */
     std::vector<Satellite> getSatelliteCollection() const override;
 
@@ -72,6 +73,7 @@ private:
     /**
      * Returns a mapping of satellites ID to its name, type and Radar Cross Section (RCS) in [m^2]
      * @return mapping <ID, infos>
+     * @throws a runtime_error if satcat is corrupt
      */
     std::map<size_t, std::tuple<std::string, SatType, double>> getSatcatMapping() const;
 

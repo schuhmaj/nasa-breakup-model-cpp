@@ -233,6 +233,14 @@ public:
         return !(lhs == rhs);
     }
 
+    /**
+     * Prints the main data of the Satellite (especially for error messages).
+     * @param os - ostream
+     * @param satellite - Satellite
+     * @return os
+     */
+    friend std::ostream &operator<<(std::ostream &os, const Satellite &satellite);
+
     /*
      * Getter and Setter
      */

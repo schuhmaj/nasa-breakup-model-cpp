@@ -9,6 +9,7 @@
 #include "output/CSVWriter.h"
 #include "output/CSVPatternWriter.h"
 #include "output/VTKWriter.h"
+#include "spdlog/spdlog.h"
 
 /**
  * Reads the breakup simulation configuration data from an YAML file.
@@ -38,8 +39,8 @@ public:
 
     /**
      * Returns the minimal characteristic Length for fragments later created by the Breakup Simulation.
-     * @attention If not given by the YAML, 0.05 [m] is returned as default value.
      * @return double
+     * @throws a runtime_error if not specified
      */
     double getMinimalCharacteristicLength() const override;
 

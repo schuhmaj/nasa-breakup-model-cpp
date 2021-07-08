@@ -4,7 +4,7 @@ double YAMLConfigurationReader::getMinimalCharacteristicLength() const {
     if (_file["minimalCharacteristicLength"]) {
         return _file["minimalCharacteristicLength"].as<double>();
     } else {
-        return 0.05;
+        throw std::runtime_error{"The minimal characteristic Length was not specified in the YAML Configuration file!"};
     }
 }
 
@@ -15,9 +15,13 @@ SimulationType YAMLConfigurationReader::getTypeOfSimulation() const {
                     _file["simulationType"].as<std::string>());
             return simulationType;
         } catch (std::exception &e) {
+            SPDLOG_WARN("The simulation type could not be parsed from the YAML Configuration file!"
+                        "SimulationType therefore UNKNOWN!");
             return SimulationType::UNKNOWN;
         }
     } else {
+        SPDLOG_WARN("The simulation was not given in the YAML Configuration file!"
+                    "SimulationType therefore UNKNOWN!");
         return SimulationType::UNKNOWN;
     }
 }
@@ -26,6 +30,8 @@ size_t YAMLConfigurationReader::getCurrentMaximalGivenID() const {
     if (_file["currentMaxID"]) {
         return _file["currentMaxID"].as<size_t>();
     } else {
+        SPDLOG_WARN("The current maximal given ID was not given in the YAML Configuration file!"
+                    "The simulation therefore will assume zero!");
         return 0;
     }
 }
@@ -43,14 +49,21 @@ std::shared_ptr<const DataSource> YAMLConfigurationReader::getDataReader() const
         return std::make_shared<YAMLDataReader>(fileNames[0]);
     } else if (fileNames.size() == 2) {
         //fileName.csv (should be satcat) && fileName.txt (should be tle)
-        if (fileNames[0].find(".csv") && fileNames[1].find(".txt")){
+        if (fileNames[0].find(".csv") && fileNames[1].find(".txt")) {
             return std::make_shared<TLESatcatDataReader>(fileNames[0], fileNames[1]);
-        //fileName.tle (should be tle) && fileName.csv (should be satcat)
+            //fileName.tle (should be tle) && fileName.csv (should be satcat)
         } else if (fileNames[0].find(".txt") && fileNames[1].find(".csv")) {
             return std::make_shared<TLESatcatDataReader>(fileNames[1], fileNames[0]);
         }
     }
-    throw std::runtime_error{"Data file input is not correctly set-up!"};
+    //Error Handling
+    std::stringstream message{};
+    message << "The YAML Configuration Reader parsed the following files as Data Input:\n";
+    for (unsigned int i = 0; i < fileNames.size(); ++i) {
+        message << '{' << i << ": " << fileNames[i] << "}\n";
+    }
+    message << "This is no valid configuration!";
+    throw std::runtime_error{message.str()};
 }
 
 std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() const {
@@ -69,7 +82,7 @@ std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputTar
     if (_file["outputTarget"] && _file["outputTarget"].IsSequence()) {
         for (auto outputFile : _file["outputTarget"]) {
             std::string filename{outputFile.as<std::string>()};
-            if (filename.substr(filename.size()-3) == "csv") {
+            if (filename.substr(filename.size() - 3) == "csv") {
                 if (_file["outputCSVPattern"]) {
                     auto pattern = _file["outputCSVPattern"].as<std::string>();
                     outputs.push_back(std::shared_ptr<OutputWriter>(new CSVPatternWriter(filename, pattern)));
@@ -80,12 +93,17 @@ std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputTar
                     }
                     outputs.push_back(std::shared_ptr<OutputWriter>(new CSVWriter(filename, kepler)));
                 }
-            } else if (filename.substr(filename.size()-3) == "vtu") {
+            } else if (filename.substr(filename.size() - 3) == "vtu") {
                 outputs.push_back(std::shared_ptr<OutputWriter>(new VTKWriter(filename)));
             } else {
-                throw std::runtime_error{"Invalid output target inside the YAML file!"};
+                SPDLOG_WARN("The file {} is no available output form. Available are csv and vtu Output", filename);
             }
         }
+        if (outputs.empty()) {
+            SPDLOG_WARN("You have defined OutputTarget with no valid files!");
+        }
+    } else {
+        SPDLOG_INFO("You have defined no way of output!");
     }
     return outputs;
 }

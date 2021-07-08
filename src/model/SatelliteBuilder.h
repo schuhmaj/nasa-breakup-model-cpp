@@ -3,8 +3,11 @@
 #include "Satellite.h"
 #include "util/UtilityFunctions.h"
 #include <string>
+#include <sstream>
 #include <array>
 #include <exception>
+#include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
 
 /**
  * General Idea is that there a multiple ways to construct a valid satellite object to run the simulation with it.

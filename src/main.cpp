@@ -8,29 +8,28 @@
 #include "simulation/BreakupBuilder.h"
 #include "output/CSVWriter.h"
 #include "output/VTKWriter.h"
+#include "spdlog/spdlog.h"
 
 int main(int argc, char *argv[]) {
 
     if (argc != 2) {
-        std::cout <<
-            "Wrong program call. Please call the program in the following way:\n" <<
-            "./breakupModel [yaml-file]" <<
-            std::endl;
+        SPDLOG_ERROR(
+                "Wrong program call. Please call the program in the following way:\n"
+                "./breakupModel [yaml-file]");
         return 0;
     }
-
-    //The fileName of the YAML file
-    std::string fileName{argv[1]};
-
-    //Load an Configuration Source containing the input arguments required for the BreakupBuilder
-    //The YAMLConfigurationReader as a special case is also able to load the Configuration for Output
-    auto configSource = std::make_shared<YAMLConfigurationReader>(fileName);
-
-    //The SimulationFactory which builds our breakup simulation
-    BreakupBuilder breakupBuilder{configSource};
-
-    //Create and run the simulation or catch an exception in case something is wrong with the simulation
     try {
+        //The fileName of the YAML file
+        std::string fileName{argv[1]};
+
+        //Load an Configuration Source containing the input arguments required for the BreakupBuilder
+        //The YAMLConfigurationReader as a special case is also able to load the Configuration for Output
+        auto configSource = std::make_shared<YAMLConfigurationReader>(fileName);
+
+        //The SimulationFactory which builds our breakup simulation
+        BreakupBuilder breakupBuilder{configSource};
+
+        //Create and run the simulation or catch an exception in case something is wrong with the simulation
         //Creates and Runs the simulation
         auto breakUpSimulation = breakupBuilder.getBreakup();
         breakUpSimulation->run();
@@ -41,8 +40,7 @@ int main(int argc, char *argv[]) {
             out->printResult(*breakUpSimulation);
         }
     } catch (std::exception &e) {
-        std::cerr << e.what();
+        SPDLOG_ERROR(e.what());
     }
-
     return 0;
 }

@@ -228,3 +228,12 @@ std::array<double, 6> Satellite::getKeplerTA() const {
     kepler[5] = util::eccentricAnomalyToTrueAnomaly(kepler[5], kepler[1]);
     return kepler;
 }
+
+std::ostream &operator<<(std::ostream &os, const Satellite &satellite) {
+    using util::operator<<;
+    os << "Satellite{"
+       << "_id: " << satellite._id << " _name: " << satellite._name << " _satType: " << satellite._satType
+       << " _characteristicLength: " << satellite._characteristicLength << " _velocity: " << satellite._velocity
+       << " _position: " << satellite._position << "}";
+    return os;
+}
