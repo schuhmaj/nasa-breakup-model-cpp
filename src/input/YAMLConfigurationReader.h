@@ -64,7 +64,7 @@ public:
      * @return DataSource as shared pointer if it is wished to (re-)use in an object-oriented purpose
      * @throws an Exception if not given because not data == no simulation possible
      */
-    std::shared_ptr<DataSource> getDataReader() const override;
+    std::shared_ptr<const DataSource> getDataReader() const override;
 
     /**
      * Returns the ID selection for the filter if given. Else an empty optional is returned.

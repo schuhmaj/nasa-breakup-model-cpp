@@ -58,7 +58,7 @@ public:
      * Returns an DataSource which has the ability to return an vector of satellites.
      * @return DataSource as shared pointer if it is wished to (re-)use in an object-oriented purpose
      */
-    virtual std::shared_ptr<DataSource> getDataReader() const = 0;
+    virtual std::shared_ptr<const DataSource> getDataReader() const = 0;
 
     /**
      * Returns a set of IDs. This set defines which Satellites should be used from the satellite collection.

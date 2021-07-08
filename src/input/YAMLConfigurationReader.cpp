@@ -30,7 +30,7 @@ size_t YAMLConfigurationReader::getCurrentMaximalGivenID() const {
     }
 }
 
-std::shared_ptr<DataSource> YAMLConfigurationReader::getDataReader() const {
+std::shared_ptr<const DataSource> YAMLConfigurationReader::getDataReader() const {
     std::vector<std::string> fileNames{};
     if (_file["inputSource"] && _file["inputSource"].IsSequence()) {
         for (auto inputSource : _file["inputSource"]) {

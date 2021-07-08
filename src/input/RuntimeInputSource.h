@@ -8,7 +8,7 @@
 /**
  * A object which defines all parameters needed for the Simulation.
  */
-class RuntimeInputSource : public InputConfigurationSource, public DataSource {
+class RuntimeInputSource : public InputConfigurationSource, public DataSource, public std::enable_shared_from_this<const DataSource> {
 
     const double _minimalCharacteristicLength;
 
@@ -84,27 +84,15 @@ public:
               _satellites{dataSource->getSatelliteCollection()} {}
 
 
-    double getMinimalCharacteristicLength() const override {
-        return _minimalCharacteristicLength;
-    }
+    double getMinimalCharacteristicLength() const override;
 
-    SimulationType getTypeOfSimulation() const override {
-        return _simulationType;
-    }
+    SimulationType getTypeOfSimulation() const override;
 
-    size_t getCurrentMaximalGivenID() const override {
-        return _currentMaximalGivenID;
-    }
+    size_t getCurrentMaximalGivenID() const override;
 
-    std::shared_ptr<DataSource> getDataReader() const override {
-        return *this;
-    }
+    std::shared_ptr<const DataSource> getDataReader() const override;
 
-    std::optional<std::set<size_t>> getIDFilter() const override {
-        return _idFilter;
-    }
+    std::optional<std::set<size_t>> getIDFilter() const override;
 
-    std::vector<Satellite> getSatelliteCollection() const override {
-        return _satellites;
-    }
+    std::vector<Satellite> getSatelliteCollection() const override;
 };
