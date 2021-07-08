@@ -176,7 +176,6 @@ TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionEmptyTLE) {
     _expectedSatellites.clear();
     TLESatcatDataReader tleSatcatDataReader{"resources/testShrinkedSatcat.csv", "resources/test-tle7.txt"};
 
-    auto actualSatellites = tleSatcatDataReader.getSatelliteCollection();
+    ASSERT_THROW(tleSatcatDataReader.getSatelliteCollection(), std::runtime_error);
 
-    ASSERT_EQ(actualSatellites.size(), 0);
 }

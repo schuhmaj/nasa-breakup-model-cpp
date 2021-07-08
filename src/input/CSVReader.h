@@ -129,13 +129,9 @@ public:
             std::getline(fileStream, line);
         }
 
-        //Read row by row, if issues appear rethrow the exception
-        try {
-            while (this->nextLine(fileStream, t)) {
-                lines.push_back(t);
-            }
-        } catch (std::exception &e) {
-            throw;
+        //Read row by row
+        while (this->nextLine(fileStream, t)) {
+            lines.push_back(t);
         }
 
         return lines;
@@ -162,7 +158,8 @@ public:
             }
             return header;
         } else {
-            throw std::runtime_error{"The CSV file has no header!"};
+            throw std::runtime_error{"The CSVReader was configured that this CSV file has no header."
+                                     "Nevertheless getHeader() was called, which is wrong!"};
         }
     }
 };
