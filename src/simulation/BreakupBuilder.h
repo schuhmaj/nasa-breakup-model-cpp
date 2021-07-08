@@ -8,6 +8,7 @@
 #include "Breakup.h"
 #include "Explosion.h"
 #include "Collision.h"
+#include "spdlog/spdlog.h"
 
 /**
  * Interface to easily create a Breakup Simulation.
@@ -101,7 +102,7 @@ public:
      * WEAK   --> No specified input type, but Satellite number suggests a type (error message, but simulation continues)<br>
      * NONE   --> No input type given, type cannot be derived from satellite number (throws exception)<br>
      * @return Breakup Simulation
-     * @throws an invalid_argument exception if type is not determined
+     * @throws a runtime_error if type is not determined
      */
     std::unique_ptr<Breakup> getBreakup() const;
 
