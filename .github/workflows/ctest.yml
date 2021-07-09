@@ -25,12 +25,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
               
-      - name: Install Environment
-        run: |
-          sudo apt install cmake
-          sudo apt install build-essential
-          
-      - name: Build project
+      - name: Build
         run: |
           mkdir build
           cd build
@@ -38,6 +33,5 @@ jobs:
           make
           
       - name: Test
-        run: |
-          ctest
+        run: cd build && ctest        
       

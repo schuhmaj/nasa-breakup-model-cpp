@@ -1,4 +1,6 @@
 # nasa-breakup-model-cpp
+![Build and Test](https://github.com/schuhmaj/nasa-breakup-model-cpp/actions/workflows/ctest.yml/badge.svg)
+
 Implementation as part of the Bachelor Thesis "Efficient Implementation and Evaluation of the NASA Breakup Model in modern C++"
 
 Comments to Equations or similar in the source code reference the following document:
