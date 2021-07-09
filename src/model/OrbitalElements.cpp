@@ -2,7 +2,7 @@
 
 std::array<double, 6> OrbitalElements::getAsArray() const {
     return std::array<double, 6>{_semiMajorAxis, _eccentricity, _inclination,
-                                 _longitudeOfTheAscendingNode, _argumentOfPeriapsis, _eccentricity};
+                                 _longitudeOfTheAscendingNode, _argumentOfPeriapsis, _eccentricAnomaly};
 }
 
 double OrbitalElements::operator[](size_t index) const {
