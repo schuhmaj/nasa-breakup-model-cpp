@@ -58,7 +58,7 @@ public:
         spdlog::drop(_logger->name());
     }
 
-    void printResult(const std::vector<Satellite> &satelliteCollection) override;
+    void printResult(const std::vector<Satellite> &satelliteCollection) const override;
 
     /**
      * Function required for testing the logger.

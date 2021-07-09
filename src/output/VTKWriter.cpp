@@ -1,6 +1,6 @@
 #include "VTKWriter.h"
 
-void VTKWriter::printResult(const std::vector<Satellite> &satelliteCollection) {
+void VTKWriter::printResult(const std::vector<Satellite> &satelliteCollection) const {
     //Header
     this->printHeader(satelliteCollection.size());
 
@@ -20,7 +20,7 @@ void VTKWriter::printResult(const std::vector<Satellite> &satelliteCollection) {
     this->printFooter();
 }
 
-void VTKWriter::printHeader(size_t size) {
+void VTKWriter::printHeader(size_t size) const {
     _logger->info(R"(<?xml version="1.0" encoding="UTF-8" standalone="no" ?>)");
     _logger->info(R"(<VTKFile byte_order="LittleEndian" type="UnstructuredGrid" version="0.1">)");
     _logger->info(R"(  <UnstructuredGrid>)");
@@ -28,13 +28,13 @@ void VTKWriter::printHeader(size_t size) {
     _logger->info(R"(      <PointData>)");
 }
 
-void VTKWriter::printSeparator() {
+void VTKWriter::printSeparator() const {
     _logger->info(R"(      </PointData>)");
     _logger->info(R"(      <CellData/>)");
     _logger->info(R"(      <Points>)");
 }
 
-void VTKWriter::printFooter() {
+void VTKWriter::printFooter() const {
     _logger->info(R"(      </Points>)");
     _logger->info(R"(      <Cells>)");
     _logger->info(R"(        <DataArray Name="types" NumberOfComponents="0" format="ascii" type="Float32"/>)");

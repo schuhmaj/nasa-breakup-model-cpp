@@ -34,7 +34,7 @@ public:
         spdlog::drop(_logger->name());
     }
 
-    void printResult(const std::vector<Satellite> &satelliteCollection) override;
+    void printResult(const std::vector<Satellite> &satelliteCollection) const override;
 
     /**
     * Function required for testing the logger.
@@ -57,7 +57,7 @@ private:
      */
     template<typename Property, typename Data>
     void printProperty(const std::string &name, const std::function<Property(const Data &data)> &property,
-                       const std::vector<Data> &dataCollection) {
+                       const std::vector<Data> &dataCollection) const {
         _logger->info(R"(        <DataArray Name="{}" NumberOfComponents="1" format="ascii" type="Float32">)", name);
         for (const auto &date : dataCollection) {
             _logger->info("          {}", property(date));
@@ -76,7 +76,7 @@ private:
      */
     template<typename Property, typename Data>
     void printProperty(const std::string &name, const std::function<std::array<Property, 3>(const Data &data)> &property,
-                       const std::vector<Data> &dataCollection) {
+                       const std::vector<Data> &dataCollection) const {
         _logger->info(R"(        <DataArray Name="{}" NumberOfComponents="3" format="ascii" type="Float32">)", name);
         for (const auto &date : dataCollection) {
             const auto &array = property(date);
@@ -89,17 +89,17 @@ private:
      * Prints the Header of the VTK file.
      * @param size - the number of points
      */
-    void printHeader(size_t size);
+    void printHeader(size_t size) const;
 
     /**
      * Prints the separator between point properties and point position in cell.
      */
-    void printSeparator();
+    void printSeparator() const;
 
     /**
      * Prints the Footer of the VTK file.
      */
-    void printFooter();
+    void printFooter() const;
 
 
 };

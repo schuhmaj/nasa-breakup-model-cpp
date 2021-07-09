@@ -46,7 +46,7 @@ const std::map<char, std::string> CSVPatternWriter::headerMap{
         {'T', "True Anomaly [rad]"}
 };
 
-void CSVPatternWriter::printResult(const std::vector<Satellite> &satelliteCollection) {
+void CSVPatternWriter::printResult(const std::vector<Satellite> &satelliteCollection) const {
     //Header
     std::stringstream header{};
     for (auto headerIt = _myHeader.begin(); headerIt != _myHeader.end() - 1; ++headerIt) {

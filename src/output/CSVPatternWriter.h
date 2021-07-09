@@ -49,11 +49,11 @@ public:
     * De-Registers the logger of the CSVPatternWriter, to ensure that a similar CSVPatternWriter
      * can be constructed once again.
     */
-    ~CSVPatternWriter() override{
+    ~CSVPatternWriter() override {
         spdlog::drop(_logger->name());
     }
 
-    void printResult(const std::vector<Satellite> &satelliteCollection) override;
+    void printResult(const std::vector<Satellite> &satelliteCollection) const override;
 
     /**
     * Function required for testing the logger.

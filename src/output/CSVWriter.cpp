@@ -1,6 +1,6 @@
 #include "CSVWriter.h"
 
-void CSVWriter::printResult(const std::vector<Satellite> &satelliteCollection) {
+void CSVWriter::printResult(const std::vector<Satellite> &satelliteCollection) const {
     if (_withKepler) {
         this->printKepler(satelliteCollection);
     } else {
