@@ -33,5 +33,5 @@ jobs:
           make
           
       - name: Test
-        run: cd test && ctest        
+        run: cd build && ctest        
       
