@@ -105,13 +105,7 @@ public:
      * @param seed
      * @return this
      */
-    virtual Breakup &setSeed(unsigned long seed);
-
-    /**
-    * This method reinitialize the random number generator of this Breakup to use a randomly generated seed.
-     * @return this
-    */
-    virtual Breakup &setRandom();
+    virtual Breakup &setSeed(unsigned long seed = std::random_device{}());
 
 protected:
 
