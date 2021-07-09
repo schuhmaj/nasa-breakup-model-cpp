@@ -1,8 +1,8 @@
 #include "TLEReader.h"
 
 
-std::map<size_t, std::array<double, 6>> TLEReader::getMappingIDKepler() const {
-    std::map<size_t, std::array<double, 6>> mapping{};
+std::map<size_t, OrbitalElements> TLEReader::getMappingIDOrbitalElements() const {
+    std::map<size_t, OrbitalElements> mapping{};
 
     std::ifstream fileStream{_filepath};
 
@@ -14,9 +14,9 @@ std::map<size_t, std::array<double, 6>> TLEReader::getMappingIDKepler() const {
     return mapping;
 }
 
-std::pair<size_t, std::array<double, 6>> TLEReader::getTwoLine(std::istream &istream) const {
+std::pair<size_t, OrbitalElements> TLEReader::getTwoLine(std::istream &istream) const {
     size_t id;
-    std::array<double, 6> keplerElements{};
+    double meanMotion, eccentricity, inclination, raan, argOfPer, ma;
     std::string line{};
 
     //Goto Line 2
@@ -31,21 +31,21 @@ std::pair<size_t, std::array<double, 6>> TLEReader::getTwoLine(std::istream &ist
         //ID
         id = std::stoul(line.substr(2, 5));
         //Mean Motion [rev/day]
-        keplerElements[0] = std::stod(line.substr(52, 11));
+        meanMotion = std::stod(line.substr(52, 11));
         //Eccentricity
-        keplerElements[1] = std::stod("0." + line.substr(26, 7));
+        eccentricity = std::stod("0." + line.substr(26, 7));
         //Inclination [deg]
-        keplerElements[2] = std::stod(line.substr(8, 8));
+        inclination = std::stod(line.substr(8, 8));
         //RAAN [deg]
-        keplerElements[3] = std::stod(line.substr(17, 8));
+        raan = std::stod(line.substr(17, 8));
         //Argument of Perigee [deg]
-        keplerElements[4] = std::stod(line.substr(34, 8));
+        argOfPer = std::stod(line.substr(34, 8));
         //Mean Anomaly [deg]
-        keplerElements[5] = std::stod(line.substr(43, 8));
+        ma = std::stod(line.substr(43, 8));
     } catch (std::exception &e) {
         throw std::runtime_error{"The TLE file " + _filepath + " is malformed! Some Data could not be parsed correctly"
                                                                "into valid numbers"};
     }
 
-    return std::make_pair(id, keplerElements);
+    return std::make_pair(id, OrbitalElements{meanMotion, eccentricity, inclination, raan, argOfPer, ma});
 }

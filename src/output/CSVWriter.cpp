@@ -31,7 +31,7 @@ void CSVWriter::printKepler(const std::vector<Satellite> &satelliteCollection) c
     for (const auto &sat : satelliteCollection) {
         auto &v = sat.getVelocity();
         auto &p = sat.getPosition();
-        auto kepler = sat.getKeplerMA();
+        auto kepler = sat.getOrbitalElements();
         //Because of ADL the overload operator<< for arrays (in UtilityContainer) does not work here
         //@related https://en.cppreference.com/w/cpp/language/adl
         _logger->info("{},{},{},{},{},{},{},[{} {} {}],[{} {} {}],{},{},{},{},{},{}", sat.getId(), sat.getName(), sat.getSatType(),

@@ -29,8 +29,10 @@ const std::map<SatType, std::string> Satellite::satTypeToString{{SatType::SPACEC
                                                                 {SatType::UNKNOWN,     "UNKNOWN"}
 };
 
-void Satellite::setCartesianByKeplerEA(const std::array<double, 6> &keplerianElements) {
+void Satellite::setCartesianByOrbitalElements(const OrbitalElements &orbitalElements) {
     using namespace util;
+
+    auto keplerianElements = orbitalElements.getAsUniform();
 
     double a = keplerianElements[0];
     double e = keplerianElements[1];
@@ -112,29 +114,7 @@ void Satellite::setCartesianByKeplerEA(const std::array<double, 6> &keplerianEle
     }
 }
 
-void Satellite::setCartesianByKeplerMA(const std::array<double, 6> &keplerianElements) {
-    std::array<double, 6> keplerianElementsEA{keplerianElements};
-    keplerianElementsEA[5] = util::meanAnomalyToEccentricAnomaly(keplerianElements[5], keplerianElements[1]);
-    this->setCartesianByKeplerEA(keplerianElementsEA);
-}
-
-void Satellite::setCartesianByKeplerTA(const std::array<double, 6> &keplerianElements) {
-    std::array<double, 6> keplerianElementsEA{keplerianElements};
-    keplerianElementsEA[5] = util::trueAnomalyToEccentricAnomaly(keplerianElements[5], keplerianElements[1]);
-    this->setCartesianByKeplerEA(keplerianElementsEA);
-}
-
-void Satellite::setCartesianByKeplerTLEFormat(const std::array<double, 6> &keplerianElements) {
-    std::array<double, 6> keplerianElementsMA{keplerianElements};
-    keplerianElementsMA[0] = util::meanMotionToSemiMajorAxis(keplerianElements[0]);
-    keplerianElementsMA[2] = util::degToRad(keplerianElements[0]);
-    keplerianElementsMA[3] = util::degToRad(keplerianElements[0]);
-    keplerianElementsMA[4] = util::degToRad(keplerianElements[0]);
-    keplerianElementsMA[5] = util::degToRad(keplerianElements[0]);
-    this->setCartesianByKeplerMA(keplerianElementsMA);
-}
-
-std::array<double, 6> Satellite::getKeplerEA() const {
+OrbitalElements Satellite::getOrbitalElements() const {
     using namespace util;
     std::array<double, 6> keplerianElements{};
 
@@ -214,19 +194,7 @@ std::array<double, 6> Satellite::getKeplerEA() const {
     if (keplerianElements[5] < 0.0) {
         keplerianElements[5] += PI2;
     }
-    return keplerianElements;
-}
-
-std::array<double, 6> Satellite::getKeplerMA() const {
-    auto kepler = getKeplerEA();
-    kepler[5] = util::eccentricAnomalyToMeanAnomaly(kepler[5], kepler[1]);
-    return kepler;
-}
-
-std::array<double, 6> Satellite::getKeplerTA() const {
-    auto kepler = getKeplerEA();
-    kepler[5] = util::eccentricAnomalyToTrueAnomaly(kepler[5], kepler[1]);
-    return kepler;
+    return OrbitalElements{keplerianElements};
 }
 
 std::ostream &operator<<(std::ostream &os, const Satellite &satellite) {

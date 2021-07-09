@@ -7,6 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <filesystem>
+#include "model/OrbitalElements.h"
 
 /**
  * Provides the functionality to parse a TLE (Two-Line-Format).
@@ -41,7 +42,7 @@ public:
      * @return mapping <ID, KeplerElements>
      * @throws an exception if the TLE is malformed or any other issues are encountered during the parsing
      */
-    std::map<size_t, std::array<double, 6>> getMappingIDKepler() const;
+    std::map<size_t, OrbitalElements> getMappingIDOrbitalElements() const;
 
 private:
 
@@ -51,7 +52,7 @@ private:
      * @return a pair of <ID, KeplerElements>
      * @throws an exception if the TLE is malformed or any other issues are encountered during the parsing
      */
-    std::pair<size_t, std::array<double, 6>> getTwoLine(std::istream &istream) const;
+    std::pair<size_t, OrbitalElements> getTwoLine(std::istream &istream) const;
 
 };
 

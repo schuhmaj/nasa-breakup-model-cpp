@@ -1,6 +1,7 @@
 #include "CSVPatternWriter.h"
 
-const std::map<char, std::function<void(const Satellite &sat, std::stringstream &stream)>> CSVPatternWriter::functionMap{
+const std::map<char, std::function<void(const Satellite &sat,
+                                        std::stringstream &stream)>> CSVPatternWriter::functionMap{
         {'I', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getId(); }},
         {'n', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getName(); }},
         {'t', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getSatType(); }},
@@ -16,14 +17,30 @@ const std::map<char, std::function<void(const Satellite &sat, std::stringstream 
             using util::operator<<;
             stream << sat.getPosition();
         }},
-        {'a', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getKeplerEA()[0]; }},
-        {'e', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getKeplerEA()[1]; }},
-        {'i', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getKeplerEA()[2]; }},
-        {'W', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getKeplerEA()[3]; }},
-        {'w', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getKeplerEA()[4]; }},
-        {'M', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getKeplerMA()[5]; }},
-        {'E', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getKeplerEA()[5]; }},
-        {'T', [](const Satellite &sat, std::stringstream &stream) -> void { stream << sat.getKeplerTA()[5]; }}
+        {'a', [](const Satellite &sat, std::stringstream &stream) -> void {
+            stream << sat.getOrbitalElements().getSemiMajorAxis();
+        }},
+        {'e', [](const Satellite &sat, std::stringstream &stream) -> void {
+            stream << sat.getOrbitalElements().getEccentricity();
+        }},
+        {'i', [](const Satellite &sat, std::stringstream &stream) -> void {
+            stream << sat.getOrbitalElements().getInclination(AngularUnit::RADIAN);
+        }},
+        {'W', [](const Satellite &sat, std::stringstream &stream) -> void {
+            stream << sat.getOrbitalElements().getLongitudeOfTheAscendingNode(AngularUnit::RADIAN);
+        }},
+        {'w', [](const Satellite &sat, std::stringstream &stream) -> void {
+            stream << sat.getOrbitalElements().getArgumentOfPeriapsis(AngularUnit::RADIAN);
+        }},
+        {'M', [](const Satellite &sat, std::stringstream &stream) -> void {
+            stream << sat.getOrbitalElements().getAnomaly(AngularUnit::RADIAN, OrbitalAnomalyType::MEAN);
+        }},
+        {'E', [](const Satellite &sat, std::stringstream &stream) -> void {
+            stream << sat.getOrbitalElements().getAnomaly(AngularUnit::RADIAN, OrbitalAnomalyType::ECCENTRIC);
+        }},
+        {'T', [](const Satellite &sat, std::stringstream &stream) -> void {
+            stream << sat.getOrbitalElements().getAnomaly(AngularUnit::RADIAN, OrbitalAnomalyType::TRUE);
+        }}
 };
 
 const std::map<char, std::string> CSVPatternWriter::headerMap{

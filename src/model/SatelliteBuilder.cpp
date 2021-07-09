@@ -80,34 +80,10 @@ SatelliteBuilder &SatelliteBuilder::setPosition(const std::array<double, 3> &pos
     return *this;
 }
 
-SatelliteBuilder &
-SatelliteBuilder::setKeplerianElementsEA(const std::array<double, 6> &keplerianElements) {
+SatelliteBuilder &SatelliteBuilder::setOrbitalElements(const OrbitalElements &orbitalElements) {
     _hasVelocity = true;
     _hasPosition = true;
-    _satellite.setCartesianByKeplerEA(keplerianElements);
-    return *this;
-}
-
-SatelliteBuilder &
-SatelliteBuilder::setKeplerianElementsMA(const std::array<double, 6> &keplerianElements) {
-    _hasVelocity = true;
-    _hasPosition = true;
-    _satellite.setCartesianByKeplerMA(keplerianElements);
-    return *this;
-}
-
-SatelliteBuilder &
-SatelliteBuilder::setKeplerianElementsTA(const std::array<double, 6> &keplerianElements) {
-    _hasVelocity = true;
-    _hasPosition = true;
-    _satellite.setCartesianByKeplerTA(keplerianElements);
-    return *this;
-}
-
-SatelliteBuilder &SatelliteBuilder::setKeplerianElementsTLEFormat(const std::array<double, 6> &keplerianElements) {
-    _hasVelocity = true;
-    _hasPosition = true;
-    _satellite.setCartesianByKeplerTLEFormat(keplerianElements);
+    _satellite.setCartesianByOrbitalElements(orbitalElements);
     return *this;
 }
 

@@ -4,14 +4,14 @@ std::vector<Satellite> TLESatcatDataReader::getSatelliteCollection() const {
     std::vector<Satellite> satellites{};
     SatelliteBuilder satelliteBuilder{};
 
-    std::map<size_t, std::tuple<std::string, SatType, double>> mappingSatcat{this->getSatcatMapping()};
-    std::map<size_t, std::array<double, 6>>mappingTLE{_tleReader.getMappingIDKepler()};
+    auto mappingSatcat = this->getSatcatMapping();
+    auto mappingTLE = _tleReader.getMappingIDOrbitalElements();
 
     satellites.reserve(std::max(mappingSatcat.size(), mappingTLE.size()));
 
     //We just search for satellites which appear in both mappings
     // --> No missing data possible (but not necessarily wrong information
-    for (auto const& [id, keplerDataTLE] : mappingTLE) {
+    for (auto const& [id, orbitalElements] : mappingTLE) {
         if (mappingSatcat.count(id) != 0) {
             auto &dataSatcat = mappingSatcat[id];
             satellites.push_back(
@@ -21,7 +21,7 @@ std::vector<Satellite> TLESatcatDataReader::getSatelliteCollection() const {
                             .setName(std::get<0>(dataSatcat))
                             .setSatType(std::get<1>(dataSatcat))
                             .setMassByArea(std::get<2>(dataSatcat))
-                            .setKeplerianElementsTLEFormat(keplerDataTLE)
+                            .setOrbitalElements(orbitalElements)
                             .getResult()
             );
         }
