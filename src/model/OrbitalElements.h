@@ -27,34 +27,36 @@ class OrbitalElements {
     /**
      * The semi-major-axis in [m]
      */
-    const double _semiMajorAxis;
+    double _semiMajorAxis{0};
 
     /**
      * The eccentricity (unit-less)
      */
-    const double _eccentricity;
+    double _eccentricity{0};
 
     /**
      * The inclination in [rad]
      */
-    const double _inclination;
+    double _inclination{0};
 
     /**
      * The longitude-of-the-ascending-node or also called RAAN in [rad]
      */
-    const double _longitudeOfTheAscendingNode;
+    double _longitudeOfTheAscendingNode{0};
 
     /**
      * The argument-of-periapsis in [rad]
      */
-    const double _argumentOfPeriapsis;
+    double _argumentOfPeriapsis{0};
 
     /**
      * One orbital anomaly given in [rad]
      */
-    const double _eccentricAnomaly;
+    double _eccentricAnomaly{0};
 
 public:
+
+    OrbitalElements() = default;
 
     /**
     * Creates the Orbital Elements.

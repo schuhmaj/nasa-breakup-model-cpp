@@ -8,6 +8,7 @@
 #include "input/CSVReader.h"
 #include "model/Satellite.h"
 #include "model/SatelliteBuilder.h"
+#include "model/OrbitalElementsFactory.h"
 
 class TLESatcatDataReaderTest : public ::testing::Test {
 
@@ -22,6 +23,9 @@ protected:
         _satcat.emplace_back("EXPLORER 1", "1958-001A", 4, SatType::SPACECRAFT, "D", "US", "1958-02-01", "AFETR",
                              "1970-03-31", 88.48, 33.15, 215.0, 183.0, 0.0, "", "EA", "IMP");
 
+        OrbitalElementsFactory factory{};
+        auto expectedKepler{factory.fromTLEData({15.72125391, 0.0006703, 51.6416,
+                                                 247.4627, 130.5360, 325.0288})};
         SatelliteBuilder satelliteBuilder{};
         _expectedSatellites.push_back(
                 satelliteBuilder
@@ -30,7 +34,7 @@ protected:
                         .setName("SL-1 R/B")
                         .setSatType(SatType::ROCKET_BODY)
                         .setMassByArea(20.42)
-                        .setKeplerianElementsTLEFormat(_expectedKepler)
+                        .setOrbitalElements(expectedKepler)
                         .getResult()
         );
         _expectedSatellites.push_back(
@@ -40,7 +44,7 @@ protected:
                         .setName("SPUTNIK 1")
                         .setSatType(SatType::SPACECRAFT)
                         .setMassByArea(0)
-                        .setKeplerianElementsTLEFormat(_expectedKepler)
+                        .setOrbitalElements(expectedKepler)
                         .getResult()
         );
         _expectedSatellites.push_back(
@@ -50,7 +54,7 @@ protected:
                         .setName("SPUTNIK 2")
                         .setSatType(SatType::SPACECRAFT)
                         .setMassByArea(0.0800)
-                        .setKeplerianElementsTLEFormat(_expectedKepler)
+                        .setOrbitalElements(expectedKepler)
                         .getResult()
         );
         _expectedSatellites.push_back(
@@ -60,14 +64,11 @@ protected:
                         .setName("EXPLORER 1")
                         .setSatType(SatType::SPACECRAFT)
                         .setMassByArea(0)
-                        .setKeplerianElementsTLEFormat(_expectedKepler)
+                        .setOrbitalElements(expectedKepler)
                         .getResult()
         );
 
     }
-
-    std::array<double, 6> _expectedKepler = {15.72125391, 0.0006703, 51.6416,
-                                             247.4627, 130.5360, 325.0288};
 
     std::vector<std::tuple<std::string, std::string, size_t,
             SatType, std::string, std::string, std::string, std::string, std::string,

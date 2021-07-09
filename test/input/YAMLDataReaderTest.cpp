@@ -2,6 +2,7 @@
 
 #include <array>
 #include "input/YAMLDataReader.h"
+#include "model/OrbitalElementsFactory.h"
 
 
 class YAMLReaderTest : public ::testing::Test {
@@ -9,6 +10,7 @@ class YAMLReaderTest : public ::testing::Test {
 protected:
     virtual void SetUp() {
         SatelliteBuilder satelliteBuilder{};
+        OrbitalElementsFactory factory{};
 
         _sat[0] = satelliteBuilder
                 .setID(1)
@@ -46,8 +48,8 @@ protected:
                 .setName("ISS")
                 .setSatType(SatType::SPACECRAFT)
                 .setMassByArea(399.05)
-                .setKeplerianElementsMA({6798505.86, 0.0002215, 0.9013735469,
-                                         4.724103630312, 2.237100203348, 0.2405604761})
+                .setOrbitalElements(factory.fromOnlyRadians({6798505.86, 0.0002215, 0.9013735469,
+                                         4.724103630312, 2.237100203348, 0.2405604761}, OrbitalAnomalyType::MEAN))
                 .getResult();
     }
 

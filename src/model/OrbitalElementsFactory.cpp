@@ -22,7 +22,7 @@ OrbitalElements OrbitalElementsFactory::fromOnlyRadians(const std::array<double,
 OrbitalElements OrbitalElementsFactory::fromOnlyDegree(const std::array<double, 6> &standardKepler,
                                                        OrbitalAnomalyType orbitalAnomalyType) const {
     auto radKepler = standardKepler;
-    for (unsigned int i = 0; i < 6; ++i) {
+    for (unsigned int i = 2; i < 6; ++i) {
         radKepler[i] = util::degToRad(radKepler[i]);
     }
     return this->fromOnlyRadians(radKepler, orbitalAnomalyType);
