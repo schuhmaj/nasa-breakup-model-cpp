@@ -25,14 +25,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
               
-      - name: Install Environment
-        run: |
-          sudo apt install cmake
-          sudo apt install build-essential
-          
-      - name: Build CMake
-        uses: ashutoshvarma/action-cmake-build@v1
+      - name: Run unit tests
+        uses: HorstBaerbel/action-ctest@1.1
+        # These are optional (defaults displayed)
         with:
-          # Run CTest or not
-          run-test: true
+          sourcedir: '.'
+          builddir: 'build'
+          cmakeoptions: '--config Release'
+          ctestoptions: ''
       
