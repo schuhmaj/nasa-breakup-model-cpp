@@ -2,11 +2,11 @@
 
 BreakupBuilder &BreakupBuilder::reconfigure(const std::shared_ptr<InputConfigurationSource> &configurationSource) {
     _configurationSource = configurationSource;
-    _minimalCharacteristicLength = configurationSource->getMinimalCharacteristicLength();
-    _simulationType = configurationSource->getTypeOfSimulation();
-    _currentMaximalGivenID = configurationSource->getCurrentMaximalGivenID();
-    _idFilter = configurationSource->getIDFilter();
-    _satellites = configurationSource->getDataReader()->getSatelliteCollection();
+    this->setMinimalCharacteristicLength(configurationSource->getMinimalCharacteristicLength());
+    this->setSimulationType(configurationSource->getTypeOfSimulation());
+    this->setCurrentMaximalGivenID(configurationSource->getCurrentMaximalGivenID()),
+            this->setIDFilter(configurationSource->getIDFilter());
+    this->setDataSource(configurationSource->getDataReader());
     return *this;
 }
 
@@ -25,7 +25,7 @@ BreakupBuilder &BreakupBuilder::setSimulationType(SimulationType simulationType)
     return *this;
 }
 
-BreakupBuilder &BreakupBuilder::setCurrentMaximalGivenID(size_t currentMaximalGivenID) {
+BreakupBuilder &BreakupBuilder::setCurrentMaximalGivenID(const std::optional<size_t> &currentMaximalGivenID) {
     _currentMaximalGivenID = currentMaximalGivenID;
     return *this;
 }
@@ -40,18 +40,24 @@ BreakupBuilder &BreakupBuilder::setDataSource(const std::vector<Satellite> &sate
     return *this;
 }
 
-BreakupBuilder &BreakupBuilder::setDataSource(const std::shared_ptr<DataSource> &dataSource) {
+BreakupBuilder &BreakupBuilder::setDataSource(const std::shared_ptr<const DataSource> &dataSource) {
     _satellites = dataSource->getSatelliteCollection();
     return *this;
 }
 
 std::unique_ptr<Breakup> BreakupBuilder::getBreakup() const {
+    //1. Step: Max ID is derived from all available Satellites, not from only those contained in the filter
+    size_t maxID = this->deriveMaximalID();
+
+    //2. Step: Apply the filter
     auto satelliteVector = this->applyFilter();
 
+    //3. Step: Create the Simulation if Type and Input Number of Satellites match together
+    //         or try to derive the correct type
     switch (_simulationType) {
         case SimulationType::EXPLOSION:
             if (satelliteVector.size() == 1) {
-                return createExplosion(satelliteVector);
+                return createExplosion(satelliteVector, maxID);
             } else {
                 std::stringstream message{};
                 message << "No Breakup Simulation was created!\n"
@@ -62,7 +68,7 @@ std::unique_ptr<Breakup> BreakupBuilder::getBreakup() const {
             }
         case SimulationType::COLLISION:
             if (satelliteVector.size() == 2) {
-                return createCollision(satelliteVector);
+                return createCollision(satelliteVector, maxID);
             } else {
                 std::stringstream message{};
                 message << "No Breakup Simulation was created!\n"
@@ -74,26 +80,26 @@ std::unique_ptr<Breakup> BreakupBuilder::getBreakup() const {
         default:
             if (satelliteVector.size() == 1) {
                 SPDLOG_WARN("Type was not specified by configuration file, Derived 'Explosion' from 1 satellite!");
-                return createExplosion(satelliteVector);
+                return createExplosion(satelliteVector, maxID);
             } else if (satelliteVector.size() == 2) {
                 SPDLOG_WARN("Type was not specified by configuration file, Derived 'Collision' from 2 satellites!");
-                return createCollision(satelliteVector);
+                return createCollision(satelliteVector, maxID);
             } else {
                 throw std::runtime_error{"A breakup simulation could not be created because the type given"
-                                            "by the configuration file was different than the number of"
-                                            "satellites in the given data input would suggest. Notice:\n"
-                                            "Explosion --> 1 satellite\n"
-                                            "Collision --> 2 satellites"};
+                                         "by the configuration file was different than the number of"
+                                         "satellites in the given data input would suggest. Notice:\n"
+                                         "Explosion --> 1 satellite\n"
+                                         "Collision --> 2 satellites"};
             }
     }
 }
 
-std::unique_ptr<Breakup> BreakupBuilder::createExplosion(std::vector<Satellite> &satelliteVector) const  {
-    return std::make_unique<Explosion>(satelliteVector, _minimalCharacteristicLength, _currentMaximalGivenID);
+std::unique_ptr<Breakup> BreakupBuilder::createExplosion(std::vector<Satellite> &satelliteVector, size_t maxID) const {
+    return std::make_unique<Explosion>(satelliteVector, _minimalCharacteristicLength, maxID);
 }
 
-std::unique_ptr<Breakup> BreakupBuilder::createCollision(std::vector<Satellite> &satelliteVector) const {
-    return std::make_unique<Collision>(satelliteVector, _minimalCharacteristicLength, _currentMaximalGivenID);
+std::unique_ptr<Breakup> BreakupBuilder::createCollision(std::vector<Satellite> &satelliteVector, size_t maxID) const {
+    return std::make_unique<Collision>(satelliteVector, _minimalCharacteristicLength, maxID);
 }
 
 std::vector<Satellite> BreakupBuilder::applyFilter() const {
@@ -108,4 +114,13 @@ std::vector<Satellite> BreakupBuilder::applyFilter() const {
     } else {
         return _satellites;
     }
+}
+
+size_t BreakupBuilder::deriveMaximalID() const {
+    return _currentMaximalGivenID.value_or(_satellites.empty() ?
+                                           std::max_element(_satellites.begin(), _satellites.end(),
+                                                            [](const Satellite &sat1, const Satellite &sat2) {
+                                                                return sat1.getId() < sat2.getId();
+                                                            })->getId()
+                                                               : 0);
 }

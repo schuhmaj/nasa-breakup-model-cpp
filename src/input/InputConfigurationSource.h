@@ -67,7 +67,7 @@ public:
      * to determine the IDs of the fragments.
      * @return size_t
      */
-    virtual size_t getCurrentMaximalGivenID() const = 0;
+    virtual std::optional<size_t> getCurrentMaximalGivenID() const = 0;
 
     /**
      * Returns an DataSource which has the ability to return an vector of satellites.

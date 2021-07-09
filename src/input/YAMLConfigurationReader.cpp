@@ -26,13 +26,11 @@ SimulationType YAMLConfigurationReader::getTypeOfSimulation() const {
     }
 }
 
-size_t YAMLConfigurationReader::getCurrentMaximalGivenID() const {
+std::optional<size_t> YAMLConfigurationReader::getCurrentMaximalGivenID() const {
     if (_file["currentMaxID"]) {
-        return _file["currentMaxID"].as<size_t>();
+        return std::make_optional(_file["currentMaxID"].as<size_t>());
     } else {
-        SPDLOG_WARN("The current maximal given ID was not given in the YAML Configuration file! "
-                    "The simulation therefore will assume zero!");
-        return 0;
+        return std::nullopt;
     }
 }
 

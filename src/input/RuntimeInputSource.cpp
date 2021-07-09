@@ -9,7 +9,7 @@ SimulationType RuntimeInputSource::getTypeOfSimulation() const {
     return _simulationType;
 }
 
-size_t RuntimeInputSource::getCurrentMaximalGivenID() const {
+std::optional<size_t> RuntimeInputSource::getCurrentMaximalGivenID() const {
     return _currentMaximalGivenID;
 }
 

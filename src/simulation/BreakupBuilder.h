@@ -4,6 +4,7 @@
 #include <exception>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include "input/InputConfigurationSource.h"
 #include "input/DataSource.h"
 #include "Breakup.h"
@@ -22,7 +23,7 @@ class BreakupBuilder {
 
     SimulationType _simulationType;
 
-    size_t _currentMaximalGivenID;
+    std::optional<size_t> _currentMaximalGivenID;
 
     std::optional<std::set<size_t>> _idFilter;
 
@@ -68,10 +69,11 @@ public:
 
     /**
      * Overrides/ Re-Sets the currentMaximalGivenID (e.g. maximal given NORAD Catalog ID) to a specific value.
-     * @param currentMaximalGivenID - size_t
+     * If the nullopt is chosen, the maximal ID is derived from the input satellites.
+     * @param currentMaximalGivenID - std::optional<size_t>
      * @return this
      */
-    BreakupBuilder &setCurrentMaximalGivenID(size_t currentMaximalGivenID);
+    BreakupBuilder &setCurrentMaximalGivenID(const std::optional<size_t> &currentMaximalGivenID);
 
     /**
      * Overrides/ Re-Sets the ID Filter and sets it to a new set.
@@ -93,7 +95,7 @@ public:
      * @param dataSource - a pointer to an DataSource
      * @return this
      */
-    BreakupBuilder &setDataSource(const std::shared_ptr<DataSource> &dataSource);
+    BreakupBuilder &setDataSource(const std::shared_ptr<const DataSource> &dataSource);
 
     /**
      * Creates a new Breakup Simulation with the given input.
@@ -115,18 +117,25 @@ private:
      * @param satelliteVector - std::vector<Satellite>
      * @return a Explosion
      */
-    std::unique_ptr<Breakup> createExplosion(std::vector<Satellite> &satelliteVector) const;
+    std::unique_ptr<Breakup> createExplosion(std::vector<Satellite> &satelliteVector, size_t maxID) const;
 
     /**
      * Creates a Collision Simulation.
      * @param satelliteVector - std::vector<Satellite>
      * @return a Collision
      */
-    std::unique_ptr<Breakup> createCollision(std::vector<Satellite> &satelliteVector) const;
+    std::unique_ptr<Breakup> createCollision(std::vector<Satellite> &satelliteVector, size_t maxID) const;
 
     /**
      * Returns an vector containing only the satellites given in the filterSet.
      * @return a modified satellite vector
      */
     std::vector<Satellite> applyFilter() const;
+
+    /**
+     * Returns either the the maximalGivenID if this value is given via input or it derives this value from the input
+     * satellites. In case the input satellite vector is empty, this function will return zero.
+     * @return size_t - maxID
+     */
+    size_t deriveMaximalID() const;
 };

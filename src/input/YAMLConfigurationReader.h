@@ -54,11 +54,10 @@ public:
 
     /**
     * Returns the current Maximal Given (NORAD-Catalog) ID. This is later required for the breakup simulation
-    * to determine the IDs of the fragments.
-    * @attention If not given 0 is returned as default value (might lead to problems in the afternoon)
-    * @return size_t
+    * to determine the IDs of the fragments. The nullopt is returned if this is not given.
+    * @return std::optional<size_t>
     */
-    size_t getCurrentMaximalGivenID() const override;
+    std::optional<size_t> getCurrentMaximalGivenID() const override;
 
     /**
      * Returns an DataSource which has the ability to return an vector of satellites.
