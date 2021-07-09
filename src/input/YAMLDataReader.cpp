@@ -45,36 +45,23 @@ Satellite YAMLDataReader::parseSatellite(SatelliteBuilder &satelliteBuilder, con
 void YAMLDataReader::parseKepler(SatelliteBuilder &satelliteBuilder, const YAML::Node &node) {
     if (node["semi-major-axis"] && node["eccentricity"] && node["inclination"]
         && node["longitude-of-the-ascending-node"] && node["argument-of-periapsis"]) {
-        double a = node["semi-major-axis"].as<double>();
-        double e = node["eccentricity"].as<double>();
-        double i = node["inclination"].as<double>();
-        double W = node["longitude-of-the-ascending-node"].as<double>();
-        double w = node["argument-of-periapsis"].as<double>();
+        OrbitalElementsFactory factory{};
+        std::array<double, 6> keplerData{};
+        keplerData[0] = node["semi-major-axis"].as<double>();
+        keplerData[1] = node["eccentricity"].as<double>();
+        keplerData[2] = node["inclination"].as<double>();
+        keplerData[3] = node["longitude-of-the-ascending-node"].as<double>();
+        keplerData[4] = node["argument-of-periapsis"].as<double>();
 
         if (node["eccentric-anomaly"]) {
-            double EA = node["eccentric-anomaly"].as<double>();
-            OrbitalElements orbitalElements{a, e, std::make_pair(i, AngularUnit::RADIAN),
-                                            std::make_pair(W, AngularUnit::RADIAN),
-                                            std::make_pair(w, AngularUnit::RADIAN),
-                                            std::make_tuple(EA, AngularUnit::RADIAN, OrbitalAnomalyType::ECCENTRIC)};
-
-            satelliteBuilder.setOrbitalElements(orbitalElements);
+            keplerData[5] = node["eccentric-anomaly"].as<double>();
+            satelliteBuilder.setOrbitalElements(factory.fromOnlyRadians(keplerData, OrbitalAnomalyType::ECCENTRIC));
         } else if (node["mean-anomaly"]) {
-            double MA = node["mean-anomaly"].as<double>();
-            OrbitalElements orbitalElements{a, e, std::make_pair(i, AngularUnit::RADIAN),
-                                            std::make_pair(W, AngularUnit::RADIAN),
-                                            std::make_pair(w, AngularUnit::RADIAN),
-                                            std::make_tuple(MA, AngularUnit::RADIAN, OrbitalAnomalyType::MEAN)};
-
-            satelliteBuilder.setOrbitalElements(orbitalElements);
+            keplerData[5] = node["mean-anomaly"].as<double>();
+            satelliteBuilder.setOrbitalElements(factory.fromOnlyRadians(keplerData, OrbitalAnomalyType::MEAN));
         } else if (node["true-anomaly"]) {
-            double TA = node["true-anomaly"].as<double>();
-            OrbitalElements orbitalElements{a, e, std::make_pair(i, AngularUnit::RADIAN),
-                                            std::make_pair(W, AngularUnit::RADIAN),
-                                            std::make_pair(w, AngularUnit::RADIAN),
-                                            std::make_tuple(TA, AngularUnit::RADIAN, OrbitalAnomalyType::TRUE)};
-
-            satelliteBuilder.setOrbitalElements(orbitalElements);
+            keplerData[5] = node["true-anomaly"].as<double>();
+            satelliteBuilder.setOrbitalElements(factory.fromOnlyRadians(keplerData, OrbitalAnomalyType::TRUE));
         } else {
             throw std::runtime_error{"One satellite input is incomplete!"
                                      "You have to give at least one of the following orbital Anomalies"

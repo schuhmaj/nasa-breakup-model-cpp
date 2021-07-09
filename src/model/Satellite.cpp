@@ -32,7 +32,7 @@ const std::map<SatType, std::string> Satellite::satTypeToString{{SatType::SPACEC
 void Satellite::setCartesianByOrbitalElements(const OrbitalElements &orbitalElements) {
     using namespace util;
 
-    auto keplerianElements = orbitalElements.getAsUniform();
+    auto keplerianElements = orbitalElements.getAsArray();
 
     double a = keplerianElements[0];
     double e = keplerianElements[1];

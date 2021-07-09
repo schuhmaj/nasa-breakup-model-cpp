@@ -18,6 +18,7 @@ std::pair<size_t, OrbitalElements> TLEReader::getTwoLine(std::istream &istream) 
     size_t id;
     double meanMotion, eccentricity, inclination, raan, argOfPer, ma;
     std::string line{};
+    std::array<double, 6> tleData{};
 
     //Goto Line 2
     do {
@@ -31,21 +32,22 @@ std::pair<size_t, OrbitalElements> TLEReader::getTwoLine(std::istream &istream) 
         //ID
         id = std::stoul(line.substr(2, 5));
         //Mean Motion [rev/day]
-        meanMotion = std::stod(line.substr(52, 11));
+        tleData[0] = std::stod(line.substr(52, 11));
         //Eccentricity
-        eccentricity = std::stod("0." + line.substr(26, 7));
+        tleData[1] = std::stod("0." + line.substr(26, 7));
         //Inclination [deg]
-        inclination = std::stod(line.substr(8, 8));
+        tleData[2] = std::stod(line.substr(8, 8));
         //RAAN [deg]
-        raan = std::stod(line.substr(17, 8));
+        tleData[3] = std::stod(line.substr(17, 8));
         //Argument of Perigee [deg]
-        argOfPer = std::stod(line.substr(34, 8));
+        tleData[4] = std::stod(line.substr(34, 8));
         //Mean Anomaly [deg]
-        ma = std::stod(line.substr(43, 8));
+        tleData[5] = std::stod(line.substr(43, 8));
     } catch (std::exception &e) {
         throw std::runtime_error{"The TLE file " + _filepath + " is malformed! Some Data could not be parsed correctly"
                                                                "into valid numbers"};
     }
 
-    return std::make_pair(id, OrbitalElements{meanMotion, eccentricity, inclination, raan, argOfPer, ma});
+    OrbitalElementsFactory factory{};
+    return std::make_pair(id, factory.fromTLEData(tleData));
 }

@@ -35,72 +35,66 @@ class OrbitalElements {
     const double _eccentricity;
 
     /**
-     * The inclination in either [deg] or [rad]
+     * The inclination in [rad]
      */
-    const std::pair<double, AngularUnit> _inclination;
+    const double _inclination;
 
     /**
-     * The longitude-of-the-ascending-node or also called RAAN in [deg] or [rad]
+     * The longitude-of-the-ascending-node or also called RAAN in [rad]
      */
-    const std::pair<double, AngularUnit> _longitudeOfTheAscendingNode;
+    const double _longitudeOfTheAscendingNode;
 
     /**
-     * The argument-of-periapsis in [deg] or [rad]
+     * The argument-of-periapsis in [rad]
      */
-    const std::pair<double, AngularUnit> _argumentOfPeriapsis;
+    const double _argumentOfPeriapsis;
 
     /**
-     * One orbital anomaly given in [deg] or [rad]
+     * One orbital anomaly given in [rad]
      */
-    const std::tuple<double, AngularUnit, OrbitalAnomalyType> _anomaly;
+    const double _eccentricAnomaly;
 
 public:
 
-    OrbitalElements(double semiMajorAxis, double eccentricity,
-                    std::pair<double, AngularUnit> inclination,
-                    std::pair<double, AngularUnit> longitudeOfTheAscendingNode,
-                    std::pair<double, AngularUnit> argumentOfPeriapsis,
-                    std::tuple<double, AngularUnit, OrbitalAnomalyType> anomaly)
-            : _semiMajorAxis{semiMajorAxis},
-              _eccentricity{eccentricity},
-              _inclination{std::move(inclination)},
-              _longitudeOfTheAscendingNode{std::move(longitudeOfTheAscendingNode)},
-              _argumentOfPeriapsis{std::move(argumentOfPeriapsis)},
-              _anomaly{std::move(anomaly)} {}
-
     /**
-    * Creates the Orbital Elements from the TLE Data set which contains the following elements
-    * @param meanMotion in [rev/day]
-    * @param eccentricity (unit-less)
-    * @param inclination in [deg]
-    * @param longitudeOfTheAscendingNode in [deg]
-    * @param argumentOfPeriapsis in [deg]
-    * @param meanAnomaly in [deg]
+    * Creates the Orbital Elements.
+    * @param a - semir-major axis [m]
+    * @param e - eccentricity
+    * @param i - inclination [rad]
+    * @param W - longitude of the ascending node (big omega) [rad]
+    * @param w - argument of periapsis (small omega) [rad]
+    * @param EA - eccentric Anomaly [rad]
+    * This is the "inverse" of getAsArray.
+    * @note Use the OrbitalElementsFactory instead of this constructor!
     */
-    explicit OrbitalElements(double meanMotion, double eccentricity, double inclination,
-                             double longitudeOfTheAscendingNode, double argumentOfPeriapsis, double meanAnomaly)
-            : _semiMajorAxis{util::meanMotionToSemiMajorAxis(meanMotion)},
-              _eccentricity{eccentricity},
-              _inclination{std::make_pair(inclination, AngularUnit::DEGREE)},
-              _longitudeOfTheAscendingNode{std::make_pair(longitudeOfTheAscendingNode, AngularUnit::DEGREE)},
-              _argumentOfPeriapsis{std::make_pair(argumentOfPeriapsis, AngularUnit::DEGREE)},
-              _anomaly{std::make_tuple(meanAnomaly, AngularUnit::DEGREE, OrbitalAnomalyType::MEAN)} {}
-
+    OrbitalElements(double semiMajorAxis, double eccentricity, double inclination, double longitudeOfTheAscendingNode,
+                    double argumentOfPeriapsis, double eccentricAnomaly) :
+            _semiMajorAxis(semiMajorAxis),
+            _eccentricity(eccentricity),
+            _inclination(inclination),
+            _longitudeOfTheAscendingNode(longitudeOfTheAscendingNode),
+            _argumentOfPeriapsis(argumentOfPeriapsis),
+            _eccentricAnomaly(eccentricAnomaly) {}
 
     /**
-     * Creates the Orbital Elements from the Uniform array which contains the six elements in the from:
-     * The semi-major-axis in [m], the eccentricity unit-less,
-     * the angles in [RAD] and lastly the eccentric anomaly in [RAD] too.
-     * This is the "inverse" of getAsUniform.
-     * @param uniformOrbitalElements
+     * Creates the Orbital Elements from an array which contains the six elements in the following order:
+     * @param uniformOrbitalElements<br>
+     * a - semir-major axis [m]<br>
+     * e - eccentricity<br>
+     * i - inclination [rad]<br>
+     * W - longitude of the ascending node (big omega) [rad]<br>
+     * w - argument of periapsis (small omega) [rad]<br>
+     * EA - eccentric Anomaly [rad]<br>
+     * This is the "inverse" of getAsArray.
+     * @note Use the OrbitalElementsFactory instead of this constructor!
      */
     explicit OrbitalElements(const std::array<double, 6> &uniformOrbitalElements)
             : _semiMajorAxis{uniformOrbitalElements[0]},
               _eccentricity{uniformOrbitalElements[1]},
-              _inclination{std::make_pair(uniformOrbitalElements[2], AngularUnit::RADIAN)},
-              _longitudeOfTheAscendingNode{std::make_pair(uniformOrbitalElements[3], AngularUnit::RADIAN)},
-              _argumentOfPeriapsis{std::make_pair(uniformOrbitalElements[4], AngularUnit::RADIAN)},
-              _anomaly{std::make_tuple(uniformOrbitalElements[5], AngularUnit::RADIAN, OrbitalAnomalyType::ECCENTRIC)} {}
+              _inclination{uniformOrbitalElements[2]},
+              _longitudeOfTheAscendingNode{uniformOrbitalElements[3]},
+              _argumentOfPeriapsis{uniformOrbitalElements[4]},
+              _eccentricAnomaly{uniformOrbitalElements[5]} {}
 
     /**
      * Returns the orbital Element in an array. The semi-major-axis in [m], the eccentricity unit-less,
@@ -108,7 +102,7 @@ public:
      * This is the "inverse" of the OrbitalElements(const std::array<double, 6>) constructor.
      * @return array<a, e, i, W, w, eccentric-anomaly>
      */
-    std::array<double, 6> getAsUniform() const;
+    std::array<double, 6> getAsArray() const;
 
     /**
      * Returns one element from the uniform "view" of the Keplerian Elements.
@@ -131,52 +125,69 @@ public:
     double getEccentricity() const;
 
     /**
-     * Returns the inclination in [DEG] or [RAD]
+     * Returns the inclination in [DEG] or [RAD] (default)
      * @param angularUnit
      * @return inclination
      */
-    double getInclination(AngularUnit angularUnit) const;
+    double getInclination(AngularUnit angularUnit = AngularUnit::RADIAN) const;
 
     /**
-    * Returns the longitude-of-the-ascending-node in [DEG] or [RAD]
+    * Returns the longitude-of-the-ascending-node in [DEG] or [RAD] (default)
     * @param angularUnit
     * @return longitude-of-the-ascending-node
     */
-    double getLongitudeOfTheAscendingNode(AngularUnit angularUnit) const;
+    double getLongitudeOfTheAscendingNode(AngularUnit angularUnit = AngularUnit::RADIAN) const;
 
     /**
-    * Returns the argument-of-periapsis in [DEG] or [RAD]
+    * Returns the argument-of-periapsis in [DEG] or [RAD] (default)
     * @param angularUnit
     * @return argument-of-periapsis
     */
-    double getArgumentOfPeriapsis(AngularUnit angularUnit) const;
+    double getArgumentOfPeriapsis(AngularUnit angularUnit = AngularUnit::RADIAN) const;
 
     /**
-    * Returns an orbital anomaly in [DEG] or [RAD]; Available types are MEAN/ ECCENTRIC/ TRUE Anomaly.
+    * Returns an orbital anomaly in [DEG] or [RAD] (default); Available types are MEAN/ ECCENTRIC (default) / TRUE Anomaly.
     * @param angularUnit
     * @return orbital anomaly
     */
-    double getAnomaly(AngularUnit angularUnit, OrbitalAnomalyType orbitalAnomalyType) const;
+    double getAnomaly(AngularUnit angularUnit = AngularUnit::RADIAN,
+                      OrbitalAnomalyType orbitalAnomalyType = OrbitalAnomalyType::ECCENTRIC) const;
+
+    /**
+     * Compares two OrbitalElements for equality.
+     * @param lhs - OrbitalElements
+     * @param rhs - OrbitalElements
+     * @return true if they are exactly the same
+     */
+    friend bool operator==(const OrbitalElements &lhs, const OrbitalElements &rhs);
+
+    /**
+     * Compares two OrbitalElements for inequality.
+     * @param lhs - OrbitalElements
+     * @param rhs - OrbitalElements
+     * @return true if they differ
+     */
+    friend bool operator!=(const OrbitalElements &lhs, const OrbitalElements &rhs);
 
 private:
 
     /**
      * Converts a given angle into a given target unit
-     * @param angle - pair of value and unit
+     * @param angle - angle in [rad]
      * @param targetAngularUnit - target unit
      * @return the value in the target unit
      */
-    double convertAngle(const std::pair<double, AngularUnit> &angle, AngularUnit targetAngularUnit) const;
+    static double convertAngle(double angle, AngularUnit targetAngularUnit);
 
     /**
-     * Converts a given orbital anomaly into a given target anomaly in a specific target angular unit.
-     * @param anomaly - a tuple of value, unit and anomaly type
-     * @param targetAngularUnit - target angular unit
+     * Converts a given eccentric anomaly into a given target anomaly in a specific target angular unit.
+     * @param eccentricAnomaly - eccentric anomaly in [rad]
+     * @param eccentricity - the eccentricity
+     * @param targetAngularUnit - the target angular unit
      * @param targetOrbitalAnomalyType - target anomaly MEAN/ ECCENTRIC/ TRUE Anomaly
      * @return value of chosen anomaly in target angular unit
      */
-    double convertAnomaly(const std::tuple<double, AngularUnit, OrbitalAnomalyType> &anomaly,
-                          AngularUnit targetAngularUnit,
-                          OrbitalAnomalyType targetOrbitalAnomalyType) const;
+    static double convertEccentricAnomaly(double eccentricAnomaly, double eccentricity, AngularUnit targetAngularUnit,
+                                          OrbitalAnomalyType targetOrbitalAnomalyType);
 
 };

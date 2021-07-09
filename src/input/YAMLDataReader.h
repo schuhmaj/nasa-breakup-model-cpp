@@ -10,7 +10,7 @@
 #include "input/DataSource.h"
 #include "model/Satellite.h"
 #include "model/SatelliteBuilder.h"
-#include "model/OrbitalElements.h"
+#include "model/OrbitalElementsFactory.h"
 
 /**
  * Reads Satellites from an YAML file.

@@ -24,7 +24,7 @@ protected:
 TEST_F(TLEReaderTest, readTLE_01_Test) {
     TLEReader tleReader{"resources/test-tle1.txt"};
 
-    auto map = tleReader.getMappingIDKepler();
+    auto map = tleReader.getMappingIDOrbitalElements();
 
     ASSERT_EQ(map.size(), 1);
     ASSERT_TRUE(map.count(_expectedID_1) == 1);
@@ -36,7 +36,7 @@ TEST_F(TLEReaderTest, readTLE_01_Test) {
 TEST_F(TLEReaderTest, readTLE_02_Test) {
     TLEReader tleReader{"resources/test-tle2.txt"};
 
-    auto map = tleReader.getMappingIDKepler();
+    auto map = tleReader.getMappingIDOrbitalElements();
 
     ASSERT_EQ(map.size(), 1);
     ASSERT_TRUE(map.count(_expectedID_2) == 1);

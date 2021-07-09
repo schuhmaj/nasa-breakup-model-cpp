@@ -1,27 +1,24 @@
 #include "OrbitalElements.h"
 
-std::array<double, 6> OrbitalElements::getAsUniform() const {
-    std::array<double, 6> keplerElements{};
-    for (unsigned int i = 0; i < 5; ++i) {
-        keplerElements[i] = (*this)[i];
-    }
-    return keplerElements;
+std::array<double, 6> OrbitalElements::getAsArray() const {
+    return std::array<double, 6>{_semiMajorAxis, _eccentricity, _inclination,
+                                 _longitudeOfTheAscendingNode, _argumentOfPeriapsis, _eccentricity};
 }
 
 double OrbitalElements::operator[](size_t index) const {
     switch (index) {
         case 0:
-            return getSemiMajorAxis();
+            return _semiMajorAxis;
         case 1:
-            return getEccentricity();
+            return _eccentricity;
         case 2:
-            return getInclination(AngularUnit::RADIAN);
+            return _inclination;
         case 3:
-            return getLongitudeOfTheAscendingNode(AngularUnit::RADIAN);
+            return _longitudeOfTheAscendingNode;
         case 4:
-            return getArgumentOfPeriapsis(AngularUnit::RADIAN);
+            return _argumentOfPeriapsis;
         case 5:
-            return getAnomaly(AngularUnit::RADIAN, OrbitalAnomalyType::ECCENTRIC);
+            return _eccentricAnomaly;
         default:
             throw std::out_of_range{"The Orbital elements only consists of six elements --> range[0;5]!"};
     }
@@ -48,61 +45,46 @@ double OrbitalElements::getArgumentOfPeriapsis(AngularUnit angularUnit) const {
 }
 
 double OrbitalElements::getAnomaly(AngularUnit angularUnit, OrbitalAnomalyType anomalyType) const {
-    return convertAnomaly(_anomaly, angularUnit, anomalyType);
+    return convertEccentricAnomaly(_eccentricAnomaly, _eccentricity, angularUnit, anomalyType);
 }
 
-double OrbitalElements::convertAngle(const std::pair<double, AngularUnit> &angle, AngularUnit targetAngularUnit) const {
-    if (targetAngularUnit == angle.second) {
-        return angle.first;
-    } else {
-        if (angle.second == AngularUnit::DEGREE) {
-            return util::degToRad(angle.first);
-        } else {
-            return util::radToDeg(angle.first);
-        }
-    }
+bool operator==(const OrbitalElements &lhs, const OrbitalElements &rhs) {
+    return lhs._semiMajorAxis == rhs._semiMajorAxis &&
+           lhs._eccentricity == rhs._eccentricity &&
+           lhs._inclination == rhs._inclination &&
+           lhs._longitudeOfTheAscendingNode == rhs._longitudeOfTheAscendingNode &&
+           lhs._argumentOfPeriapsis == rhs._argumentOfPeriapsis &&
+           lhs._eccentricAnomaly == rhs._eccentricAnomaly;
 }
 
-double OrbitalElements::convertAnomaly(const std::tuple<double, AngularUnit, OrbitalAnomalyType> &anomaly,
-                                       AngularUnit targetAngularUnit,
-                                       OrbitalAnomalyType targetOrbitalAnomalyType) const {
-    double angle = std::get<0>(anomaly);
-    AngularUnit angularUnit = std::get<1>(anomaly);
-    OrbitalAnomalyType anomalyType = std::get<2>(anomaly);
+bool operator!=(const OrbitalElements &lhs, const OrbitalElements &rhs) {
+    return !(rhs == lhs);
+}
 
-    //First check if we already have the result or if we only have to convert angular units
-    if (anomalyType == targetOrbitalAnomalyType) {
-        if (angularUnit == AngularUnit::DEGREE && targetAngularUnit == AngularUnit::RADIAN) {
-            return util::degToRad(angle);
-        } else if (angularUnit == AngularUnit::RADIAN && targetAngularUnit == AngularUnit::DEGREE) {
-            return util::radToDeg(angle);
-        } else {
-            return angle;
-        }
+
+double OrbitalElements::convertAngle(double angle, AngularUnit targetAngularUnit) {
+    return targetAngularUnit == AngularUnit::RADIAN ? angle : util::radToDeg(angle);
+}
+
+double OrbitalElements::convertEccentricAnomaly(double anomaly, double eccentricity, AngularUnit targetAngularUnit,
+                                                OrbitalAnomalyType targetOrbitalAnomalyType) {
+    switch (targetOrbitalAnomalyType) {
+        case OrbitalAnomalyType::ECCENTRIC:
+            break;
+        case OrbitalAnomalyType::MEAN:
+            anomaly = util::eccentricAnomalyToMeanAnomaly(anomaly, eccentricity);
+
+            break;
+        case OrbitalAnomalyType::TRUE:
+            anomaly = util::eccentricAnomalyToTrueAnomaly(anomaly, eccentricity);
+            break;
     }
-
-    //angle is now definitely in [RAD]
-    angle = convertAngle(std::make_pair(angle, angularUnit), AngularUnit::RADIAN);
-
-    //Convert angle of anomaly to eccentric anomaly angle, if it is eccentric we do nothing
-    if (anomalyType == OrbitalAnomalyType::TRUE) {
-        angle = util::trueAnomalyToEccentricAnomaly(angle, _eccentricity);
-    } else if (anomalyType == OrbitalAnomalyType::MEAN) {
-        angle = util::meanAnomalyToEccentricAnomaly(angle, _eccentricity);
-    }
-
-    //Convert anomaly into target anomaly type; anomaly is already eccentric, if this is the right target, do nothing
-    if (targetOrbitalAnomalyType == OrbitalAnomalyType::TRUE) {
-        angle = util::eccentricAnomalyToTrueAnomaly(angle, _eccentricity);
-    } else if (targetOrbitalAnomalyType == OrbitalAnomalyType::MEAN) {
-        angle = util::eccentricAnomalyToMeanAnomaly(angle, _eccentricity);
-    }
-
-    //Convert angle into target unit; angle is already in [RAD], if [RAD] is the target unit, do nothing
     if (targetAngularUnit == AngularUnit::DEGREE) {
-        angle = util::radToDeg(angle);
+        anomaly = util::radToDeg(anomaly);
     }
-    return angle;
+    return anomaly;
 }
+
+
 
 
