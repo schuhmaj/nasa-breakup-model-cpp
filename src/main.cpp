@@ -13,7 +13,7 @@
 int main(int argc, char *argv[]) {
 
     if (argc != 2) {
-        SPDLOG_ERROR(
+        spdlog::error(
                 "Wrong program call. Please call the program in the following way:\n"
                 "./breakupModel [yaml-file]");
         return 0;
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
             out->printResult(*breakUpSimulation);
         }
     } catch (std::exception &e) {
-        SPDLOG_ERROR(e.what());
+        spdlog::error(e.what());
     }
     return 0;
 }

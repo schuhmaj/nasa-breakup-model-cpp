@@ -15,12 +15,12 @@ SimulationType YAMLConfigurationReader::getTypeOfSimulation() const {
                     _file["simulationType"].as<std::string>());
             return simulationType;
         } catch (std::exception &e) {
-            SPDLOG_WARN("The simulation type could not be parsed from the YAML Configuration file! "
+            spdlog::warn("The simulation type could not be parsed from the YAML Configuration file! "
                         "SimulationType therefore UNKNOWN!");
             return SimulationType::UNKNOWN;
         }
     } else {
-        SPDLOG_WARN("The simulation was not given in the YAML Configuration file! "
+        spdlog::warn("The simulation was not given in the YAML Configuration file! "
                     "SimulationType therefore UNKNOWN!");
         return SimulationType::UNKNOWN;
     }
@@ -94,14 +94,14 @@ std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputTar
             } else if (filename.substr(filename.size() - 3) == "vtu") {
                 outputs.push_back(std::shared_ptr<OutputWriter>(new VTKWriter(filename)));
             } else {
-                SPDLOG_WARN("The file {} is no available output form. Available are csv and vtu Output", filename);
+                spdlog::warn("The file {} is no available output form. Available are csv and vtu Output", filename);
             }
         }
         if (outputs.empty()) {
-            SPDLOG_WARN("You have defined OutputTarget with no valid files!");
+            spdlog::warn("You have defined OutputTarget with no valid files!");
         }
     } else {
-        SPDLOG_INFO("You have defined no way of output!");
+        spdlog::info("You have defined no way of output!");
     }
     return outputs;
 }

@@ -104,7 +104,7 @@ Satellite &SatelliteBuilder::getResult() {
         throw std::runtime_error{message.str()};
     }
     if (!_hasPosition) {
-        SPDLOG_INFO("{} has no position. This is not a problem!", _satellite);
+        spdlog::info("{} has no position. This is not a problem!", _satellite);
     }
     return _satellite;
 }

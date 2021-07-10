@@ -79,10 +79,10 @@ std::unique_ptr<Breakup> BreakupBuilder::getBreakup() const {
             }
         default:
             if (satelliteVector.size() == 1) {
-                SPDLOG_WARN("Type was not specified by configuration file, Derived 'Explosion' from 1 satellite!");
+                spdlog::warn("Type was not specified by configuration file, Derived 'Explosion' from 1 satellite!");
                 return createExplosion(satelliteVector, maxID);
             } else if (satelliteVector.size() == 2) {
-                SPDLOG_WARN("Type was not specified by configuration file, Derived 'Collision' from 2 satellites!");
+                spdlog::warn("Type was not specified by configuration file, Derived 'Collision' from 2 satellites!");
                 return createCollision(satelliteVector, maxID);
             } else {
                 throw std::runtime_error{"A breakup simulation could not be created because the type given"
