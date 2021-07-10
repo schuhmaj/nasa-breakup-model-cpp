@@ -34,7 +34,9 @@ SatelliteBuilder &SatelliteBuilder::setSatType(const std::string &satType) {
     try {
         this->setSatType(Satellite::stringToSatType.at(satType));
     } catch (std::exception &e) {
-        throw std::invalid_argument{"Satellite Type is not well defined!"};
+        std::stringstream message{};
+        message << _satellite << " has no well defined Satellite Type";
+        throw std::runtime_error{message.str()};
     }
     return *this;
 }
@@ -43,7 +45,9 @@ SatelliteBuilder &SatelliteBuilder::setSatType(std::string &&satType) {
     try {
         this->setSatType(Satellite::stringToSatType.at(satType));
     } catch (std::exception &e) {
-        throw std::invalid_argument{"Satellite Type is not well defined!"};
+        std::stringstream message{};
+        message << _satellite << " has no well defined Satellite Type";
+        throw std::runtime_error{message.str()};
     }
     return *this;
 }

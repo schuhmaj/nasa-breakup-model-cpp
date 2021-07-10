@@ -7,8 +7,12 @@ std::ostream &operator<<(std::ostream &os, SatType satType) {
 std::istream &operator>>(std::istream &istream, SatType &satType) {
     std::string string;
     istream >> string;
-    satType = Satellite::stringToSatType.at(string);
-    return istream;
+    try {
+        satType = Satellite::stringToSatType.at(string);
+        return istream;
+    } catch (std::exception &e) {
+        throw std::runtime_error{"SatType could not be parsed correctly from string: \"" + string + "\"!"};
+    }
 }
 
 const std::map<std::string, SatType> Satellite::stringToSatType{{"SPACECRAFT",  SatType::SPACECRAFT},

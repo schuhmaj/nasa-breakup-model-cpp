@@ -82,7 +82,7 @@ public:
      * Adds the SatelliteType. If not used the builder will use the default from Satellite class: SPACECRAFT.
      * @param satType as string
      * @return this
-     * @throws May throw an invalid_argument Exception if the satType String can not be mapped to a SatType!
+     * @throws May throw an runtime_error Exception if the satType String can not be mapped to a SatType!
      */
     SatelliteBuilder &setSatType(const std::string &satType);
 
@@ -90,7 +90,7 @@ public:
      * Adds the SatelliteType. If not used the builder will use the default from Satellite class: SPACECRAFT.
      * @param satType as string
      * @return this
-     * @throws May throw an invalid_argument Exception if the satType String can not be mapped to a SatType!
+     * @throws May throw an runtime_error Exception if the satType String can not be mapped to a SatType!
      */
     SatelliteBuilder &setSatType(std::string &&satType);
 

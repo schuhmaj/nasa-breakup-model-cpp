@@ -16,6 +16,15 @@
  * to true in the constructor, the header can be read as strings by using getHeader().
  *
  * @example CSVReader{int, std::string, double} reads in rows of the kind "1234,Hello World,3.33"
+ *
+ * @note If you define the wrong types the CSVReader will nevertheless work or not depending on the definition of the
+ * operator >> for a given type. E. g. if you define double as type, but in the the CSV is written "word" in the
+ * corresponding cell. The operator >> for double reads in zero. A reverse example would be defined type string, but
+ * in the cell is written "12.22", then "12.22" will be the result. The CSVReader has no clue if the data is correct,
+ * this is the duty of the User.<br><br>
+ * Other example, where error handling is implemented: If you read in a SatType, the operator for SatType will throw
+ * an exception if no mapping can be found. Nevertheless this is NOT implemented here in the CSVReader whereas it is
+ * implemented by the "user".
  */
 template<typename ...T>
 class CSVReader {

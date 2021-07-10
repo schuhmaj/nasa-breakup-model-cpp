@@ -32,6 +32,7 @@ std::ostream &operator<<(std::ostream &os, SatType satType);
  * @param istream - istream
  * @param satType - SatType
  * @return istream
+ * @throws a runtime_error if SatType cannot be parsed from the istream
  */
 std::istream &operator>>(std::istream &istream, SatType &satType);
 
