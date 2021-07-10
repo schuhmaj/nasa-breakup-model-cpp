@@ -26,7 +26,7 @@ protected:
 
 
         _explosion = std::make_unique<Explosion>(_input, _minimalCharacteristicLength);
-        _explosion->run();
+        _explosion->setSeed(1234).run();
         _output = _explosion->getResult();
 
     }

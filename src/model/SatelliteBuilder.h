@@ -126,11 +126,61 @@ public:
     SatelliteBuilder &setPosition(const std::array<double, 3> &position);
 
     /**
-     * TODO
-     * @return
+     * Sets the position and velocity of the satellite by using the Keplerian Elements.
+     * @param keplerianElements array holds the arguments in the following order:
+     * @param a - semir-major axis [m]
+     * @param e - eccentricity
+     * @param i - inclination [rad]
+     * @param W - longitude of the ascending node (big omega) [rad]
+     * @param w - argument of periapsis (small omega) [rad]
+     * @param EA - eccentric Anomaly [rad]
+     * @return this
      * @attention This will override previous attempts of setting the velocity/ position.
      */
-    SatelliteBuilder &setKeplerianElements();
+    SatelliteBuilder &setKeplerianElementsEA(const std::array<double, 6> &keplerianElements);
+
+    /**
+     * Sets the position and velocity of the satellite by using the Keplerian Elements.
+     * @param keplerianElements array holds the arguments in the following order:
+     * @param a - semir-major axis [m]
+     * @param e - eccentricity
+     * @param i - inclination [rad]
+     * @param W - longitude of the ascending node (big omega) [rad]
+     * @param w - argument of periapsis (small omega) [rad]
+     * @param MA - mean Anomaly [rad]
+     * @return this
+     * @attention This will override previous attempts of setting the velocity/ position.
+     */
+    SatelliteBuilder &setKeplerianElementsMA(const std::array<double, 6> &keplerianElements);
+
+    /**
+     * Sets the position and velocity of the satellite by using the Keplerian Elements.
+     * @param keplerianElements array holds the arguments in the following order:
+     * @param a - semir-major axis [m]
+     * @param e - eccentricity
+     * @param i - inclination [rad]
+     * @param W - longitude of the ascending node (big omega) [rad]
+     * @param w - argument of periapsis (small omega) [rad]
+     * @param TA - true Anomaly [rad]
+     * @return this
+     * @attention This will override previous attempts of setting the velocity/ position.
+     */
+    SatelliteBuilder &setKeplerianElementsTA(const std::array<double, 6> &keplerianElements);
+
+    /**
+     * @attention The angle values are in [deg] in this method!!!
+     * Sets the position and velocity of the satellite by using the Keplerian Elements.
+     * @param keplerianElements array holds the arguments in the following order:
+     * @param mm - mean motion [revolutions/day]
+     * @param e - eccentricity
+     * @param i - inclination [deg]
+     * @param W - longitude of the ascending node (big omega) [deg]
+     * @param w - argument of periapsis (small omega) [deg]
+     * @param MA - Mean Anomaly [deg]
+     * @return this
+     * @attention This will override previous attempts of setting the velocity/ position.
+     */
+    SatelliteBuilder &setKeplerianElementsTLEFormat(const std::array<double, 6> &keplerianElements);
 
     /**
      * Returns the fully build satellite. Validates if all necessary parameters are specified.

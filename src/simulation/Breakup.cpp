@@ -2,7 +2,7 @@
 
 void Breakup::run() {
     //1. Step: Remove all old stuff which there possible is and makes the Breakup ready to go
-    this->init();
+    this->prepare();
 
     //2. Step: Generate the new Satellites
     this->generateFragments();
@@ -18,16 +18,20 @@ void Breakup::run() {
 
 }
 
-void Breakup::init() {
-    _output.clear();
-    std::random_device rd;
-    _randomNumberGenerator = std::mt19937{rd()};
+Breakup &Breakup::setSeed(unsigned long seed) {
+    _randomNumberGenerator = std::mt19937{seed};
+    return *this;
 }
 
-void inline Breakup::createFragments(double fragmentCount, const std::string &debrisName) {
-    _output.resize(static_cast<size_t>(fragmentCount), Satellite(debrisName, SatType::DEBRIS));
+void Breakup::prepare() {
+    _output.clear();
+}
+
+void
+Breakup::createFragments(size_t fragmentCount, const std::string &debrisName, const std::array<double, 3> &position) {
+    _output.resize(fragmentCount, Satellite(debrisName, SatType::DEBRIS, position));
     std::for_each(_output.begin(), _output.end(),
-                  [](Satellite &sat) {sat.setId(++Satellite::currentMaxGivenID);});
+                  [&](Satellite &sat) {sat.setId(++_currentMaxGivenID);});
 }
 
 void Breakup::characteristicLengthDistribution(double powerLawExponent) {
@@ -89,10 +93,6 @@ void Breakup::deltaVelocityDistribution(double factor, double offset) {
                       auto velocityVector = calculateVelocityVector(velocity);
                       sat.setVelocity(velocityVector);
                   });
-}
-
-void Breakup::finalize() {
-    //TODO see header file
 }
 
 double Breakup::calculateAM(double characteristicLength) {

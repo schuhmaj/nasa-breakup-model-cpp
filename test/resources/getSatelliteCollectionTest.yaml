@@ -21,3 +21,14 @@ satellites:
     satType: UNKNOWN
     area: 3333.33
     velocity: [ 11.0, 22.0, 33.0 ]
+  - name: "ISS"
+    id: 25544
+    satType: SC
+    area: 399.05
+    kepler:
+      semi-major-axis: 6798505.86
+      eccentricity: 0.0002215
+      inclination: 0.9013735469
+      longitude-of-the-ascending-node: 4.724103630312
+      argument-of-periapsis: 2.237100203348
+      mean-anomaly: 0.2405604761

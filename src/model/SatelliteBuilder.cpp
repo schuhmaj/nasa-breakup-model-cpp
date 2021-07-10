@@ -49,7 +49,6 @@ SatelliteBuilder &SatelliteBuilder::setSatType(std::string &&satType) {
 }
 
 SatelliteBuilder &SatelliteBuilder::setMass(double mass) {
-    //TODO To be reviewed!!!!!! Is this good or is it a very bad assumption?
     double characteristicLength = util::calculateCharacteristicLengthFromMass(mass);
     double area = util::calculateCircleArea(characteristicLength);
     _satellite.setMass(mass);
@@ -70,7 +69,6 @@ SatelliteBuilder &SatelliteBuilder::setMassByArea(double area) {
 }
 
 SatelliteBuilder &SatelliteBuilder::setVelocity(const std::array<double, 3> &velocity) {
-    //TODO Similiar handling to mass? Or integrate Keplerian Elements into Satellite Model?
     _satellite.setVelocity(velocity);
     _hasVelocity = true;
     return *this;
@@ -82,22 +80,46 @@ SatelliteBuilder &SatelliteBuilder::setPosition(const std::array<double, 3> &pos
     return *this;
 }
 
-SatelliteBuilder &SatelliteBuilder::setKeplerianElements() {
-    //TODO Insert pykep Utilisation here to convert Keplerian Elements to Velocity vector
+SatelliteBuilder &
+SatelliteBuilder::setKeplerianElementsEA(const std::array<double, 6> &keplerianElements) {
     _hasVelocity = true;
     _hasPosition = true;
+    _satellite.setCartesianByKeplerEA(keplerianElements);
+    return *this;
+}
+
+SatelliteBuilder &
+SatelliteBuilder::setKeplerianElementsMA(const std::array<double, 6> &keplerianElements) {
+    _hasVelocity = true;
+    _hasPosition = true;
+    _satellite.setCartesianByKeplerMA(keplerianElements);
+    return *this;
+}
+
+SatelliteBuilder &
+SatelliteBuilder::setKeplerianElementsTA(const std::array<double, 6> &keplerianElements) {
+    _hasVelocity = true;
+    _hasPosition = true;
+    _satellite.setCartesianByKeplerTA(keplerianElements);
+    return *this;
+}
+
+SatelliteBuilder &SatelliteBuilder::setKeplerianElementsTLEFormat(const std::array<double, 6> &keplerianElements) {
+    _hasVelocity = true;
+    _hasPosition = true;
+    _satellite.setCartesianByKeplerTLEFormat(keplerianElements);
     return *this;
 }
 
 Satellite &SatelliteBuilder::getResult() {
     if (!_hasID) {
-        throw std::invalid_argument{"Satellite has no ID!"};
+        throw std::runtime_error{"Satellite has no ID!"};
     }
     if (!_hasMass) {
-        throw std::invalid_argument{"Satellite has no mass or way to derive the mass!"};
+        throw std::runtime_error{"Satellite has no mass or way to derive the mass!"};
     }
     if (!_hasVelocity) {
-        throw std::invalid_argument{"Satellite has no velocity or way to derive the velocity!"};
+        throw std::runtime_error{"Satellite has no velocity or way to derive the velocity!"};
     }
     return _satellite;
 }

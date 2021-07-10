@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 #include <array>
-#include "input/YAMLReader.h"
+#include "input/YAMLDataReader.h"
 
 
 class YAMLReaderTest : public ::testing::Test {
@@ -41,19 +41,27 @@ protected:
                 .setMassByArea(3333.33)
                 .setVelocity({11,22,33})
                 .getResult();
+        _sat[4] = satelliteBuilder
+                .setID(25544)
+                .setName("ISS")
+                .setSatType(SatType::SPACECRAFT)
+                .setMassByArea(399.05)
+                .setKeplerianElementsMA({6798505.86, 0.0002215, 0.9013735469,
+                                         4.724103630312, 2.237100203348, 0.2405604761})
+                .getResult();
     }
 
-    std::array<Satellite, 4> _sat{};
+    std::array<Satellite, 5> _sat{};
 };
 
 /**
  * Checks if the file "resources/getSatelliteCollectionTest.yaml" is correctly read in
  */
 TEST_F(YAMLReaderTest, getSatelliteCollectionTest) {
-    YAMLReader yamlReader{"resources/getSatelliteCollectionTest.yaml"};
+    YAMLDataReader yamlReader{"resources/getSatelliteCollectionTest.yaml"};
     auto satelliteCollection = yamlReader.getSatelliteCollection();
 
-    ASSERT_EQ(satelliteCollection.size(), 4);
+    ASSERT_EQ(satelliteCollection.size(), 5);
 
     auto expectedSatellites = _sat.begin();
     for(auto &sat : satelliteCollection) {

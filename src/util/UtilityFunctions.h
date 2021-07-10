@@ -78,4 +78,22 @@ namespace util {
         return std::pow(step, 1/ (n + 1) );
     }
 
+    /**
+     * Converts an angle [deg] to [rad]
+     * @param angle in [deg]
+     * @return angle in [rad]
+     */
+    inline double degToRad(double angle) {
+        return angle * PI / 180.0;
+    }
+
+    /**
+     * Converts an angle [rad] to [deg]
+     * @param angle in [rad]
+     * @return angle in [deg]
+     */
+    inline double radToDeg(double angle) {
+        return angle * 180 / PI;
+    }
+
 }

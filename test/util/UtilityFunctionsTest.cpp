@@ -25,7 +25,7 @@ TEST_P(UtilityFunctionsDouble, CharacteristicLengthFromMass){
     ASSERT_NEAR(actualCharacteristicLength, expectedCharacteristicLength, 0.001);
 }
 
-INSTANTIATE_TEST_SUITE_P(CharacteristicLengthFromMass, UtilityFunctionsDouble,
+INSTANTIATE_TEST_SUITE_P(DoubleParam, UtilityFunctionsDouble,
                         ::testing::Values(0.2, 0.7589, 2.42, 2.5, 3, 7.89));
 
 
@@ -48,7 +48,7 @@ TEST_P(UtilityFunctionsPair, TransformUniformToPowerLaw){
     ASSERT_NEAR(actualValue, expectedValue, 0.0001);
 }
 
-INSTANTIATE_TEST_SUITE_P(Tests, UtilityFunctionsPair,
+INSTANTIATE_TEST_SUITE_P(PairDoubleDoubleParam, UtilityFunctionsPair,
                          ::testing::Values(
                                  std::make_pair(0.0966, 0.05306),
                                  std::make_pair(0.66922, 0.09549),

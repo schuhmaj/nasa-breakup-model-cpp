@@ -20,19 +20,26 @@ class Breakup {
 protected:
 
     /**
-     * The minimal characteristic length. The Breakup Simulation will only produce fragments
-     * greater or equal this fragmentCount.
-     * It is given in [m]
-     * TODO Better integration program flow!!!!
+     * The minimal characteristic length in [m]
+     * The Breakup Simulation will only produce fragments greater or equal this fragmentCount.
      */
     const double _minimalCharacteristicLength{0.05};
 
     /**
-     * The maximal characteristic length.
+     * The maximal characteristic length in [m]
      * The value is set during the run of the simulation and derived
      * from the input satellites (the max L_c of them).
      */
     double _maximalCharacteristicLength{};
+
+    /**
+     * The Breakup simulation will assign each satellite, created after setting this, an ID greater than this number.
+     * ID will be unique if _currentMaxGivenID is set to the current maximal given NORAD-Catalog ID.
+     * @note Default value is zero which could led to confusion because those numbers directly after zero are already
+     * assigned to existing satellites. Nevertheless the simulation never uses those IDs, so this value is only a
+     * MUST if the users wants to work with valid satellite IDs beyond the Breakup simulation.
+     */
+    size_t _currentMaxGivenID{0};
 
     /**
      * Member which is required to choose the correct Distribution function for the A/M values.
@@ -42,9 +49,9 @@ protected:
 
     /**
      * The random number generator, used by the implementation.
-     * It is correctly initialized by the init method with a random seed each time before the simulation runs.
+     * It is default initialized with a random seed when the Breakup is constructed.
      */
-    std::mt19937 _randomNumberGenerator{};
+    std::mt19937 _randomNumberGenerator{std::random_device{}()};
 
     /**
      * Contains the input satellites. Normally the fragmentCount for this collection is either one (explosion) or
@@ -68,7 +75,12 @@ public:
 
     Breakup(std::vector<Satellite> input, double minimalCharacteristicLength)
             : _input{std::move(input)},
-              _minimalCharacteristicLength{minimalCharacteristicLength} {}
+              _minimalCharacteristicLength{minimalCharacteristicLength} {};
+
+    Breakup(std::vector<Satellite> input, double minimalCharacteristicLength, size_t currentMaxGivenID)
+            : _input{std::move(input)},
+              _minimalCharacteristicLength{minimalCharacteristicLength},
+              _currentMaxGivenID{currentMaxGivenID} {}
 
 
     virtual ~Breakup() = default;
@@ -83,9 +95,17 @@ public:
      * Return the result of the breakup event
      * @return SatelliteCollection with the generated fragments
      */
-    const std::vector<Satellite> &getResult() const {
+    std::vector<Satellite> getResult() const {
         return _output;
     }
+
+    /**
+     * This method allows to set the seed of the random number generator to generate predictable fragments when
+     * the run method is called.
+     * @param seed
+     * @return this
+     */
+    virtual Breakup &setSeed(unsigned long seed = std::random_device{}());
 
 protected:
 
@@ -93,7 +113,7 @@ protected:
      * This method contains every step required to re-run the simulation.
      * The method for example resets the _output's size to zero.
      */
-    virtual void init();
+    virtual void prepare();
 
     /**
      * Creates the a number of fragments, following the Equation 2 for Explosions and
@@ -103,11 +123,13 @@ protected:
 
     /**
      * Actually creates the fragments (Resizes the vector and assigns a unique ID and name to each fragment)
+     * Further the position vector is correctly set. This one is derived from the parents.
      * @param fragmentCount - the number of fragments which should be created
      * @param debrisName - the name for the fragments
-     * @attention Implemented in the base class, called by the subclasses with their parameters
+     * @param position - position of the fragment, derived from the one parent (explosion) or from first parent (collision)
      */
-    virtual void createFragments(double fragmentCount, const std::string &debrisName);
+    virtual void
+    createFragments(size_t fragmentCount, const std::string &debrisName, const std::array<double, 3> &position);
 
     /**
      * Creates the Size Distribution. After the fragments are generated this method will assign
@@ -148,12 +170,6 @@ protected:
      */
     virtual void deltaVelocityDistribution(double factor, double offset);
 
-    /**
-     * TODO Remember vel/pos TO Kep should be implemented in the Satellite Class, NOT HERE!!!!
-     * Optional method which assigns every Satellite their Keplerian Elements.
-     */
-    virtual void finalize();
-
 private:
 
     /**
@@ -174,12 +190,16 @@ private:
 
 public:
 
-    const double getMinimalCharacteristicLength() const {
+    double getMinimalCharacteristicLength() const {
         return _minimalCharacteristicLength;
     }
 
     double getMaximalCharacteristicLength() const {
         return _maximalCharacteristicLength;
+    }
+
+    size_t getCurrentMaxGivenId() const {
+        return _currentMaxGivenID;
     }
 
 };

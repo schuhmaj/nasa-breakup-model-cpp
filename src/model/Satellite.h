@@ -3,8 +3,12 @@
 #include <array>
 #include <map>
 #include <string>
-#include <ostream>
+#include <iostream>
 #include <utility>
+#include <cmath>
+#include "util/UtilityKepler.h"
+#include "util/UtilityFunctions.h"
+#include "util/UtilityContainer.h"
 
 /**
  * Type of a Satellite
@@ -15,6 +19,8 @@ enum class SatType {
 };
 
 std::ostream &operator<<(std::ostream &os, SatType satType);
+
+std::istream &operator>>(std::istream &istream, SatType &satType);
 
 
 /**
@@ -73,7 +79,7 @@ class Satellite {
 
     /**
      * The cartesian velocity vector v [m/s^2]
-     * @note Directly given as input parameter
+     * @note Directly given as input parameter, e.g. the velocity Orbital State Vector
      * @note Derived from the Keplerian elements
      * @remark Determined by the breakup simulation
      */
@@ -81,16 +87,11 @@ class Satellite {
 
     /**
      * The cartesian position vector [m]
-     * @note Directly given as input parameter
+     * @note Directly given as input parameter, e.g. the position Orbital State Vector
      * @note Derived from the Keplerian elements
+     * @remark Determined by the breakup simulation, more precisely inherited from parent
      */
     std::array<double, 3> _position{};
-
-
-    /* TODO Subclass to add Keplerian Elements only if they are given, no memory overhead or Factory/ Builder before?
-     * Implement Keplerian Elements --> v, r
-     * Not necessarily required for the simulation (only in case of non-catastrophic collision)
-     */
 
 public:
 
@@ -104,12 +105,6 @@ public:
      */
     const static std::map<SatType, std::string> satTypeToString;
 
-    /**
-     * TODO: Connect to input config file
-     * The maximum already given NORAD-ID, usually set by an input source
-     */
-    static size_t currentMaxGivenID;
-
     Satellite() = default;
 
     explicit Satellite(size_t id)
@@ -119,6 +114,91 @@ public:
             : _name{std::move(name)},
               _satType{satType} {}
 
+    Satellite(std::string name, SatType satType, std::array<double, 3> position)
+            : _name{std::move(name)},
+              _satType{satType},
+              _position{position} {}
+
+    /**
+     * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
+     * This function sets the internal members _velocity and _position to the corresponding values.
+     * @param keplerianElements array holds the arguments in the following order:
+     * @param a - semir-major axis [m]
+     * @param e - eccentricity
+     * @param i - inclination [rad]
+     * @param W - longitude of the ascending node (big omega) [rad]
+     * @param w - argument of periapsis (small omega) [rad]
+     * @param EA - eccentric Anomaly [rad]
+     * @note Code taken and adapted
+     * from pykep (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/par2ic.hpp)
+     * [23.06.2021]
+     */
+    void setCartesianByKeplerEA(const std::array<double, 6> &keplerianElements);
+
+    /**
+     * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
+     * This function sets the internal members _velocity and _position to the corresponding values.
+     * @param keplerianElements array holds the arguments in the following order:
+     * @param a - semir-major axis [m]
+     * @param e - eccentricity
+     * @param i - inclination [rad]
+     * @param W - longitude of the ascending node (big omega) [rad]
+     * @param w - argument of periapsis (small omega) [rad]
+     * @param MA - mean Anomaly [rad]
+     */
+    void setCartesianByKeplerMA(const std::array<double, 6> &keplerianElements);
+
+    /**
+     * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
+     * This function sets the internal members _velocity and _position to the corresponding values.
+     * @param keplerianElements array holds the arguments in the following order:
+     * @param a - semir-major axis [m]
+     * @param e - eccentricity
+     * @param i - inclination [rad]
+     * @param W - longitude of the ascending node (big omega) [rad]
+     * @param w - argument of periapsis (small omega) [rad]
+     * @param TA - true Anomaly [rad]
+     */
+    void setCartesianByKeplerTA(const std::array<double, 6> &keplerianElements);
+
+    /**
+    * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
+    * This function sets the internal members _velocity and _position to the corresponding values.
+    * @param keplerianElements array holds the arguments in the following order:
+    * @param mm - mean motion [revolutions/day]
+    * @param e - eccentricity
+    * @param i - inclination [deg]
+    * @param W - longitude of the ascending node (big omega) [deg]
+    * @param w - argument of periapsis (small omega) [deg]
+    * @param MA - Mean Anomaly [deg]
+    */
+    void setCartesianByKeplerTLEFormat(const std::array<double, 6> &keplerianElements);
+
+    /**
+     * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
+     * @return an array consisting of the six Keplerian Elements in the following order [a, e, i, W, w, EA] where
+     * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
+     * w = argument of periapsis [rad]; EA = eccentric Anomaly [rad]
+     * @note Code taken and adapted from pykep
+     * (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/ic2par.hpp) [25.06.2021]
+     */
+    std::array<double, 6> getKeplerEA() const;
+
+    /**
+    * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
+    * @return an array consisting of the six Keplerian Elements in the following order [a, e, i, W, w, MA] where
+    * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
+    * w = argument of periapsis [rad]; MA = mean Anomaly [rad]
+    */
+    std::array<double, 6> getKeplerMA() const;
+
+    /**
+    * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
+    * @return an array consisting of the six Keplerian Elements in the following order [a, e, i, W, w, TA] where
+    * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
+    * w = argument of periapsis [rad]; TA = true Anomaly [rad]
+    */
+    std::array<double, 6> getKeplerTA() const;
 
     /**
      * Compares two Satellites by comparing their IDs.
@@ -138,10 +218,8 @@ public:
      * @return true if they do not have the same ID
      */
     friend bool operator!=(const Satellite &lhs, const Satellite &rhs) {
-        return not(lhs == rhs);
+        return !(lhs == rhs);
     }
-
-    friend std::ostream &operator<<(std::ostream &os, const Satellite &satellite);
 
     /*
      * Getter and Setter

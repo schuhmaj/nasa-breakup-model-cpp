@@ -19,6 +19,7 @@ void CSVWriter::printResult(const Breakup &breakup) {
 
 void CSVWriter::csvLine(std::ostream &ostream, const Satellite &satellite) {
     using util::operator<<;
+    ostream.precision(17);
     ostream << satellite.getId() << ','
             << satellite.getName() << ','
             << satellite.getSatType() << ','
@@ -27,11 +28,21 @@ void CSVWriter::csvLine(std::ostream &ostream, const Satellite &satellite) {
             << satellite.getArea() << ','
             << satellite.getMass() << ','
             << satellite.getVelocity() << ','
-            << satellite.getPosition()
-            << "\n";
+            << satellite.getPosition();
+    if (_withKepler) {
+        auto kepler = satellite.getKeplerMA();
+        ostream << ","
+                << kepler[0] << ','
+                << kepler[1] << ','
+                << kepler[2] << ','
+                << kepler[3] << ','
+                << kepler[4] << ','
+                << kepler[5];
+    }
+    ostream << "\n";
 }
 
-void CSVWriter::csvHeader(std::ostream &ostream) {
+void CSVWriter::csvHeader(std::ostream &ostream) const {
     ostream << "ID" << ','
             << "Name" << ','
             << "Satellite Type" << ','
@@ -40,6 +51,15 @@ void CSVWriter::csvHeader(std::ostream &ostream) {
             << "Area [m^2]" << ','
             << "Mass [kg]" << ','
             << "Velocity [m/s]" << ','
-            << "Position [m]"
-            << "\n";
+            << "Position [m]";
+    if (_withKepler) {
+        ostream << ","
+                << "Semi-Major-Axis [m]" << ','
+                << "Eccentricity" << ','
+                << "Inclination [rad]" << ','
+                << "Longitude of the ascending node [rad]" << ','
+                << "Argument of periapsis [rad]" << ','
+                << "Mean Anomaly [rad]";
+    }
+    ostream << "\n";
 }

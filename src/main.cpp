@@ -3,8 +3,9 @@
 #include <memory>
 #include <exception>
 
-#include "input/YAMLReader.h"
-#include "simulation/BreakupFactory.h"
+#include "input/YAMLDataReader.h"
+#include "input/YAMLConfigurationReader.h"
+#include "simulation/BreakupBuilder.h"
 #include "output/CSVWriter.h"
 
 int main(int argc, char *argv[]) {
@@ -20,20 +21,20 @@ int main(int argc, char *argv[]) {
     //The fileName of the YAML file
     std::string fileName{argv[1]};
 
-    //The InputReader
-    auto inputSource = std::shared_ptr<InputReader>{new YAMLReader{fileName}};
+    //Load an Configuration Reader which contains the necessary config + data for the BreakupBuilder
+    auto configurationSource = std::shared_ptr<ConfigurationSource>{new YAMLConfigurationReader{fileName}};
 
     //The SimulationFactory which builds our breakup simulation
-    BreakupFactory breakupFactory{inputSource};
+    BreakupBuilder breakupBuilder{configurationSource};
 
     //Create and run the simulation or catch an exception in case something is wrong with the simulation
     try {
         //Creates and Runs the simulation
-        auto breakUpSimulation = breakupFactory.getBreakupTypeByInput();
+        auto breakUpSimulation = breakupBuilder.getBreakup();
         breakUpSimulation->run();
 
         //Prints the the output to a CSV file
-        auto output = std::unique_ptr<OutputWriter>{new CSVWriter{"result.csv"}};
+        auto output = std::unique_ptr<OutputWriter>{new CSVWriter{"result.csv", configurationSource->getOutputWithKepler()}};
         output->printResult(*breakUpSimulation);
     } catch (std::exception &e) {
         std::cerr << e.what();
