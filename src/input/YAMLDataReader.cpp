@@ -55,13 +55,13 @@ void YAMLDataReader::parseKepler(SatelliteBuilder &satelliteBuilder, const YAML:
 
         if (node["eccentric-anomaly"]) {
             keplerData[5] = node["eccentric-anomaly"].as<double>();
-            satelliteBuilder.setOrbitalElements(factory.fromOnlyRadians(keplerData, OrbitalAnomalyType::ECCENTRIC));
+            satelliteBuilder.setOrbitalElements(factory.createFromOnlyRadians(keplerData, OrbitalAnomalyType::ECCENTRIC));
         } else if (node["mean-anomaly"]) {
             keplerData[5] = node["mean-anomaly"].as<double>();
-            satelliteBuilder.setOrbitalElements(factory.fromOnlyRadians(keplerData, OrbitalAnomalyType::MEAN));
+            satelliteBuilder.setOrbitalElements(factory.createFromOnlyRadians(keplerData, OrbitalAnomalyType::MEAN));
         } else if (node["true-anomaly"]) {
             keplerData[5] = node["true-anomaly"].as<double>();
-            satelliteBuilder.setOrbitalElements(factory.fromOnlyRadians(keplerData, OrbitalAnomalyType::TRUE));
+            satelliteBuilder.setOrbitalElements(factory.createFromOnlyRadians(keplerData, OrbitalAnomalyType::TRUE));
         } else {
             throw std::runtime_error{"One satellite input is incomplete!"
                                      "You have to give at least one of the following orbital Anomalies"

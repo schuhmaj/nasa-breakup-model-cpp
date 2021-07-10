@@ -49,5 +49,5 @@ std::pair<size_t, OrbitalElements> TLEReader::getTwoLine(std::istream &istream) 
     }
 
     OrbitalElementsFactory factory{};
-    return std::make_pair(id, factory.fromTLEData(tleData));
+    return std::make_pair(id, factory.createFromTLEData(tleData));
 }

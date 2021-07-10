@@ -174,7 +174,7 @@ public:
 private:
 
     /**
-     * Converts a given angle into a given target unit
+     * Converts a given angle in rad into a given target unit
      * @param angle - angle in [rad]
      * @param targetAngularUnit - target unit
      * @return the value in the target unit

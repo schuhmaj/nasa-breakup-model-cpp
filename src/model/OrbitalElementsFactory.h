@@ -26,7 +26,7 @@ public:
     * w - argument of periapsis (small omega) [deg]<br>
     * MA - Mean Anomaly [deg]<br>
     */
-    OrbitalElements fromTLEData(const std::array<double, 6> &tleData) const;
+    OrbitalElements createFromTLEData(const std::array<double, 6> &tleData) const;
 
     /**
     * Constructs the Orbital Elements from the standard keplerian Elements in the following order:
@@ -40,7 +40,7 @@ public:
     * @param orbitalAnomalyType - this defines the last element in the array, either: ECCENTRIC, MEAN or TRUE
     */
     OrbitalElements
-    fromOnlyRadians(const std::array<double, 6> &standardKepler, OrbitalAnomalyType orbitalAnomalyType) const;
+    createFromOnlyRadians(const std::array<double, 6> &standardKepler, OrbitalAnomalyType orbitalAnomalyType) const;
 
     /**
     * Constructs the Orbital Elements from the standard keplerian Elements in the following order:
@@ -54,7 +54,7 @@ public:
     * @param orbitalAnomalyType - this defines the last element in the array, either: ECCENTRIC, MEAN or TRUE
     */
     OrbitalElements
-    fromOnlyDegree(const std::array<double, 6> &standardKepler, OrbitalAnomalyType orbitalAnomalyType) const;
+    createFromOnlyDegree(const std::array<double, 6> &standardKepler, OrbitalAnomalyType orbitalAnomalyType) const;
 
 
 };

@@ -12,10 +12,10 @@ protected:
 
     virtual void SetUp() {
         OrbitalElementsFactory factory{};
-        _expectedKepler_1 = factory.fromTLEData({15.72125391, 0.0006703, 51.6416,
-                                                 247.4627, 130.5360, 325.0288});
-        _expectedKepler_2 = factory.fromTLEData({1.00272877, 0.0000694, 0.0541,
-                                                 226.6478, 252.0694, 256.3446});
+        _expectedKepler_1 = factory.createFromTLEData({15.72125391, 0.0006703, 51.6416,
+                                                       247.4627, 130.5360, 325.0288});
+        _expectedKepler_2 = factory.createFromTLEData({1.00272877, 0.0000694, 0.0541,
+                                                       226.6478, 252.0694, 256.3446});
 
     }
 

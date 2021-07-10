@@ -44,8 +44,8 @@ TEST_F(SatelliteTest, operatorNEQTest) {
 
 TEST_F(SatelliteTest, KeplerConversionTest) {
     OrbitalElementsFactory factory{};
-    auto expectedKepler = factory.fromTLEData({15.72125391, 0.0006703, 51.6416,
-                                               247.4627, 130.5360, 325.0288});
+    auto expectedKepler = factory.createFromTLEData({15.72125391, 0.0006703, 51.6416,
+                                                     247.4627, 130.5360, 325.0288});
     Satellite sat{1};
     sat.setCartesianByOrbitalElements(expectedKepler);
 
@@ -76,7 +76,7 @@ std::vector<OrbitalElements> getOrbitalParameters() {
         kepler[2] += 0.0349066;     //+2 deg inclination
         kepler[3] += 0.0174533;     //+1 deg RAAN
         kepler[4] += 0.00872665;    //+0.5 deg argument of perigee
-        values.push_back(factory.fromOnlyRadians(kepler, OrbitalAnomalyType::MEAN));
+        values.push_back(factory.createFromOnlyRadians(kepler, OrbitalAnomalyType::MEAN));
     }
 
     return values;

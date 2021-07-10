@@ -48,8 +48,9 @@ protected:
                 .setName("ISS")
                 .setSatType(SatType::SPACECRAFT)
                 .setMassByArea(399.05)
-                .setOrbitalElements(factory.fromOnlyRadians({6798505.86, 0.0002215, 0.9013735469,
-                                         4.724103630312, 2.237100203348, 0.2405604761}, OrbitalAnomalyType::MEAN))
+                .setOrbitalElements(factory.createFromOnlyRadians({6798505.86, 0.0002215, 0.9013735469,
+                                                                   4.724103630312, 2.237100203348, 0.2405604761},
+                                                                  OrbitalAnomalyType::MEAN))
                 .getResult();
     }
 

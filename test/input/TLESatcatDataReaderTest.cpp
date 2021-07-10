@@ -24,8 +24,8 @@ protected:
                              "1970-03-31", 88.48, 33.15, 215.0, 183.0, 0.0, "", "EA", "IMP");
 
         OrbitalElementsFactory factory{};
-        auto expectedKepler{factory.fromTLEData({15.72125391, 0.0006703, 51.6416,
-                                                 247.4627, 130.5360, 325.0288})};
+        auto expectedKepler{factory.createFromTLEData({15.72125391, 0.0006703, 51.6416,
+                                                       247.4627, 130.5360, 325.0288})};
         SatelliteBuilder satelliteBuilder{};
         _expectedSatellites.push_back(
                 satelliteBuilder
