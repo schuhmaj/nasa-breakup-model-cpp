@@ -9,6 +9,8 @@ std::vector<Satellite> YAMLDataReader::getSatelliteCollection() const {
         for (auto satNode : satellites) {
             satelliteVector.push_back(parseSatellite(satelliteBuilder, satNode));
         }
+    } else {
+        throw std::runtime_error{"The was no satellites tag inside the YAML file, so no satellites were extracted!"};
     }
     return satelliteVector;
 }
@@ -63,13 +65,13 @@ void YAMLDataReader::parseKepler(SatelliteBuilder &satelliteBuilder, const YAML:
             keplerData[5] = node["true-anomaly"].as<double>();
             satelliteBuilder.setOrbitalElements(factory.createFromOnlyRadians(keplerData, OrbitalAnomalyType::TRUE));
         } else {
-            throw std::runtime_error{"One satellite input is incomplete!"
-                                     "You have to give at least one of the following orbital Anomalies"
-                                     "Eccentric Anomaly > Mean Anomaly > True Anomaly [in the order how the"
+            throw std::runtime_error{"One satellite input is incomplete! "
+                                     "You have to give at least one of the following orbital Anomalies "
+                                     "Eccentric Anomaly > Mean Anomaly > True Anomaly [in the order how the "
                                      "program will prioritize an anomaly if multiple are given]"};
         }
     } else {
-        throw std::runtime_error{"One satellite input is incomplete!"
+        throw std::runtime_error{"One satellite input is incomplete! "
                                  "The Keplerian Elements are not fully given!"};
     }
 }
