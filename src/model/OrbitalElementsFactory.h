@@ -56,5 +56,25 @@ public:
     OrbitalElements
     createFromOnlyDegree(const std::array<double, 6> &standardKepler, OrbitalAnomalyType orbitalAnomalyType) const;
 
+    /**
+     * Creates the orbital elements from the user's wish units:
+     * @param a - semi-major-axis in [m]
+     * @param eccentricity - eccentricity (unit-less)
+     * @param inclination - inclination
+     * @param inclinationU - unit of inclination, either [deg] or [rad]
+     * @param raan - longitude of the ascending node (big omega)
+     * @param raanU - unit of raan, either [deg] or [rad]
+     * @param argOfPer - argument of periapsis (small omega)
+     * @param argOfPerU - unit of argument of periapsis, either [deg] or [rad]
+     * @param anomaly - the value of the anomaly
+     * @param anomalyU - the unit of the anomaly, either [deg] or [rad]
+     * @param anomalyType - the type (MEAN/ ECCENTRIC/ TRUE)
+     * @return OrbitalElements
+     */
+    OrbitalElements
+    createOrbitalElements(double a, double eccentricity, double inclination, AngularUnit inclinationU, double raan,
+                          AngularUnit raanU, double argOfPer, AngularUnit argOfPerU, double anomaly,
+                          AngularUnit anomalyU, OrbitalAnomalyType anomalyType) const;
+
 
 };
