@@ -84,7 +84,3 @@ double OrbitalElements::convertEccentricAnomaly(double anomaly, double eccentric
     }
     return anomaly;
 }
-
-
-
-
