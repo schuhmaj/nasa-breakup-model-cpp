@@ -37,6 +37,7 @@ After the build, the simulation can be run by executing:
 The given yaml-file should look like this:
 
 ```yaml
+  simulation:
     minimalCharacteristicLength: 0.05 #minimal fragment L_c in [m]
     simulationType: COLLISION         #Option (Alias): COLLISION (CO) or EXPLOSION (EX)
                                       #If not given type is determined
@@ -50,12 +51,14 @@ The given yaml-file should look like this:
     idFilter: [1, 2]                  #Only the satellites with these IDs will be
                                       #recognized by the simulation.
                                       #If not given, no filter is applied
-    outputTarget: ["result.csv", "result.vtu"]  #List containing the wished output files
-    outputKepler: True                #If given the CSV output contains Kepler elements
-    outputCSVPattern: "IL"            #Superpasses outputKepler (which is ignored if given)
-                                      #When given the implementation switchs
-                                      #to the CSVPatternWriter (more time-costly)
-                                      #and produces a custom CSV
+  inputOutput:                        #If you want to print out the input data into specific file (optional)
+    target: ["input.csv", "input.vtu"]#Target files
+    #kepler: True                     #CSV with Kepler elements
+    #csvPattern: "IL"                 #Override "kepler" setting and prints CSV output according to pattern
+  resultOutput:                       #If you want a result, you should define here some target file for the
+    target: ["result.csv", "result.vtu"]#fragements (like vtk or csv)
+    #kepler: True                     #Option like above
+    #csvPattern: "IL"                 #Option like above
 ```    
 A "data.yaml" should have the following form (for example):
 
@@ -133,9 +136,9 @@ Example:
 
 ```cpp
     //RuntimeInput via the RuntimeInputSource Object (minmial Config: minL_c = 0.05 + inputSatellites)
-    auto configurationSource = std::shared_ptr<InputConfigurationSource>{new RuntimeInputSource(0.05, satellites)};
+    auto configSource = std::make_shared<RuntimeInputSource>(0.05, satellites);
     //Give the BreakupBuilder its configuration object (YMALConfigurationReader or RuntimeInputSource or your own derived source)
-    BreakupBuilder breakupBuilder{configurationSource};
+    BreakupBuilder breakupBuilder{configSource};
     //Create the Breakup Simulation
     auto breakup = breakupBuilder.getBreakup();
     //Run it and get the result via breakup.getResult();

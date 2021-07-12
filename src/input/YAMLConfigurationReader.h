@@ -16,6 +16,22 @@
  */
 class YAMLConfigurationReader : public InputConfigurationSource, public OutputConfigurationSource {
 
+    /*
+     * The following static variables contain the names of the YAML nodes.
+     * Note: C++20 would allow constexpr std::string which would be more appropriate instead of char[]
+     */
+    static constexpr char SIMULATION_TAG[] = "simulation";
+    static constexpr char MIN_CHAR_LENGTH_TAG[] = "minimalCharacteristicLength";
+    static constexpr char SIMULATION_TYPE_TAG[] = "simulationType";
+    static constexpr char CURRENT_MAX_ID_TAG[] = "currentMaxID";
+    static constexpr char INPUT_SOURCE_TAG[] = "inputSource";
+    static constexpr char ID_FILTER_TAG[] = "idFilter";
+    static constexpr char RESULT_OUTPUT_TAG[] = "resultOutput";
+    static constexpr char INPUT_OUTPUT_TAG[] = "inputOutput";
+    static constexpr char TARGET_TAG[] = "target";
+    static constexpr char KEPLER_TAG[] = "kepler";
+    static constexpr char CSV_PATTERN_TAG[] = "csvPattern";
+
     const YAML::Node _file;
 
 public:
@@ -23,18 +39,26 @@ public:
     /**
      * Creates a new YAML Configuration Reader.
      * @param filename
-     * @throws an exception if the file is malformed or cannot be loaded
+     * @throws an exception if the file is malformed or cannot be loaded or if no SIMULATION_TAG is found
      */
     explicit YAMLConfigurationReader(const std::string &filename)
-        : _file{YAML::LoadFile(filename)} {}
+        : _file{YAML::LoadFile(filename)} {
+        if (!_file[SIMULATION_TAG]) {
+            throw std::runtime_error{"No tag found the YAML-Config file which specifies the simulation!"};
+        }
+    }
 
     /**
      * Creates a new YAML Configuration Reader.
      * @param filename
-     * @throws an exception if the file is malformed or cannot be loaded
+     * @throws an exception if the file is malformed or cannot be loaded or if no SIMULATION_TAG is found
      */
     explicit YAMLConfigurationReader(std::string &&filename)
-            : _file{YAML::LoadFile(filename)} {}
+            : _file{YAML::LoadFile(filename)} {
+        if (!_file[SIMULATION_TAG]) {
+            throw std::runtime_error{"No tag found the YAML-Config file which specifies the simulation!"};
+        }
+    }
 
 
     /**
@@ -86,7 +110,11 @@ public:
 
 private:
 
-    static std::vector<std::shared_ptr<OutputWriter>>
-    extractOutputWriter(const YAML::Node &node) ;
+    /**
+     * Internally used by getOutputTargets() and getInputTargets() to read in the YAML output specification.
+     * @param node - the YAML Node RESULT_OUTPUT_TAG or either INPUT_OUTPUT_TAG
+     * @return a vector containing the OutputWriter according to the YAML file
+     */
+    static std::vector<std::shared_ptr<OutputWriter>> extractOutputWriter(const YAML::Node &node) ;
 };
 

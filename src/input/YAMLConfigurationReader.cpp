@@ -1,22 +1,18 @@
 #include "YAMLConfigurationReader.h"
 
-/*
- * TODO: Refactor this stuff and move some checks into a centralized form, maybe constructor!
- */
-
 double YAMLConfigurationReader::getMinimalCharacteristicLength() const {
-    if (_file["simulation"] && _file["simulation"]["minimalCharacteristicLength"]) {
-        return _file["simulation"]["minimalCharacteristicLength"].as<double>();
+    if (_file[SIMULATION_TAG][MIN_CHAR_LENGTH_TAG]) {
+        return _file[SIMULATION_TAG][MIN_CHAR_LENGTH_TAG].as<double>();
     } else {
         throw std::runtime_error{"The minimal characteristic Length was not specified in the YAML Configuration file!"};
     }
 }
 
 SimulationType YAMLConfigurationReader::getTypeOfSimulation() const {
-    if (_file["simulation"] && _file["simulation"]["simulationType"]) {
+    if (_file[SIMULATION_TAG][SIMULATION_TYPE_TAG]) {
         try {
             SimulationType simulationType = InputConfigurationSource::stringToSimulationType.at(
-                    _file["simulation"]["simulationType"].as<std::string>());
+                    _file[SIMULATION_TAG][SIMULATION_TYPE_TAG].as<std::string>());
             return simulationType;
         } catch (std::exception &e) {
             spdlog::warn("The simulation type could not be parsed from the YAML Configuration file! "
@@ -24,15 +20,15 @@ SimulationType YAMLConfigurationReader::getTypeOfSimulation() const {
             return SimulationType::UNKNOWN;
         }
     } else {
-        spdlog::warn("The simulation was not given in the YAML Configuration file! "
+        spdlog::warn("The simulation type was not given in the YAML Configuration file! "
                      "SimulationType therefore UNKNOWN!");
         return SimulationType::UNKNOWN;
     }
 }
 
 std::optional<size_t> YAMLConfigurationReader::getCurrentMaximalGivenID() const {
-    if (_file["simulation"] && _file["simulation"]["currentMaxID"]) {
-        return std::make_optional(_file["simulation"]["currentMaxID"].as<size_t>());
+    if (_file[SIMULATION_TAG][CURRENT_MAX_ID_TAG]) {
+        return std::make_optional(_file[SIMULATION_TAG][CURRENT_MAX_ID_TAG].as<size_t>());
     } else {
         return std::nullopt;
     }
@@ -40,8 +36,8 @@ std::optional<size_t> YAMLConfigurationReader::getCurrentMaximalGivenID() const 
 
 std::shared_ptr<const DataSource> YAMLConfigurationReader::getDataReader() const {
     std::vector<std::string> fileNames{};
-    if (_file["simulation"] && _file["simulation"]["inputSource"] && _file["simulation"]["inputSource"].IsSequence()) {
-        for (auto inputSource : _file["simulation"]["inputSource"]) {
+    if (_file[SIMULATION_TAG][INPUT_SOURCE_TAG] && _file[SIMULATION_TAG][INPUT_SOURCE_TAG].IsSequence()) {
+        for (auto inputSource : _file[SIMULATION_TAG][INPUT_SOURCE_TAG]) {
             fileNames.push_back(inputSource.as<std::string>());
         }
     }
@@ -69,9 +65,9 @@ std::shared_ptr<const DataSource> YAMLConfigurationReader::getDataReader() const
 }
 
 std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() const {
-    if (_file["simulation"] && _file["simulation"]["idFilter"] && _file["simulation"]["idFilter"].IsSequence()) {
+    if (_file[SIMULATION_TAG][ID_FILTER_TAG] && _file[SIMULATION_TAG][ID_FILTER_TAG].IsSequence()) {
         std::set<size_t> filterSet{};
-        for (auto id : _file["simulation"]["idFilter"]) {
+        for (auto id : _file[SIMULATION_TAG][ID_FILTER_TAG]) {
             filterSet.insert(id.as<size_t>());
         }
         return std::make_optional(filterSet);
@@ -80,8 +76,8 @@ std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() const {
 }
 
 std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputTargets() const {
-    if (_file["resultOutput"] && _file["resultOutput"]["target"] && _file["resultOutput"]["target"].IsSequence()) {
-        return extractOutputWriter(_file["resultOutput"]);
+    if (_file[RESULT_OUTPUT_TAG]) {
+        return extractOutputWriter(_file[RESULT_OUTPUT_TAG]);
     } else {
         spdlog::info("You have defined no way of output for the result of the simulation!");
     }
@@ -90,25 +86,30 @@ std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputTar
 
 std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getInputTargets() const {
     std::vector<std::shared_ptr<OutputWriter>> outputs{};
-    if (_file["inputOutput"] && _file["inputOutput"]["target"] && _file["inputOutput"]["target"].IsSequence()) {
-        return extractOutputWriter(_file["inputOutput"]);
+    if (_file[INPUT_OUTPUT_TAG]) {
+        return extractOutputWriter(_file[INPUT_OUTPUT_TAG]);
     } //This param is optional, so no info, if no output for input is specified
     return std::vector<std::shared_ptr<OutputWriter>>{};
 }
 
 std::vector<std::shared_ptr<OutputWriter>>
 YAMLConfigurationReader::extractOutputWriter(const YAML::Node &node) {
+    //If no targets are given, we can save a lot of work
+    if (!node[TARGET_TAG]) {
+        throw std::runtime_error{"You specified an output tag, but did not give it any targets!"};
+    }
+    //Start extracting the OutputWriter
     std::vector<std::shared_ptr<OutputWriter>> outputs{};
-    for (auto outputFile : node["target"]) {
+    for (auto outputFile : node[TARGET_TAG]) {
         std::string filename{outputFile.as<std::string>()};
         if (filename.substr(filename.size() - 3) == "csv") {            //CSV Case
-            if (node["csvPattern"]) {
-                auto pattern = node["csvPattern"].as<std::string>();
+            if (node[CSV_PATTERN_TAG]) {
+                auto pattern = node[CSV_PATTERN_TAG].as<std::string>();
                 outputs.push_back(std::shared_ptr<OutputWriter>(new CSVPatternWriter(filename, pattern)));
             } else {
                 bool kepler = false;
-                if (node["kepler"]) {
-                    kepler = node["kepler"].as<bool>();
+                if (node[KEPLER_TAG]) {
+                    kepler = node[KEPLER_TAG].as<bool>();
                 }
                 outputs.push_back(std::shared_ptr<OutputWriter>(new CSVWriter(filename, kepler)));
             }
@@ -118,8 +119,9 @@ YAMLConfigurationReader::extractOutputWriter(const YAML::Node &node) {
             spdlog::warn("The file {} is no available output form. Available are csv and vtu Output", filename);
         }
     }
+    //Lastly check, if we really extracted OutputWriter
     if (outputs.empty()) {
-        spdlog::warn("You have defined OutputTarget/ InputTargets with no valid file formats!");
+        spdlog::warn("You have defined ResultOutput/ InputOutput with no valid file formats!");
     }
     return outputs;
 }
