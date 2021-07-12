@@ -58,10 +58,10 @@ protected:
 };
 
 /**
- * Checks if the file "resources/getSatelliteCollectionTest01.yaml" is correctly read in
+ * Checks if the file "resources/YamlDataReaderTest01.yaml" is correctly read in
  */
 TEST_F(YAMLReaderTest, getSatelliteCollectionTest01) {
-    YAMLDataReader yamlReader{"resources/getSatelliteCollectionTest01.yaml"};
+    YAMLDataReader yamlReader{"resources/YamlDataReaderTest01.yaml"};
     auto satelliteCollection = yamlReader.getSatelliteCollection();
 
     ASSERT_EQ(satelliteCollection.size(), 5);
@@ -88,7 +88,7 @@ TEST_F(YAMLReaderTest, getSatelliteCollectionTest01) {
  * Kepler Elements not correctly given
  */
 TEST_F(YAMLReaderTest, getSatelliteCollectionTest02) {
-    YAMLDataReader yamlReader{"resources/getSatelliteCollectionTest02.yaml"};
+    YAMLDataReader yamlReader{"resources/YamlDataReaderTest02.yaml"};
 
     ASSERT_THROW(yamlReader.getSatelliteCollection(), std::runtime_error) << "This should throw a "
                                                                              "runtime exception cause eccentricity and "
@@ -99,7 +99,7 @@ TEST_F(YAMLReaderTest, getSatelliteCollectionTest02) {
  * Kepler Elements are given with two anomalies, eccentric anomaly should be preferred
  */
 TEST_F(YAMLReaderTest, getSatelliteCollectionTest03) {
-    YAMLDataReader yamlReader{"resources/getSatelliteCollectionTest03.yaml"};
+    YAMLDataReader yamlReader{"resources/YamlDataReaderTest03.yaml"};
     auto satelliteCollection = yamlReader.getSatelliteCollection();
 
     ASSERT_EQ(satelliteCollection.size(), 5);
@@ -123,7 +123,7 @@ TEST_F(YAMLReaderTest, getSatelliteCollectionTest03) {
  * Kepler Elements are given with two anomalies, eccentric anomaly should be preferred
  */
 TEST_F(YAMLReaderTest, getSatelliteCollectionTest04) {
-    YAMLDataReader yamlReader{"resources/getSatelliteCollectionTest04.yaml"};
+    YAMLDataReader yamlReader{"resources/YamlDataReaderTest04.yaml"};
 
     ASSERT_THROW(yamlReader.getSatelliteCollection(), std::runtime_error) << "This should throw a "
                                                                              "runtime exception cause there was no "

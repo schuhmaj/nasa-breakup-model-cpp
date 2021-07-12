@@ -28,7 +28,7 @@ protected:
 };
 
 TEST_F(TLEReaderTest, readTLE_01_Test) {
-    TLEReader tleReader{"resources/test-tle1.txt"};
+    TLEReader tleReader{"resources/TLEReaderTest01.txt"};
 
     auto map = tleReader.getMappingIDOrbitalElements();
 
@@ -40,7 +40,7 @@ TEST_F(TLEReaderTest, readTLE_01_Test) {
 }
 
 TEST_F(TLEReaderTest, readTLE_02_Test) {
-    TLEReader tleReader{"resources/test-tle2.txt"};
+    TLEReader tleReader{"resources/TLEReaderTest02.txt"};
 
     auto map = tleReader.getMappingIDOrbitalElements();
 
@@ -52,7 +52,7 @@ TEST_F(TLEReaderTest, readTLE_02_Test) {
 }
 
 TEST_F(TLEReaderTest, readTLE_03_Test) {
-    TLEReader tleReader{"resources/test-tle3.txt"};
+    TLEReader tleReader{"resources/TLEReaderTest03.txt"};
 
     auto map = tleReader.getMappingIDOrbitalElements();
 

@@ -81,7 +81,7 @@ protected:
 
 TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionEverythingIn) {
     //The TLE file is not well-formed, but good enough for this test case
-    TLESatcatDataReader tleSatcatDataReader{"resources/testShrinkedSatcat.csv", "resources/test-tle4.txt"};
+    TLESatcatDataReader tleSatcatDataReader{"resources/SatcatReaderTest01.csv", "resources/TLESatcatReaderTest01.txt"};
 
     auto actualSatellites = tleSatcatDataReader.getSatelliteCollection();
 
@@ -111,7 +111,7 @@ TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionOneMissingInTLE) {
                                              [](Satellite &sat) {return sat.getId() == 3;}),
                               _expectedSatellites.end());
     //The TLE file is not well-formed, but good enough for this test case
-    TLESatcatDataReader tleSatcatDataReader{"resources/testShrinkedSatcat.csv", "resources/test-tle5.txt"};
+    TLESatcatDataReader tleSatcatDataReader{"resources/SatcatReaderTest01.csv", "resources/TLESatcatReaderTest02.txt"};
 
     auto actualSatellites = tleSatcatDataReader.getSatelliteCollection();
 
@@ -138,7 +138,7 @@ TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionOneMissingInTLE) {
 TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionOneInSatCat) {
     _expectedSatellites.erase(_expectedSatellites.begin()+1, _expectedSatellites.end());
     //The TLE file is not well-formed, but good enough for this test case
-    TLESatcatDataReader tleSatcatDataReader{"resources/testShrinkedSatcat2.csv", "resources/test-tle4.txt"};
+    TLESatcatDataReader tleSatcatDataReader{"resources/SatcatReaderTest02.csv", "resources/TLESatcatReaderTest01.txt"};
 
     auto actualSatellites = tleSatcatDataReader.getSatelliteCollection();
 
@@ -166,7 +166,7 @@ TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionNoPartner) {
     _expectedSatellites.clear();
     //The TLE file is not well-formed, but good enough for this test case; Technically it is not empty, but it contains
     //a satellite with no partner in the satcat
-    TLESatcatDataReader tleSatcatDataReader{"resources/testShrinkedSatcat2.csv", "resources/test-tle6.txt"};
+    TLESatcatDataReader tleSatcatDataReader{"resources/SatcatReaderTest02.csv", "resources/TLESatcatReaderTest03.txt"};
 
     auto actualSatellites = tleSatcatDataReader.getSatelliteCollection();
 
@@ -175,7 +175,7 @@ TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionNoPartner) {
 
 TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionEmptyTLE) {
     _expectedSatellites.clear();
-    TLESatcatDataReader tleSatcatDataReader{"resources/testShrinkedSatcat.csv", "resources/test-tle7.txt"};
+    TLESatcatDataReader tleSatcatDataReader{"resources/SatcatReaderTest01.csv", "resources/TLESatcatReaderTest04.txt"};
 
     ASSERT_THROW(tleSatcatDataReader.getSatelliteCollection(), std::runtime_error);
 

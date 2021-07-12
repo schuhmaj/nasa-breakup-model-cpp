@@ -21,7 +21,7 @@ TEST_F(CSVReaderTest, readHeader) {
     CSVReader<std::string, std::string, size_t,
             SatType, std::string, std::string, std::string, std::string, std::string,
             double, double, double, double, double,
-            std::string, std::string, std::string> satcatReader{"resources/testShrinkedSatcat.csv", true};
+            std::string, std::string, std::string> satcatReader{"resources/SatcatReaderTest01.csv", true};
 
     auto actualHeader = satcatReader.getHeader();
 
@@ -41,7 +41,7 @@ TEST_F(CSVReaderTest, readLines) {
     CSVReader<std::string, std::string, size_t,
             SatType, std::string, std::string, std::string, std::string, std::string,
             double, double, double, double, double,
-            std::string, std::string, std::string> satcatReader{"resources/testShrinkedSatcat.csv", true};
+            std::string, std::string, std::string> satcatReader{"resources/SatcatReaderTest01.csv", true};
 
     auto actualTuple = satcatReader.getLines();
 
@@ -61,7 +61,7 @@ TEST_F(CSVReaderTest, readExampleRight) {
         expectedTuple[i-1] = std::make_tuple(stringstream.str(), i*i);
     }
 
-    CSVReader<std::string, int> satcatReader{"resources/testCSVReader.csv", false};
+    CSVReader<std::string, int> satcatReader{"resources/CSVReaderTest.csv", false};
 
     auto actualTuple = satcatReader.getLines();
 
@@ -80,7 +80,7 @@ TEST_F(CSVReaderTest, readExampleWrong) {
         expectedTuple[i-1] = std::make_tuple( i, stringstream.str());
     }
 
-    CSVReader<int, std::string> satcatReader{"resources/testCSVReader.csv", false};
+    CSVReader<int, std::string> satcatReader{"resources/CSVReaderTest.csv", false};
 
     auto actualTuple = satcatReader.getLines();
 
@@ -93,7 +93,7 @@ TEST_F(CSVReaderTest, readExampleWrong) {
  * Operator >> of SatType is smart and throws an exception if not successfully parsing.
  */
 TEST_F(CSVReaderTest, readExampleVeryWrong) {
-    CSVReader<SatType, std::string> satcatReader{"resources/testCSVReader.csv", false};
+    CSVReader<SatType, std::string> satcatReader{"resources/CSVReaderTest.csv", false};
 
     ASSERT_THROW(satcatReader.getLines(), std::runtime_error) << "This should throw an exception by the >> operator of "
                                                                  "SatType";
