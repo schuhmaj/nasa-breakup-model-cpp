@@ -1,34 +1,38 @@
 #include "YAMLConfigurationReader.h"
 
+/*
+ * TODO: Refactor this stuff and move some checks into a centralized form, maybe constructor!
+ */
+
 double YAMLConfigurationReader::getMinimalCharacteristicLength() const {
-    if (_file["minimalCharacteristicLength"]) {
-        return _file["minimalCharacteristicLength"].as<double>();
+    if (_file["simulation"] && _file["simulation"]["minimalCharacteristicLength"]) {
+        return _file["simulation"]["minimalCharacteristicLength"].as<double>();
     } else {
         throw std::runtime_error{"The minimal characteristic Length was not specified in the YAML Configuration file!"};
     }
 }
 
 SimulationType YAMLConfigurationReader::getTypeOfSimulation() const {
-    if (_file["simulationType"]) {
+    if (_file["simulation"] && _file["simulation"]["simulationType"]) {
         try {
             SimulationType simulationType = InputConfigurationSource::stringToSimulationType.at(
-                    _file["simulationType"].as<std::string>());
+                    _file["simulation"]["simulationType"].as<std::string>());
             return simulationType;
         } catch (std::exception &e) {
             spdlog::warn("The simulation type could not be parsed from the YAML Configuration file! "
-                        "SimulationType therefore UNKNOWN!");
+                         "SimulationType therefore UNKNOWN!");
             return SimulationType::UNKNOWN;
         }
     } else {
         spdlog::warn("The simulation was not given in the YAML Configuration file! "
-                    "SimulationType therefore UNKNOWN!");
+                     "SimulationType therefore UNKNOWN!");
         return SimulationType::UNKNOWN;
     }
 }
 
 std::optional<size_t> YAMLConfigurationReader::getCurrentMaximalGivenID() const {
-    if (_file["currentMaxID"]) {
-        return std::make_optional(_file["currentMaxID"].as<size_t>());
+    if (_file["simulation"] && _file["simulation"]["currentMaxID"]) {
+        return std::make_optional(_file["simulation"]["currentMaxID"].as<size_t>());
     } else {
         return std::nullopt;
     }
@@ -36,8 +40,8 @@ std::optional<size_t> YAMLConfigurationReader::getCurrentMaximalGivenID() const 
 
 std::shared_ptr<const DataSource> YAMLConfigurationReader::getDataReader() const {
     std::vector<std::string> fileNames{};
-    if (_file["inputSource"] && _file["inputSource"].IsSequence()) {
-        for (auto inputSource : _file["inputSource"]) {
+    if (_file["simulation"] && _file["simulation"]["inputSource"] && _file["simulation"]["inputSource"].IsSequence()) {
+        for (auto inputSource : _file["simulation"]["inputSource"]) {
             fileNames.push_back(inputSource.as<std::string>());
         }
     }
@@ -65,9 +69,9 @@ std::shared_ptr<const DataSource> YAMLConfigurationReader::getDataReader() const
 }
 
 std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() const {
-    if (_file["idFilter"] && _file["idFilter"].IsSequence()) {
+    if (_file["simulation"] && _file["simulation"]["idFilter"] && _file["simulation"]["idFilter"].IsSequence()) {
         std::set<size_t> filterSet{};
-        for (auto id : _file["idFilter"]) {
+        for (auto id : _file["simulation"]["idFilter"]) {
             filterSet.insert(id.as<size_t>());
         }
         return std::make_optional(filterSet);
@@ -76,32 +80,46 @@ std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() const {
 }
 
 std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputTargets() const {
-    std::vector<std::shared_ptr<OutputWriter>> outputs{};
-    if (_file["outputTarget"] && _file["outputTarget"].IsSequence()) {
-        for (auto outputFile : _file["outputTarget"]) {
-            std::string filename{outputFile.as<std::string>()};
-            if (filename.substr(filename.size() - 3) == "csv") {
-                if (_file["outputCSVPattern"]) {
-                    auto pattern = _file["outputCSVPattern"].as<std::string>();
-                    outputs.push_back(std::shared_ptr<OutputWriter>(new CSVPatternWriter(filename, pattern)));
-                } else {
-                    bool kepler = false;
-                    if (_file["outputKepler"]) {
-                        kepler = _file["outputKepler"].as<bool>();
-                    }
-                    outputs.push_back(std::shared_ptr<OutputWriter>(new CSVWriter(filename, kepler)));
-                }
-            } else if (filename.substr(filename.size() - 3) == "vtu") {
-                outputs.push_back(std::shared_ptr<OutputWriter>(new VTKWriter(filename)));
-            } else {
-                spdlog::warn("The file {} is no available output form. Available are csv and vtu Output", filename);
-            }
-        }
-        if (outputs.empty()) {
-            spdlog::warn("You have defined OutputTarget with no valid files!");
-        }
+    if (_file["resultOutput"] && _file["resultOutput"]["target"] && _file["resultOutput"]["target"].IsSequence()) {
+        return extractOutputWriter(_file["resultOutput"]);
     } else {
-        spdlog::info("You have defined no way of output!");
+        spdlog::info("You have defined no way of output for the result of the simulation!");
+    }
+    return std::vector<std::shared_ptr<OutputWriter>>{};
+}
+
+std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getInputTargets() const {
+    std::vector<std::shared_ptr<OutputWriter>> outputs{};
+    if (_file["inputOutput"] && _file["inputOutput"]["target"] && _file["inputOutput"]["target"].IsSequence()) {
+        return extractOutputWriter(_file["inputOutput"]);
+    } //This param is optional, so no info, if no output for input is specified
+    return std::vector<std::shared_ptr<OutputWriter>>{};
+}
+
+std::vector<std::shared_ptr<OutputWriter>>
+YAMLConfigurationReader::extractOutputWriter(const YAML::Node &node) {
+    std::vector<std::shared_ptr<OutputWriter>> outputs{};
+    for (auto outputFile : node["target"]) {
+        std::string filename{outputFile.as<std::string>()};
+        if (filename.substr(filename.size() - 3) == "csv") {            //CSV Case
+            if (node["csvPattern"]) {
+                auto pattern = node["csvPattern"].as<std::string>();
+                outputs.push_back(std::shared_ptr<OutputWriter>(new CSVPatternWriter(filename, pattern)));
+            } else {
+                bool kepler = false;
+                if (node["kepler"]) {
+                    kepler = node["kepler"].as<bool>();
+                }
+                outputs.push_back(std::shared_ptr<OutputWriter>(new CSVWriter(filename, kepler)));
+            }
+        } else if (filename.substr(filename.size() - 3) == "vtu") {     //VTK Case
+            outputs.push_back(std::shared_ptr<OutputWriter>(new VTKWriter(filename)));
+        } else {
+            spdlog::warn("The file {} is no available output form. Available are csv and vtu Output", filename);
+        }
+    }
+    if (outputs.empty()) {
+        spdlog::warn("You have defined OutputTarget/ InputTargets with no valid file formats!");
     }
     return outputs;
 }

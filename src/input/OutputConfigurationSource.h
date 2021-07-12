@@ -17,4 +17,10 @@ public:
      */
     virtual std::vector<std::shared_ptr<OutputWriter>> getOutputTargets () const = 0;
 
+    /**
+    * Returns a vector of pointers to InputTargets defined by a given configuration source.
+    * @return InputTargets
+    */
+    virtual std::vector<std::shared_ptr<OutputWriter>> getInputTargets () const = 0;
+
 };

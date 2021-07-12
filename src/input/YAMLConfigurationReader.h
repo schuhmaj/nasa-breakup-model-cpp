@@ -73,10 +73,20 @@ public:
     std::optional<std::set<size_t>> getIDFilter() const override;
 
     /**
-     * Reads in the which Output is wished by the YAML file.
+     * Reads in which Output is wished by the YAML file.
      * @return a vector containing the Outputs according to the YAML file
      */
     std::vector<std::shared_ptr<OutputWriter>> getOutputTargets() const override;
 
+    /**
+     * Reads in which Output is wished for the Input Satellites.
+     * @return a vector containing the Outputs according to the YAML file
+     */
+    std::vector<std::shared_ptr<OutputWriter>> getInputTargets() const override;
+
+private:
+
+    static std::vector<std::shared_ptr<OutputWriter>>
+    extractOutputWriter(const YAML::Node &node) ;
 };
 

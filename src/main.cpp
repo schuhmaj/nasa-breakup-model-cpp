@@ -37,7 +37,12 @@ int main(int argc, char *argv[]) {
         //Prints the the output to files defined by the OutputConfigurationSource aka the YAMLConfigurationReader
         auto outputTargets = configSource->getOutputTargets();
         for (auto &out : outputTargets) {
-            out->printResult(*breakUpSimulation);
+            out->printResult(breakUpSimulation->getResult());
+        }
+        //Print output for the input defined by the OutputConfigurationSource aka the YAMLConfigurationReader
+        auto inputTargets = configSource->getInputTargets();
+        for (auto &inOut : inputTargets) {
+            inOut->printResult(breakUpSimulation->getInput());
         }
     } catch (std::exception &e) {
         spdlog::error(e.what());

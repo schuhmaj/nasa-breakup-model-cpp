@@ -92,8 +92,16 @@ public:
     virtual void run();
 
     /**
-     * Return the result of the breakup event
-     * @return SatelliteCollection with the generated fragments
+     * Return the given input for this breakup event.
+     * @return vector of satellites containing the input satellites
+     */
+    std::vector<Satellite> getInput() const {
+        return _input;
+    }
+
+    /**
+     * Return the result of the breakup event.
+     * @return vector of satellites containing the generated fragments
      */
     std::vector<Satellite> getResult() const {
         return _output;
