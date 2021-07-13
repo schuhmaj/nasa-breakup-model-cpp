@@ -19,7 +19,7 @@ protected:
     virtual void SetUp() {
         double area = 1.0;
         double mass = 100;
-        double id = 0;
+        size_t id = 0;
         _satelliteCollection.resize(static_cast<size_t>(4), Satellite("DebrisTestFragment", SatType::DEBRIS));
         for (auto &sat : _satelliteCollection) {
             sat.setId(++id);
@@ -52,16 +52,19 @@ protected:
 TEST_F(CSVWriterTest, FileCreation) {
     ASSERT_FALSE(std::filesystem::exists(_filePath)) << "File should not yet exist!";
 
-    CSVWriter csvWriter{_filePath};
+    auto csvTestLogger = spdlog::basic_logger_mt("CSVWriterTest", _filePath, true);
+    CSVWriter csvWriter{csvTestLogger};
 
     ASSERT_TRUE(std::filesystem::exists(_filePath)) << "A CSV file should have been generated!";
 }
 
 TEST_F(CSVWriterTest, HeaderCheck) {
-    CSVWriter csvWriter{_filePath};
+    auto csvTestLogger = spdlog::basic_logger_mt("CSVWriterTest", _filePath, true);
+    CSVWriter csvWriter{csvTestLogger};
+    csvTestLogger->flush();
 
     csvWriter.printResult(_satelliteCollection);
-    csvWriter.flush();
+    csvTestLogger->flush();
 
     CSVReader<size_t, std::string, SatType,
             double, double, double, double,
@@ -83,10 +86,11 @@ TEST_F(CSVWriterTest, HeaderCheck) {
 }
 
 TEST_F(CSVWriterTest, DataCheck) {
-    CSVWriter csvWriter{_filePath};
+    auto csvTestLogger = spdlog::basic_logger_mt("CSVWriterTest", _filePath, true);
+    CSVWriter csvWriter{csvTestLogger};
 
     csvWriter.printResult(_satelliteCollection);
-    csvWriter.flush();
+    csvTestLogger->flush();
 
     CSVReader<size_t, std::string, SatType,
             double, double, double, double,

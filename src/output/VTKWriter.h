@@ -36,15 +36,6 @@ public:
 
     void printResult(const std::vector<Satellite> &satelliteCollection) const override;
 
-    /**
-    * Function required for testing the logger.
-    * Flushes immediately the content, to be called after printResult(...)
-    * Kills the advantage of asynchronous logging!
-    */
-    void flush() {
-        _logger->flush();
-    }
-
 private:
 
     /**

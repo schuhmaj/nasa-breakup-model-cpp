@@ -34,19 +34,25 @@ public:
 
     /**
      * Creates a new CSVWriter.
-     * Results are written to filename. Kepler elements are deactivated.
-     * @param filename - a string
-     */
-    explicit CSVWriter(const std::string &filename) : CSVWriter(filename, false) {}
-
-    /**
-     * Creates a new CSVWriter.
      * Results are written to filename. Kepler elements are activated depending on the flag.
      * @param filename - a string
-     * @param withKepler - if true Kepler elements are printed
+     * @param withKepler - if true Kepler elements are printed (default: false)
      */
-    CSVWriter(const std::string &filename, bool withKepler)
+    explicit CSVWriter(const std::string &filename, bool withKepler = false)
             : _logger{spdlog::basic_logger_mt<spdlog::async_factory>("CSVWriter_" + filename, filename, true)},
+              _withKepler{withKepler} {
+        _logger->set_pattern("%v");
+    }
+
+    /**
+     * Creates a new CSVWriter with a custom logger. This constructor is especially useful for testing if no
+     * asynchronous properties are wished.
+     * Results are written to filename. Kepler elements are activated depending on the flag.
+     * @param filename - a string
+     * @param withKepler - if true Kepler elements are printed (default: false)
+     */
+    explicit CSVWriter(std::shared_ptr<spdlog::logger> logger, bool withKepler = false)
+            : _logger{std::move(logger)},
               _withKepler{withKepler} {
         _logger->set_pattern("%v");
     }
@@ -59,15 +65,6 @@ public:
     }
 
     void printResult(const std::vector<Satellite> &satelliteCollection) const override;
-
-    /**
-     * Function required for testing the logger.
-     * Flushes immediately the content, to be called after printResult(...)
-     * Kills the advantage of asynchronous logging!
-     */
-    void flush() {
-        _logger->flush();
-    }
 
 private:
 
