@@ -87,6 +87,12 @@ A "data.yaml" should have the following form (for example):
         eccentric-anomaly: (double) #But one of them is a must.
         mean-anomaly: 0.2405604761  #The program ignores if multipe anomalies are given
                                     #expect one.The precedence is: Eccentric > Mean > True
+    - name: "Example Satellite 3"   
+      id: 24948                     
+      satType: SPACECRAFT           
+      mass: 700.0                   
+      kepler: "../tle-file.txt"     #It is also possible to parse the Kepler elements from
+                                    #a TLE file
     - ...
 ```
 

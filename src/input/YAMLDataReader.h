@@ -6,8 +6,10 @@
 #include <array>
 #include <utility>
 #include <iostream>
+#include <sstream>
 #include "yaml-cpp/yaml.h"
 #include "input/DataSource.h"
+#include "input/TLEReader.h"
 #include "model/Satellite.h"
 #include "model/SatelliteBuilder.h"
 #include "model/OrbitalElementsFactory.h"
@@ -72,6 +74,15 @@ private:
      * @throws a runtime_error if Kepler elements not fully given
      */
     static void parseKepler(SatelliteBuilder &satelliteBuilder, const YAML::Node &node);
+
+    /**
+     * Parses the Kepler Elements from a TLE file.
+     * @param satelliteBuilder - an reference to an SatelliteBuilder
+     * @param id - the id of the satellite which to find in the TLE file
+     * @param tleFilepath - the path to the TLE file
+     * @throws a runtime_error if the TLE does not contain the satellite
+     */
+    static void parseKepler(SatelliteBuilder &satelliteBuilder, size_t id, const std::string &tleFilepath);
 
 };
 
