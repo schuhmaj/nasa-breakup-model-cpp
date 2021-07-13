@@ -6,6 +6,7 @@
 #include <iostream>
 #include <utility>
 #include <cmath>
+#include <optional>
 #include "util/UtilityKepler.h"
 #include "util/UtilityFunctions.h"
 #include "util/UtilityContainer.h"
@@ -106,6 +107,14 @@ class Satellite {
      * @remark Determined by the breakup simulation, more precisely inherited from parent
      */
     std::array<double, 3> _position{};
+
+    /**
+     * Contains the Orbital elements of this Satellite if the satellite is created with them or
+     * if they are once queried by using the function getOrbitalElements(). The attribute therefore
+     * can be seen as a cache for the orbital elements.
+     * This member is reset to std::nullopt if the cartesian vectors or the orbital elements are changed.
+     */
+    mutable std::optional<OrbitalElements> _orbitalElementsCache{std::nullopt};
 
 public:
 
@@ -245,6 +254,8 @@ public:
     }
 
     void setVelocity(const std::array<double, 3> &velocity) {
+        //Orbital Elements if they where previously calculated are now invalid
+        _orbitalElementsCache = std::nullopt;
         _velocity = velocity;
     }
 
@@ -253,6 +264,8 @@ public:
     }
 
     void setPosition(const std::array<double, 3> &position) {
+        //Orbital Elements if they where previously calculated are now invalid
+        _orbitalElementsCache = std::nullopt;
         _position = position;
     }
 

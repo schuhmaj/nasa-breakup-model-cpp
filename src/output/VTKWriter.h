@@ -4,6 +4,7 @@
 
 #include <string>
 #include <functional>
+#include <utility>
 #include "model/Satellite.h"
 #include "spdlog/async.h"
 #include "spdlog/sinks/basic_file_sink.h"
@@ -22,8 +23,22 @@ public:
 
     VTKWriter() : VTKWriter("breakupResult.vtu") {}
 
+    /**
+     * Creates a new VTKWriter to a specific file.
+     * @param filename - std::string
+     */
     explicit VTKWriter(const std::string &filename)
             : _logger{spdlog::basic_logger_mt<spdlog::async_factory>("VTKWriter_" + filename, filename, true)} {
+        _logger->set_pattern("%v");
+    }
+
+    /**
+     * Creates a new VTKWriter with a specific logger which is especially useful if no asynchronous logging properties
+     * are wished (e. g. for testing purposes).
+     * @param logger - a shared_ptr to a logger
+     */
+    explicit VTKWriter(std::shared_ptr<spdlog::logger> logger)
+            : _logger{std::move(logger)} {
         _logger->set_pattern("%v");
     }
 

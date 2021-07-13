@@ -48,7 +48,7 @@ public:
      * Creates a new CSVWriter with a custom logger. This constructor is especially useful for testing if no
      * asynchronous properties are wished.
      * Results are written to filename. Kepler elements are activated depending on the flag.
-     * @param filename - a string
+     * @param logger - a shared_ptr to a logger
      * @param withKepler - if true Kepler elements are printed (default: false)
      */
     explicit CSVWriter(std::shared_ptr<spdlog::logger> logger, bool withKepler = false)

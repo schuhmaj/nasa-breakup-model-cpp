@@ -35,6 +35,8 @@ const std::map<SatType, std::string> Satellite::satTypeToString{{SatType::SPACEC
 
 void Satellite::setCartesianByOrbitalElements(const OrbitalElements &orbitalElements) {
     using namespace util;
+    //Sets the Orbital Elements cache
+    _orbitalElementsCache = std::make_optional(orbitalElements);
 
     auto keplerianElements = orbitalElements.getAsArray();
 
@@ -120,6 +122,12 @@ void Satellite::setCartesianByOrbitalElements(const OrbitalElements &orbitalElem
 
 OrbitalElements Satellite::getOrbitalElements() const {
     using namespace util;
+
+    //Save same expensive operations by using the cache
+    if (_orbitalElementsCache.has_value()) {
+        return _orbitalElementsCache.value();
+    }
+
     std::array<double, 6> keplerianElements{};
 
     std::array<double, 3> k = {0.0, 0.0, 1.0};
@@ -198,7 +206,13 @@ OrbitalElements Satellite::getOrbitalElements() const {
     if (keplerianElements[5] < 0.0) {
         keplerianElements[5] += PI2;
     }
-    return OrbitalElements{keplerianElements};
+
+
+    OrbitalElements orbitalElements {keplerianElements};
+
+    //Sets the orbital elements cache to the new calculated values
+    _orbitalElementsCache = std::make_optional(orbitalElements);
+    return orbitalElements;
 }
 
 std::ostream &operator<<(std::ostream &os, const Satellite &satellite) {

@@ -35,8 +35,24 @@ public:
      * @param filename - string
      * @param pattern - the pattern (have a look at the headerMap, which char has which meaning)
      */
-    explicit CSVPatternWriter(const std::string &filename, const std::string &pattern)
+    CSVPatternWriter(const std::string &filename, const std::string &pattern)
             : _logger{spdlog::basic_logger_mt<spdlog::async_factory>("CSVPatternWriter_" + filename, filename, true)},
+              _myToDo{} {
+        _logger->set_pattern("%v");
+        for (char c : pattern) {
+            _myToDo.push_back(functionMap.at(c));
+            _myHeader.push_back(headerMap.at(c));
+        }
+    }
+
+    /**
+    * Creates a new CSVPatternWriter with a specific logger. This constructor is especially useful for testing if no
+    * asynchronous properties are wished.
+    * @param logger - a shared_ptr to a logger
+    * @param pattern - the pattern (have a look at the headerMap, which char has which meaning)
+    */
+    CSVPatternWriter(std::shared_ptr<spdlog::logger> logger, const std::string &pattern)
+            : _logger{std::move(logger)},
               _myToDo{} {
         _logger->set_pattern("%v");
         for (char c : pattern) {
