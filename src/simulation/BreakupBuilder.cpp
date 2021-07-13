@@ -5,7 +5,7 @@ BreakupBuilder &BreakupBuilder::reconfigure(const std::shared_ptr<InputConfigura
     this->setMinimalCharacteristicLength(configurationSource->getMinimalCharacteristicLength());
     this->setSimulationType(configurationSource->getTypeOfSimulation());
     this->setCurrentMaximalGivenID(configurationSource->getCurrentMaximalGivenID()),
-            this->setIDFilter(configurationSource->getIDFilter());
+    this->setIDFilter(configurationSource->getIDFilter());
     this->setDataSource(configurationSource->getDataReader());
     return *this;
 }
