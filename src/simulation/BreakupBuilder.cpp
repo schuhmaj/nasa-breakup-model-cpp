@@ -107,7 +107,7 @@ std::vector<Satellite> BreakupBuilder::applyFilter() const {
         std::vector<Satellite> satellitesFiltered{_satellites};
         satellitesFiltered.erase(std::remove_if(satellitesFiltered.begin(), satellitesFiltered.end(),
                                                 [&](Satellite &sat) {
-                                                    return _idFilter->count(sat.getId()) == 1;
+                                                    return _idFilter->count(sat.getId()) == 0;
                                                 }),
                                  satellitesFiltered.end());
         return satellitesFiltered;
@@ -117,10 +117,8 @@ std::vector<Satellite> BreakupBuilder::applyFilter() const {
 }
 
 size_t BreakupBuilder::deriveMaximalID() const {
-    return _currentMaximalGivenID.value_or(_satellites.empty() ?
+    return _currentMaximalGivenID.value_or(_satellites.empty() ? 0 :
                                            std::max_element(_satellites.begin(), _satellites.end(),
                                                             [](const Satellite &sat1, const Satellite &sat2) {
-                                                                return sat1.getId() < sat2.getId();
-                                                            })->getId()
-                                                               : 0);
+                                                                return sat1.getId() < sat2.getId();})->getId());
 }
