@@ -4,6 +4,7 @@
 #include <tuple>
 #include <array>
 #include <exception>
+#include <stdexcept>
 #include "util/UtilityKepler.h"
 #include "util/UtilityFunctions.h"
 
