@@ -2,15 +2,10 @@
 
 #include <vector>
 #include <string>
-#include <sstream>
 #include <filesystem>
-#include <fstream>
-#include <exception>
-#include <iostream>
-#include <utility>
 #include "output/CSVWriter.h"
-#include "model/Satellite.h"
 #include "input/CSVReader.h"
+#include "model/Satellite.h"
 
 class CSVWriterTest : public ::testing::Test {
 
