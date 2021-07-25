@@ -5,6 +5,7 @@
 #include <array>
 #include <exception>
 #include <stdexcept>
+#include <ostream>
 #include "util/UtilityKepler.h"
 #include "util/UtilityFunctions.h"
 
@@ -105,7 +106,7 @@ public:
      * This is the "inverse" of the OrbitalElements(const std::array<double, 6>) constructor.
      * @return array<a, e, i, W, w, eccentric-anomaly>
      */
-    std::array<double, 6> getAsArray() const;
+    [[nodiscard]] std::array<double, 6> getAsArray() const;
 
     /**
      * Returns one element from the uniform "view" of the Keplerian Elements.
@@ -119,41 +120,41 @@ public:
      * Returns the semi-major-axis in [m]
      * @return semi-major-axis
      */
-    double getSemiMajorAxis() const;
+    [[nodiscard]] double getSemiMajorAxis() const;
 
     /**
      * Returns the eccentricity (unit-less)
      * @return eccentricity
      */
-    double getEccentricity() const;
+    [[nodiscard]] double getEccentricity() const;
 
     /**
      * Returns the inclination in [DEG] or [RAD] (default)
      * @param angularUnit
      * @return inclination
      */
-    double getInclination(AngularUnit angularUnit = AngularUnit::RADIAN) const;
+    [[nodiscard]] double getInclination(AngularUnit angularUnit = AngularUnit::RADIAN) const;
 
     /**
     * Returns the longitude-of-the-ascending-node in [DEG] or [RAD] (default)
     * @param angularUnit
     * @return longitude-of-the-ascending-node
     */
-    double getLongitudeOfTheAscendingNode(AngularUnit angularUnit = AngularUnit::RADIAN) const;
+    [[nodiscard]] double getLongitudeOfTheAscendingNode(AngularUnit angularUnit = AngularUnit::RADIAN) const;
 
     /**
     * Returns the argument-of-periapsis in [DEG] or [RAD] (default)
     * @param angularUnit
     * @return argument-of-periapsis
     */
-    double getArgumentOfPeriapsis(AngularUnit angularUnit = AngularUnit::RADIAN) const;
+    [[nodiscard]] double getArgumentOfPeriapsis(AngularUnit angularUnit = AngularUnit::RADIAN) const;
 
     /**
     * Returns an orbital anomaly in [DEG] or [RAD] (default); Available types are MEAN/ ECCENTRIC (default) / TRUE Anomaly.
     * @param angularUnit
     * @return orbital anomaly
     */
-    double getAnomaly(AngularUnit angularUnit = AngularUnit::RADIAN,
+    [[nodiscard]] double getAnomaly(AngularUnit angularUnit = AngularUnit::RADIAN,
                       OrbitalAnomalyType orbitalAnomalyType = OrbitalAnomalyType::ECCENTRIC) const;
 
     /**
@@ -171,6 +172,14 @@ public:
      * @return true if they differ
      */
     friend bool operator!=(const OrbitalElements &lhs, const OrbitalElements &rhs);
+
+    /**
+     * Prints the orbital elements in an human friendly format to os.
+     * @param os - ostream
+     * @param elements - the Orbital Elements
+     * @return os
+     */
+    friend std::ostream &operator<<(std::ostream &os, const OrbitalElements &elements);
 
 private:
 

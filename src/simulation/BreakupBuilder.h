@@ -107,7 +107,7 @@ public:
      * @return Breakup Simulation
      * @throws a runtime_error if type is not determined
      */
-    std::unique_ptr<Breakup> getBreakup() const;
+    [[nodiscard]] std::unique_ptr<Breakup> getBreakup() const;
 
 
 private:
@@ -130,12 +130,12 @@ private:
      * Returns an vector containing only the satellites given in the filterSet.
      * @return a modified satellite vector
      */
-    std::vector<Satellite> applyFilter() const;
+    [[nodiscard]] std::vector<Satellite> applyFilter() const;
 
     /**
      * Returns either the the maximalGivenID if this value is given via input or it derives this value from the input
      * satellites. In case the input satellite vector is empty, this function will return zero.
      * @return size_t - maxID
      */
-    size_t deriveMaximalID() const;
+    [[nodiscard]] size_t deriveMaximalID() const;
 };

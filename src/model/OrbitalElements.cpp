@@ -84,3 +84,12 @@ double OrbitalElements::convertEccentricAnomaly(double anomaly, double eccentric
     }
     return anomaly;
 }
+
+std::ostream &operator<<(std::ostream &os, const OrbitalElements &elements) {
+    os << "OrbitalElements{"
+       << "_semiMajorAxis: " << elements._semiMajorAxis << " _eccentricity: " << elements._eccentricity
+       << " _inclination: " << elements._inclination << " _longitudeOfTheAscendingNode: "
+       << elements._longitudeOfTheAscendingNode << " _argumentOfPeriapsis: " << elements._argumentOfPeriapsis
+       << " _eccentricAnomaly: " << elements._eccentricAnomaly << '}';
+    return os;
+}

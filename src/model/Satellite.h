@@ -196,7 +196,7 @@ public:
      * Getter and Setter
      */
 
-    size_t getId() const {
+    [[nodiscard]] size_t getId() const {
         return _id;
     }
 
@@ -204,7 +204,7 @@ public:
         _id = id;
     }
 
-    const std::string &getName() const {
+    [[nodiscard]] const std::string &getName() const {
         return _name;
     }
 
@@ -212,7 +212,7 @@ public:
         _name = name;
     }
 
-    SatType getSatType() const {
+    [[nodiscard]] SatType getSatType() const {
         return _satType;
     }
 
@@ -220,7 +220,7 @@ public:
         _satType = satType;
     }
 
-    double getCharacteristicLength() const {
+    [[nodiscard]] double getCharacteristicLength() const {
         return _characteristicLength;
     }
 
@@ -228,7 +228,7 @@ public:
         _characteristicLength = characteristicLength;
     }
 
-    double getAreaToMassRatio() const {
+    [[nodiscard]] double getAreaToMassRatio() const {
         return _areaToMassRatio;
     }
 
@@ -236,7 +236,7 @@ public:
         _areaToMassRatio = areaToMassRatio;
     }
 
-    double getMass() const {
+    [[nodiscard]] double getMass() const {
         return _mass;
     }
 
@@ -244,7 +244,7 @@ public:
         _mass = mass;
     }
 
-    double getArea() const {
+    [[nodiscard]] double getArea() const {
         return _area;
     }
 
@@ -252,7 +252,7 @@ public:
         _area = area;
     }
 
-    const std::array<double, 3> &getVelocity() const {
+    [[nodiscard]] const std::array<double, 3> &getVelocity() const {
         return _velocity;
     }
 
@@ -267,7 +267,7 @@ public:
         _velocity = velocity;
     }
 
-    const std::array<double, 3> &getPosition() const {
+    [[nodiscard]] const std::array<double, 3> &getPosition() const {
         return _position;
     }
 
