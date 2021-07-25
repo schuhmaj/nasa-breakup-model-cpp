@@ -58,7 +58,7 @@ The given yaml-file should look like this:
   resultOutput:                       #If you want a result, you should define here some target file for the
     target: ["result.csv", "result.vtu"]#fragements (like vtk or csv)
     #kepler: True                     #Option like above
-    #csvPattern: "IL"                 #Option like above
+    #csvPattern: "IL"                 #Option like above, available Patterns: see below
 ```    
 A "data.yaml" should have the following form (for example):
 
@@ -125,6 +125,38 @@ in the TLE optionally in first and second row in the beginning (example: 25544).
 
 ### Output
 The simulation can produce depending on the configuration CSV and VTK files.
+
+#### Available Patterns for the CSVPatternWriter:
+
+| Pattern | Meaning                   | Pattern | Meaning |
+| ---     | ---                       | ---     | --- |
+| I       | ID                        | a       | Semi-Major-Axis [m] |
+| n       | Name                      | e       | Eccentricity |
+| t       | Satellite Type            | i       | Inclination [rad] |
+| L       | Characteristic Length [m] | W       | Longitude of the ascending node [rad] |
+| R       | A/M [m^2/kg]              | w       | Argument of periapsis [rad] |
+| A       | Area [m^2]                | M       | Mean Anomaly [rad] |
+| m       | Mass [kg]                 | E       | Eccentric Anomaly [rad] |
+| v       | Velocity [m/s]            | T       | True Anomaly [rad] |
+| p       | Position [m]              |         | |
+
+{'I', "ID"},
+{'n', "Name"},
+{'t', "Satellite Type"},
+{'L', "Characteristic Length [m]"},
+{'R', "A/M [m^2/kg]"},
+{'A', "Area [m^2]"},
+{'m', "Mass [kg]"},
+{'v', "Velocity [m/s]"},
+{'p', "Position [m]"},
+{'a', "Semi-Major-Axis [m]"},
+{'e', "Eccentricity"},
+{'i', "Inclination [rad]"},
+{'W', "Longitude of the ascending node [rad]"},
+{'w', "Argument of periapsis [rad]"},
+{'M', "Mean Anomaly [rad]"},
+{'E', "Eccentric Anomaly [rad]"},
+{'T', "True Anomaly [rad]"}
 
 ## Library
 The Breakup Simulation can be used directly from any C++ project
