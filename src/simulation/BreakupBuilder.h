@@ -107,7 +107,7 @@ public:
      * @return Breakup Simulation
      * @throws a runtime_error if type is not determined
      */
-    [[nodiscard]] std::unique_ptr<Breakup> getBreakup() const;
+    std::unique_ptr<Breakup> getBreakup() const;
 
 
 private:
