@@ -145,8 +145,9 @@ public:
     /**
      * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
      * This function sets the internal members _velocity and _position to the corresponding values.
-     * @param orbitalElements hold the Keplerian Elements
-     * @note Code taken and adapted
+     * @param orbitalElements holds the Keplerian Elements
+     * @note This method will also sets the value of the _orbitalElementsCache
+     * @related Code taken and adapted
      * from pykep (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/par2ic.hpp)
      * [23.06.2021]
      */
@@ -155,7 +156,9 @@ public:
     /**
      * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
      * @return the Orbital Elements
-     * @note Code taken and adapted from pykep
+     * @note This method will return the value of the cache _orbitalElementsCache if valid otherwise it will calculate
+     * the value and saves them to the cache for further use
+     * @related Code taken and adapted from pykep
      * (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/ic2par.hpp) [25.06.2021]
      */
     OrbitalElements getOrbitalElements() const;
@@ -253,6 +256,11 @@ public:
         return _velocity;
     }
 
+    /**
+     * Sets the velcoity of the Satellite.
+     * @note This modifies the state, therefore the _orbitalElementsCache is invalidated
+     * @param velocity - cartesian vector
+     */
     void setVelocity(const std::array<double, 3> &velocity) {
         //Orbital Elements if they where previously calculated are now invalid
         _orbitalElementsCache = std::nullopt;
@@ -263,6 +271,11 @@ public:
         return _position;
     }
 
+    /**
+     * Sets the position of the Satellite.
+     * @note This modifies the state, therefore the _orbitalElementsCache is invalidated
+     * @param position - cartesian vector
+     */
     void setPosition(const std::array<double, 3> &position) {
         //Orbital Elements if they where previously calculated are now invalid
         _orbitalElementsCache = std::nullopt;
