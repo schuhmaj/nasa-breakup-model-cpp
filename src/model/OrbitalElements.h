@@ -73,12 +73,12 @@ public:
     */
     OrbitalElements(double semiMajorAxis, double eccentricity, double inclination, double longitudeOfTheAscendingNode,
                     double argumentOfPeriapsis, double eccentricAnomaly) :
-            _semiMajorAxis(semiMajorAxis),
-            _eccentricity(eccentricity),
-            _inclination(inclination),
-            _longitudeOfTheAscendingNode(longitudeOfTheAscendingNode),
-            _argumentOfPeriapsis(argumentOfPeriapsis),
-            _eccentricAnomaly(eccentricAnomaly) {}
+            _semiMajorAxis{semiMajorAxis},
+            _eccentricity{eccentricity},
+            _inclination{inclination},
+            _longitudeOfTheAscendingNode{longitudeOfTheAscendingNode},
+            _argumentOfPeriapsis{argumentOfPeriapsis},
+            _eccentricAnomaly{eccentricAnomaly} {}
 
     /**
      * Creates the Orbital Elements from an array which contains the six elements in the following order:
@@ -155,7 +155,7 @@ public:
     * @return orbital anomaly
     */
     [[nodiscard]] double getAnomaly(AngularUnit angularUnit = AngularUnit::RADIAN,
-                      OrbitalAnomalyType orbitalAnomalyType = OrbitalAnomalyType::ECCENTRIC) const;
+                                    OrbitalAnomalyType orbitalAnomalyType = OrbitalAnomalyType::ECCENTRIC) const;
 
     /**
      * Compares two OrbitalElements for equality.

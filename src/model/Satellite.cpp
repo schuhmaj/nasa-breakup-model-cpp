@@ -202,6 +202,11 @@ OrbitalElements Satellite::getOrbitalElements() const {
     }
     keplerianElements[5] = 2.0 * atan(sqrt(root) * tanNi_2);
 
+    //Add 2*pi if the angle is negative in order to norm it to positive values
+    if (keplerianElements[5] < 0) {
+        keplerianElements[5] += PI2;
+    }
+
     OrbitalElements orbitalElements {keplerianElements};
 
     //Sets the orbital elements cache to the new calculated values
