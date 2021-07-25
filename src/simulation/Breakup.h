@@ -95,7 +95,7 @@ public:
      * Return the given input for this breakup event.
      * @return vector of satellites containing the input satellites
      */
-    std::vector<Satellite> getInput() const {
+    [[nodiscard]] std::vector<Satellite> getInput() const {
         return _input;
     }
 
@@ -103,7 +103,7 @@ public:
      * Return the result of the breakup event.
      * @return vector of satellites containing the generated fragments
      */
-    std::vector<Satellite> getResult() const {
+    [[nodiscard]] std::vector<Satellite> getResult() const {
         return _output;
     }
 
@@ -199,15 +199,15 @@ private:
 
 public:
 
-    double getMinimalCharacteristicLength() const {
+    [[nodiscard]] double getMinimalCharacteristicLength() const {
         return _minimalCharacteristicLength;
     }
 
-    double getMaximalCharacteristicLength() const {
+    [[nodiscard]] double getMaximalCharacteristicLength() const {
         return _maximalCharacteristicLength;
     }
 
-    size_t getCurrentMaxGivenId() const {
+    [[nodiscard]] size_t getCurrentMaxGivenId() const {
         return _currentMaxGivenID;
     }
 
