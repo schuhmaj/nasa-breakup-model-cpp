@@ -140,24 +140,6 @@ The simulation can produce depending on the configuration CSV and VTK files.
 | v       | Velocity [m/s]            | T       | True Anomaly [rad] |
 | p       | Position [m]              |         | |
 
-{'I', "ID"},
-{'n', "Name"},
-{'t', "Satellite Type"},
-{'L', "Characteristic Length [m]"},
-{'R', "A/M [m^2/kg]"},
-{'A', "Area [m^2]"},
-{'m', "Mass [kg]"},
-{'v', "Velocity [m/s]"},
-{'p', "Position [m]"},
-{'a', "Semi-Major-Axis [m]"},
-{'e', "Eccentricity"},
-{'i', "Inclination [rad]"},
-{'W', "Longitude of the ascending node [rad]"},
-{'w', "Argument of periapsis [rad]"},
-{'M', "Mean Anomaly [rad]"},
-{'E', "Eccentric Anomaly [rad]"},
-{'T', "True Anomaly [rad]"}
-
 ## Library
 The Breakup Simulation can be used directly from any C++ project
 without the need of file input, etc.
