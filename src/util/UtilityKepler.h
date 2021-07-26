@@ -113,7 +113,8 @@ namespace util {
         static constexpr double thirdRoot = 73594.59595000199;
         static constexpr double twoThird = 2.0 / 3.0;
 
-        return thirdRoot / std::pow(2.0 * PI * meanMotion / 86400.0, twoThird);
+        constexpr double fac = PI2 / 86400.0;
+        return thirdRoot / std::pow(fac * meanMotion, twoThird);
     }
 
 }
