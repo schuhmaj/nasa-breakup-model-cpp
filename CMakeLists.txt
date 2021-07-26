@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 #Option to build tests or not
-option(BUILD_BREAKUP_MODEL_TEST "Set to on if the tests should be build (Default: ON)" ON)
+option(BUILD_BREAKUP_MODEL_TESTS "Set to on if the tests should be build (Default: ON)" ON)
 
 #Incorporate yaml-cpp into the project
 include(yaml)
@@ -31,8 +31,9 @@ target_link_libraries(breakupModel
         yaml-cpp
         spdlog
         )
+
 #Only build the tests if they are enabled
-if(BUILD_BREAKUP_MODEL_TEST)
+if(BUILD_BREAKUP_MODEL_TESTS)
     message("-- Building the Breakup Model Tests")
     #Enables CTest, must be in the top-level CMakeList.txt, otherwise it won't work
     enable_testing()
