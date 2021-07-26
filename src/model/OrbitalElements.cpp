@@ -7,17 +7,17 @@ std::array<double, 6> OrbitalElements::getAsArray() const {
 
 double OrbitalElements::operator[](size_t index) const {
     switch (index) {
-        case 0:
+        case OrbitalElement::SEMI_MAJOR_AXIS:
             return _semiMajorAxis;
-        case 1:
+        case OrbitalElement::ECCENTRICITY:
             return _eccentricity;
-        case 2:
+        case OrbitalElement::INCLINATION:
             return _inclination;
-        case 3:
+        case OrbitalElement::LONGITUDE_OF_THE_ASCENDING_NODE:
             return _longitudeOfTheAscendingNode;
-        case 4:
+        case OrbitalElement::ARGUMENT_OF_PERIAPSIS:
             return _argumentOfPeriapsis;
-        case 5:
+        case OrbitalElement::ECCENTRIC_ANOMALY:
             return _eccentricAnomaly;
         default:
             throw std::out_of_range{"The Orbital elements only consists of six elements --> range[0;5]!"};

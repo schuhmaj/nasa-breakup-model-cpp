@@ -20,6 +20,19 @@ enum class OrbitalAnomalyType {
     ECCENTRIC, MEAN, TRUE
 };
 
+/**
+ * The orbital Elements in the order in which they are saved in the often used "uniform" array of size six.
+ * This enum fulfills the more "readability" purpose.
+ */
+enum OrbitalElement {
+    SEMI_MAJOR_AXIS=0,
+    ECCENTRICITY=1,
+    INCLINATION=2,
+    LONGITUDE_OF_THE_ASCENDING_NODE=3,
+    ARGUMENT_OF_PERIAPSIS=4,
+    ECCENTRIC_ANOMALY=5
+};
+
 
 class OrbitalElements {
 
