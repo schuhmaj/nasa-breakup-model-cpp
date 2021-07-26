@@ -20,8 +20,14 @@
  */
 class CSVWriter : public OutputWriter {
 
+    /**
+    * The logger to write to the file sink
+    */
     std::shared_ptr<spdlog::logger> _logger;
 
+    /**
+     * States if the output should contain the Orbital Elements
+     */
     bool _withKepler;
 
 public:

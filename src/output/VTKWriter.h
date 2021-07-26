@@ -17,6 +17,9 @@
  */
 class VTKWriter : public OutputWriter {
 
+    /**
+     * The logger to write to the file sink
+     */
     std::shared_ptr<spdlog::logger> _logger;
 
 public:

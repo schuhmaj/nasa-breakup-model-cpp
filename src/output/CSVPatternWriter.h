@@ -16,16 +16,49 @@
 #include "spdlog/fmt/ostr.h"
 #include "spdlog/spdlog.h"
 
+/**
+ * The CSVPatternWriter provides methods to print the Satellite catalog in an custom format.
+ * It takes a string-pattern which is then used to print specific attributes of the Satellites.
+ * @example
+ * "IntLRAmvp" corresponds to ID, name, type, Characteristic Length, Area, mass, velocity, position<br>
+ * This would be an analogous to the CSVWriter without Kepler information
+ * @example
+ * "IntLRAmvpaeiWwM" corresponds to (same as above) + semi-major-axis, eccentricity, inclination, RAAN, Arg. of. Per.,
+ * Mean Anomaly<br>
+ * This would be analogous to the CSVWriter with Kepler information
+ * @example
+ * "L" correspond to Characteristic Length<br>
+ * THis would mean, we get a one column CSV with only the Characteristic Length
+ */
 class CSVPatternWriter : public OutputWriter {
 
+    /**
+     * Map which contains all available functions for a specific char. Those functions are usually getter of Satellite.
+     * @example for 'A' --> satellite.getArea()
+     */
     const static std::map<char, std::function<void(const Satellite &sat, std::stringstream &stream)>> functionMap;
 
+    /**
+     * Map which contains all available names for a specific char.
+     * @example for 'A' --> "Area [m^2]"
+     */
     const static std::map<char, std::string> headerMap;
 
+    /**
+     * Contains the functions to execute for each satellite print. We iterate over the whole vector and execute
+     * the functions for each satellite.
+     */
     std::vector<std::function<void(const Satellite &sat, std::stringstream &stream)>> _myToDo;
 
+    /**
+     * Contains the Header information, which is printed by iterating over the whole vector and printing the strings
+     * separated with a comma.
+     */
     std::vector<std::string> _myHeader;
 
+    /**
+     * The logger which is needed to write to a file sink
+     */
     std::shared_ptr<spdlog::logger> _logger;
 
 public:
