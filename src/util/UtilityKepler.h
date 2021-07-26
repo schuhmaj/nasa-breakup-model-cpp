@@ -112,8 +112,8 @@ namespace util {
         //GRAVITATIONAL_PARAMETER_EARTH^(1/3)
         static constexpr double thirdRoot = 73594.59595000199;
         static constexpr double twoThird = 2.0 / 3.0;
+        static constexpr double fac = PI2 / 86400.0;
 
-        constexpr double fac = PI2 / 86400.0;
         return thirdRoot / std::pow(fac * meanMotion, twoThird);
     }
 

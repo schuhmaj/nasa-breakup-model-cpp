@@ -4,8 +4,6 @@
 #include <map>
 #include <array>
 #include "input/TLESatcatDataReader.h"
-#include "input/TLEReader.h"
-#include "input/CSVReader.h"
 #include "model/Satellite.h"
 #include "model/SatelliteBuilder.h"
 #include "model/OrbitalElementsFactory.h"

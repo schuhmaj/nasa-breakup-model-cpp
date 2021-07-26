@@ -2,22 +2,22 @@
 
 #include <string>
 #include <set>
-#include "input/YAMLConfigurationReader.h"
 #include "model/Satellite.h"
+#include "input/YAMLConfigurationReader.h"
 
 TEST(YAMLConfigurationReaderTest, ConfigTest01_Normal) {
     std::set<size_t> expectedIDFilter = {123, 456};
 
     YAMLConfigurationReader yamlReader{"resources/YamlConfigurationReaderTest01.yaml"};
 
-    ASSERT_EQ(yamlReader.getMinimalCharacteristicLength(), 0.05);
-    ASSERT_EQ(yamlReader.getTypeOfSimulation(), SimulationType::COLLISION);
-    ASSERT_EQ(yamlReader.getCurrentMaximalGivenID().value(), 48514);
-    ASSERT_EQ(yamlReader.getIDFilter().value(), expectedIDFilter);
+    EXPECT_EQ(yamlReader.getMinimalCharacteristicLength(), 0.05);
+    EXPECT_EQ(yamlReader.getTypeOfSimulation(), SimulationType::COLLISION);
+    EXPECT_EQ(yamlReader.getCurrentMaximalGivenID().value(), 48514);
+    EXPECT_EQ(yamlReader.getIDFilter().value(), expectedIDFilter);
 
 
-    ASSERT_EQ(yamlReader.getInputTargets().size(), 1);
-    ASSERT_EQ(yamlReader.getOutputTargets().size(), 2);
+    EXPECT_EQ(yamlReader.getInputTargets().size(), 1);
+    EXPECT_EQ(yamlReader.getOutputTargets().size(), 2);
 }
 
 TEST(YAMLConfigurationReaderTest, ConfigTest02_Normal) {
@@ -25,14 +25,14 @@ TEST(YAMLConfigurationReaderTest, ConfigTest02_Normal) {
 
     YAMLConfigurationReader yamlReader{"resources/YamlConfigurationReaderTest02.yaml"};
 
-    ASSERT_EQ(yamlReader.getMinimalCharacteristicLength(), 0.10);
-    ASSERT_EQ(yamlReader.getTypeOfSimulation(), SimulationType::COLLISION);
-    ASSERT_EQ(yamlReader.getCurrentMaximalGivenID(), std::nullopt);
-    ASSERT_EQ(yamlReader.getIDFilter().value(), expectedIDFilter);
+    EXPECT_EQ(yamlReader.getMinimalCharacteristicLength(), 0.10);
+    EXPECT_EQ(yamlReader.getTypeOfSimulation(), SimulationType::COLLISION);
+    EXPECT_EQ(yamlReader.getCurrentMaximalGivenID(), std::nullopt);
+    EXPECT_EQ(yamlReader.getIDFilter().value(), expectedIDFilter);
 
 
-    ASSERT_EQ(yamlReader.getInputTargets().size(), 0);
-    ASSERT_EQ(yamlReader.getOutputTargets().size(), 0);
+    EXPECT_EQ(yamlReader.getInputTargets().size(), 0);
+    EXPECT_EQ(yamlReader.getOutputTargets().size(), 0);
 }
 
 TEST(YAMLConfigurationReaderTest, ConfigTest03_NoException) {
@@ -43,14 +43,14 @@ TEST(YAMLConfigurationReaderTest, ConfigTest03_NoException) {
 TEST(YAMLConfigurationReaderTest, ConfigTest04_MinimalConfig) {
     YAMLConfigurationReader yamlReader{"resources/YamlConfigurationReaderTest03.yaml"};
 
-    ASSERT_EQ(yamlReader.getMinimalCharacteristicLength(), 0.10);
-    ASSERT_EQ(yamlReader.getTypeOfSimulation(), SimulationType::UNKNOWN);
-    ASSERT_EQ(yamlReader.getCurrentMaximalGivenID(), std::nullopt);
-    ASSERT_EQ(yamlReader.getIDFilter(), std::nullopt);
+    EXPECT_EQ(yamlReader.getMinimalCharacteristicLength(), 0.10);
+    EXPECT_EQ(yamlReader.getTypeOfSimulation(), SimulationType::UNKNOWN);
+    EXPECT_EQ(yamlReader.getCurrentMaximalGivenID(), std::nullopt);
+    EXPECT_EQ(yamlReader.getIDFilter(), std::nullopt);
 
 
-    ASSERT_EQ(yamlReader.getInputTargets().size(), 0);
-    ASSERT_EQ(yamlReader.getOutputTargets().size(), 0);
+    EXPECT_EQ(yamlReader.getInputTargets().size(), 0);
+    EXPECT_EQ(yamlReader.getOutputTargets().size(), 0);
 }
 
 TEST(YAMLConfigurationReaderTest, ConfigTest05_NoSimTag) {
