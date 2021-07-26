@@ -19,6 +19,28 @@
  */
 class YAMLDataReader : public DataSource {
 
+    /*
+    * The following static variables contain the names of the YAML nodes.
+    * Note: C++20 would allow constexpr std::string which would be more appropriate instead of char[]
+    */
+    static constexpr char SATELLITES_TAG[] = "satellites";
+    static constexpr char ID_TAG[] = "id";
+    static constexpr char NAME_TAG[] = "name";
+    static constexpr char SATELLITE_TYPE_TAG[] = "satType";
+    static constexpr char MASS_TAG[] = "mass";
+    static constexpr char AREA_TAG[] = "area";
+    static constexpr char VELOCITY_TAG[] = "velocity";
+    static constexpr char POSITION_TAG[] = "position";
+    static constexpr char KEPLER_TAG[] = "kepler";
+    static constexpr char SEMI_MAJOR_AXIS_TAG[] = "semi-major-axis";
+    static constexpr char ECCENTRICITY_TAG[] = "eccentricity";
+    static constexpr char INCLINATION_TAG[] = "inclination";
+    static constexpr char LONGITUDE_OF_THE_ASCENDING_NODE_TAG[] = "longitude-of-the-ascending-node";
+    static constexpr char ARGUMENT_OF_PERIAPSIS_TAG[] = "argument-of-periapsis";
+    static constexpr char ECCENTRIC_ANOMALY_TAG[] = "eccentric-anomaly";
+    static constexpr char MEAN_ANOMALY_TAG[] = "mean-anomaly";
+    static constexpr char TRUE_ANOMALY_TAG[] = "true-anomaly";
+
     /**
      * The root node of the YAML file
      */
