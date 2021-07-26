@@ -124,7 +124,7 @@ via their IDs. You find the IDs in the satcat in the third column (NORAD_CAT_ID)
 in the TLE optionally in first and second row in the beginning (example: 25544).
 
 ### Output
-The simulation can produce depending on the configuration CSV and VTK files.
+The simulation can produce CSV and VTK files, depending on the configuration.
 
 #### Available Patterns for the CSVPatternWriter:
 
