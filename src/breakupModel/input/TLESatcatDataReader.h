@@ -4,11 +4,11 @@
 #include <map>
 #include <tuple>
 #include <cmath>
-#include "input/DataSource.h"
-#include "input/CSVReader.h"
-#include "input/TLEReader.h"
-#include "model/Satellite.h"
-#include "model/SatelliteBuilder.h"
+#include "DataSource.h"
+#include "CSVReader.h"
+#include "TLEReader.h"
+#include "breakupModel/model/Satellite.h"
+#include "breakupModel/model/SatelliteBuilder.h"
 
 /**
  * Class which reads data from a tle.txt and a satcat.csv

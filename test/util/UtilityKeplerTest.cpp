@@ -2,8 +2,8 @@
 
 #include <utility>
 #include <vector>
-#include "util/UtilityFunctions.h"
-#include "util/UtilityKepler.h"
+#include "breakupModel/util/UtilityFunctions.h"
+#include "breakupModel/util/UtilityKepler.h"
 
 
 class UtilityKeplerTest01 : public ::testing::TestWithParam<double> {

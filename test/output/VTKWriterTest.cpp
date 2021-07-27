@@ -4,8 +4,8 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
-#include "model/Satellite.h"
-#include "output/VTKWriter.h"
+#include "breakupModel/model/Satellite.h"
+#include "breakupModel/output/VTKWriter.h"
 
 class VTKWriterTest : public ::testing::Test {
 

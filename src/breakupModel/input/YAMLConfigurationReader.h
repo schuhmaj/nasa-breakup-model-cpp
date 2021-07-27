@@ -2,13 +2,13 @@
 
 #include <utility>
 #include <exception>
-#include "input/InputConfigurationSource.h"
-#include "input/OutputConfigurationSource.h"
-#include "input/YAMLDataReader.h"
-#include "input/TLESatcatDataReader.h"
-#include "output/CSVWriter.h"
-#include "output/CSVPatternWriter.h"
-#include "output/VTKWriter.h"
+#include "InputConfigurationSource.h"
+#include "OutputConfigurationSource.h"
+#include "YAMLDataReader.h"
+#include "TLESatcatDataReader.h"
+#include "breakupModel/output/CSVWriter.h"
+#include "breakupModel/output/CSVPatternWriter.h"
+#include "breakupModel/output/VTKWriter.h"
 #include "spdlog/spdlog.h"
 
 /**

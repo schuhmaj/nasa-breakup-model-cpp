@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "model/SatelliteBuilder.h"
+#include "breakupModel/model/SatelliteBuilder.h"
 #include <array>
 #include <exception>
 

@@ -2,9 +2,9 @@
 
 #include <filesystem>
 #include <vector>
-#include "model/Satellite.h"
-#include "output/CSVPatternWriter.h"
-#include "input/CSVReader.h"
+#include "breakupModel/model/Satellite.h"
+#include "breakupModel/output/CSVPatternWriter.h"
+#include "breakupModel/input/CSVReader.h"
 
 class CSVPatternWriterTest : public ::testing::Test {
 

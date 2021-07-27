@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 
 #include <array>
-#include "input/YAMLDataReader.h"
-#include "model/OrbitalElementsFactory.h"
+#include "breakupModel/input/YAMLDataReader.h"
+#include "breakupModel/model/OrbitalElementsFactory.h"
 
 
 class YAMLReaderTest : public ::testing::Test {

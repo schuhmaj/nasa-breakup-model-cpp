@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <memory>
-#include "output/OutputWriter.h"
+#include "breakupModel/output/OutputWriter.h"
 
 /**
  * Pure virtual interface for the definition of OutputSources

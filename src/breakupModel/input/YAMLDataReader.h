@@ -8,11 +8,11 @@
 #include <iostream>
 #include <sstream>
 #include "yaml-cpp/yaml.h"
-#include "input/DataSource.h"
-#include "input/TLEReader.h"
-#include "model/Satellite.h"
-#include "model/SatelliteBuilder.h"
-#include "model/OrbitalElementsFactory.h"
+#include "DataSource.h"
+#include "TLEReader.h"
+#include "breakupModel/model/Satellite.h"
+#include "breakupModel/model/SatelliteBuilder.h"
+#include "breakupModel/model/OrbitalElementsFactory.h"
 
 /**
  * Reads Satellites from an YAML file.

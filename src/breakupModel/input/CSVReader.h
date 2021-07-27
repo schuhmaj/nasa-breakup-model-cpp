@@ -8,7 +8,7 @@
 #include <exception>
 #include <tuple>
 #include <filesystem>
-#include "model/Satellite.h"
+#include "breakupModel/model/Satellite.h"
 
 /**
  * Provides the functionality to read an CSV file into an container of tuples.

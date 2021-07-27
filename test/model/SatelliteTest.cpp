@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
 
-#include "model/Satellite.h"
-#include "model/OrbitalElementsFactory.h"
-#include "model/OrbitalElements.h"
-#include "util/UtilityKepler.h"
+#include "breakupModel/model/Satellite.h"
+#include "breakupModel/model/OrbitalElementsFactory.h"
+#include "breakupModel/model/OrbitalElements.h"
+#include "breakupModel/util/UtilityKepler.h"
 #include <array>
 #include <utility>
 #include <tuple>

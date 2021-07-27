@@ -5,8 +5,8 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
-#include "input/InputConfigurationSource.h"
-#include "input/DataSource.h"
+#include "breakupModel/input/InputConfigurationSource.h"
+#include "breakupModel/input/DataSource.h"
 #include "Breakup.h"
 #include "Explosion.h"
 #include "Collision.h"

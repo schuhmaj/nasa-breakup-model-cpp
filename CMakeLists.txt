@@ -14,12 +14,10 @@ include(spdlog)
 
 #Also include the cpp files
 file(GLOB_RECURSE SRC
-        "${PROJECT_SOURCE_DIR}/src/*.h"
-        "${PROJECT_SOURCE_DIR}/src/*.cpp")
+        "${PROJECT_SOURCE_DIR}/src/breakupModel/*.h"
+        "${PROJECT_SOURCE_DIR}/src/breakupModel/*.cpp")
 
 set(mainFile ${PROJECT_SOURCE_DIR}/src/main.cpp)
-
-list(REMOVE_ITEM ${SRC} "${mainFile}")
 
 add_library(${PROJECT_NAME}_lib ${SRC})
 

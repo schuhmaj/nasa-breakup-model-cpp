@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Satellite.h"
-#include "util/UtilityFunctions.h"
+#include "breakupModel/util/UtilityFunctions.h"
 #include <string>
 #include <sstream>
 #include <array>
 #include <exception>
-#include "model/OrbitalElements.h"
+#include "OrbitalElements.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
 

@@ -2,8 +2,8 @@
 
 #include <utility>
 
-#include "input/InputConfigurationSource.h"
-#include "input/DataSource.h"
+#include "InputConfigurationSource.h"
+#include "DataSource.h"
 
 /**
  * A object which defines all parameters needed for the Simulation.

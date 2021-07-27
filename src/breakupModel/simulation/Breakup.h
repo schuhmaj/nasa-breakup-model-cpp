@@ -7,10 +7,10 @@
 #include <random>
 #include <algorithm>
 #include <memory>
-#include "model/Satellite.h"
-#include "util/UtilityContainer.h"
-#include "util/UtilityFunctions.h"
-#include "util/UtilityAreaMassRatio.h"
+#include "breakupModel/model/Satellite.h"
+#include "breakupModel/util/UtilityContainer.h"
+#include "breakupModel/util/UtilityFunctions.h"
+#include "breakupModel/util/UtilityAreaMassRatio.h"
 
 /**
  * Pure virtual class which needs a Collection of Satellites as input and output and simulates a breakup

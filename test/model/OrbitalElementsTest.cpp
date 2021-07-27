@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "model/OrbitalElements.h"
-#include "model/OrbitalElementsFactory.h"
+#include "breakupModel/model/OrbitalElements.h"
+#include "breakupModel/model/OrbitalElementsFactory.h"
 
 TEST(OrbitalElementsTest, OrbitalElements01) {
     OrbitalElementsFactory factory{};

@@ -3,8 +3,8 @@
 #include <array>
 #include <stdexcept>
 #include <ostream>
-#include "util/UtilityKepler.h"
-#include "util/UtilityFunctions.h"
+#include "breakupModel/util/UtilityKepler.h"
+#include "breakupModel/util/UtilityFunctions.h"
 
 /**
  * Unit of Angles

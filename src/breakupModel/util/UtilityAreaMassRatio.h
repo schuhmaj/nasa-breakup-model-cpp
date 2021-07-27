@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model/Satellite.h"
+#include "breakupModel/model/Satellite.h"
 
 namespace util {
 

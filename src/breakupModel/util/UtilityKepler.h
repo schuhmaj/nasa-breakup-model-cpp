@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cmath>
-#include "util/UtilityFunctions.h"
+#include "UtilityFunctions.h"
 
 /*
  * Functions adapted from pykep:
