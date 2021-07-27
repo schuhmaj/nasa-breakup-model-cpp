@@ -15,8 +15,9 @@
 /**
  * Type of a Satellite
  * (Derived from the NORAD Catalog types)
+ * The type char specifier reduces the enum size to 1 byte instead of the default integer 4 byte
  */
-enum class SatType {
+enum class SatType : char {
     SPACECRAFT, ROCKET_BODY, DEBRIS, UNKNOWN
 };
 
