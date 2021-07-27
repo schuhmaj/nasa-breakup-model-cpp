@@ -7,6 +7,7 @@
 #include <utility>
 #include <cmath>
 #include <optional>
+#include <memory>
 #include "util/UtilityKepler.h"
 #include "util/UtilityFunctions.h"
 #include "util/UtilityContainer.h"
@@ -51,10 +52,10 @@ class Satellite {
     size_t _id{0};
 
     /**
-     * The name of the Satellite, more human readable.
-     * If not given the string will be empty.
+     * The name of the Satellite, more human readable, stored as a pointer to a string.
+     * If not given the pointer will be a nullptr.
      */
-    std::string _name{};
+    std::shared_ptr<const std::string> _name{nullptr};
 
     /**
      * The type of the Satellite. Needed for determining the right equations for breakup.
@@ -134,11 +135,16 @@ public:
     explicit Satellite(size_t id)
             : _id{id} {}
 
-    Satellite(std::string name, SatType satType)
-            : _name{std::move(name)},
+    Satellite(const std::string& name, SatType satType)
+            : _name{std::make_shared<const std::string>(name)},
               _satType{satType} {}
 
-    Satellite(std::string name, SatType satType, std::array<double, 3> position)
+    Satellite(const std::string& name, SatType satType, std::array<double, 3> position)
+            : _name{std::make_shared<const std::string>(name)},
+              _satType{satType},
+              _position{position} {}
+
+    Satellite(std::shared_ptr<const std::string> name, SatType satType, std::array<double, 3> position)
             : _name{std::move(name)},
               _satType{satType},
               _position{position} {}
@@ -206,11 +212,16 @@ public:
     }
 
     [[nodiscard]] const std::string &getName() const {
-        return _name;
+        if (_name == nullptr) {
+            static const std::string emptyString;
+            return emptyString;
+        } else {
+            return *_name;
+        }
     }
 
     void setName(const std::string &name) {
-        _name = name;
+        _name = std::make_shared<const std::string>(name);
     }
 
     [[nodiscard]] SatType getSatType() const {

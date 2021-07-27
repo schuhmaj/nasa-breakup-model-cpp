@@ -6,6 +6,7 @@
 #include <cmath>
 #include <random>
 #include <algorithm>
+#include <memory>
 #include "model/Satellite.h"
 #include "util/UtilityContainer.h"
 #include "util/UtilityFunctions.h"
