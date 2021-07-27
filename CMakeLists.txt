@@ -20,17 +20,24 @@ file(GLOB_RECURSE SRC
         "${PROJECT_SOURCE_DIR}/src/*.h"
         "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
-#Creates the executable target from the source files
-add_executable(${PROJECT_NAME} ${SRC})
+set(mainFile ${PROJECT_SOURCE_DIR}/src/main.cpp)
+
+list(REMOVE_ITEM ${SRC} "${mainFile}")
+
+add_library(${PROJECT_NAME}_lib ${SRC})
 
 #Adds the include Path PROJECT_SOURCE_DIR/src to the target breakupModel
-target_include_directories(breakupModel PRIVATE "${PROJECT_SOURCE_DIR}/src")
+target_include_directories(${PROJECT_NAME}_lib PUBLIC "${PROJECT_SOURCE_DIR}/src")
 
 #Links the executable against the yaml-cpp
-target_link_libraries(breakupModel
+target_link_libraries(${PROJECT_NAME}_lib
         yaml-cpp
         spdlog
         )
+
+#Creates the executable target from the source files
+add_executable(${PROJECT_NAME} "${mainFile}")
+target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_lib)
 
 #Only build the tests if they are enabled
 if(BUILD_BREAKUP_MODEL_TESTS)
