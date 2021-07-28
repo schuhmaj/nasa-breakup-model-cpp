@@ -96,7 +96,7 @@ private:
      * https://stackoverflow.com/questions/34314806/parsing-a-c-string-into-a-tuple [accessed 29.06.2021]
      */
     template<typename Tuple, typename std::size_t... I>
-    void getTuple(std::istream &lineStream, Tuple &tuple, std::index_sequence<I...>) {
+    void getTuple(std::istream &lineStream, Tuple &tuple, std::index_sequence<I...>) const {
       (parseCell(lineStream, std::get<I>(tuple)), ...);
     }
 
