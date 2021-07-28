@@ -3,10 +3,10 @@
 #include <string>
 #include <map>
 #include <array>
-#include "input/TLESatcatDataReader.h"
-#include "model/Satellite.h"
-#include "model/SatelliteBuilder.h"
-#include "model/OrbitalElementsFactory.h"
+#include "breakupModel/input/TLESatcatDataReader.h"
+#include "breakupModel/model/Satellite.h"
+#include "breakupModel/model/SatelliteBuilder.h"
+#include "breakupModel/model/OrbitalElementsFactory.h"
 
 class TLESatcatDataReaderTest : public ::testing::Test {
 

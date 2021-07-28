@@ -2,9 +2,9 @@
 
 #include <utility>
 #include <tuple>
-#include "model/OrbitalElements.h"
-#include "util/UtilityKepler.h"
-#include "util/UtilityFunctions.h"
+#include "OrbitalElements.h"
+#include "breakupModel/util/UtilityKepler.h"
+#include "breakupModel/util/UtilityFunctions.h"
 
 /**
  * Provides methods to create Orbital Elements.

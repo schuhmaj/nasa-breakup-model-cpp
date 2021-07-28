@@ -3,8 +3,8 @@
 #include <vector>
 #include <optional>
 #include <memory>
-#include "simulation/BreakupBuilder.h"
-#include "input/RuntimeInputSource.h"
+#include "breakupModel/simulation/BreakupBuilder.h"
+#include "breakupModel/input/RuntimeInputSource.h"
 
 class BreakupBuilderTest : public ::testing::Test {
 

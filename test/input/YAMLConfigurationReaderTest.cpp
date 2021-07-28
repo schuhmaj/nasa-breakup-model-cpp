@@ -2,8 +2,8 @@
 
 #include <string>
 #include <set>
-#include "model/Satellite.h"
-#include "input/YAMLConfigurationReader.h"
+#include "breakupModel/model/Satellite.h"
+#include "breakupModel/input/YAMLConfigurationReader.h"
 
 TEST(YAMLConfigurationReaderTest, ConfigTest01_Normal) {
     std::set<size_t> expectedIDFilter = {123, 456};

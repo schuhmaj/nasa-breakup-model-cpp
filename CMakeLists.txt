@@ -6,9 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 #Appends the the module path to contain additional CMake modules for this project
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-#Option to build tests or not
-option(BUILD_BREAKUP_MODEL_TESTS "Set to on if the tests should be build (Default: ON)" ON)
-
 #Incorporate yaml-cpp into the project
 include(yaml)
 
@@ -17,21 +14,32 @@ include(spdlog)
 
 #Also include the cpp files
 file(GLOB_RECURSE SRC
-        "${PROJECT_SOURCE_DIR}/src/*.h"
-        "${PROJECT_SOURCE_DIR}/src/*.cpp")
+        "${PROJECT_SOURCE_DIR}/src/breakupModel/*.h"
+        "${PROJECT_SOURCE_DIR}/src/breakupModel/*.cpp")
 
-#Creates the executable target from the source files
-add_executable(${PROJECT_NAME} ${SRC})
+set(mainFile ${PROJECT_SOURCE_DIR}/src/main.cpp)
+
+add_library(${PROJECT_NAME}_lib ${SRC})
 
 #Adds the include Path PROJECT_SOURCE_DIR/src to the target breakupModel
-target_include_directories(breakupModel PRIVATE "${PROJECT_SOURCE_DIR}/src")
+target_include_directories(${PROJECT_NAME}_lib PUBLIC "${PROJECT_SOURCE_DIR}/src")
 
 #Links the executable against the yaml-cpp
-target_link_libraries(breakupModel
+target_link_libraries(${PROJECT_NAME}_lib
         yaml-cpp
         spdlog
         )
 
+#Option to simulation or not
+option(BUILD_BREAKUP_MODEL_SIM "Set to on if the simulation should be built (Default: ON)" ON)
+if(BUILD_BREAKUP_MODEL_SIM)
+    #Creates the executable target from the source files
+    add_executable(${PROJECT_NAME} "${mainFile}")
+    target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_lib)
+endif()
+
+#Option to build tests or not
+option(BUILD_BREAKUP_MODEL_TESTS "Set to on if the tests should be built (Default: ON)" ON)
 #Only build the tests if they are enabled
 if(BUILD_BREAKUP_MODEL_TESTS)
     message("-- Building the Breakup Model Tests")

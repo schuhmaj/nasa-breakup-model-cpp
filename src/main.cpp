@@ -3,11 +3,11 @@
 #include <memory>
 #include <exception>
 
-#include "input/YAMLDataReader.h"
-#include "input/YAMLConfigurationReader.h"
-#include "simulation/BreakupBuilder.h"
-#include "output/CSVWriter.h"
-#include "output/VTKWriter.h"
+#include "breakupModel/input/YAMLDataReader.h"
+#include "breakupModel/input/YAMLConfigurationReader.h"
+#include "breakupModel/simulation/BreakupBuilder.h"
+#include "breakupModel/output/CSVWriter.h"
+#include "breakupModel/output/VTKWriter.h"
 #include "spdlog/spdlog.h"
 
 int main(int argc, char *argv[]) {

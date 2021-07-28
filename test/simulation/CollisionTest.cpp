@@ -4,9 +4,9 @@
 #include <algorithm>
 #include <cmath>
 #include <memory>
-#include "model/Satellite.h"
-#include "model/SatelliteBuilder.h"
-#include "simulation/Collision.h"
+#include "breakupModel/model/Satellite.h"
+#include "breakupModel/model/SatelliteBuilder.h"
+#include "breakupModel/simulation/Collision.h"
 
 class CollisionTest : public ::testing::Test {
 

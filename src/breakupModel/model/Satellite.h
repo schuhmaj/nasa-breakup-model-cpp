@@ -8,10 +8,10 @@
 #include <cmath>
 #include <optional>
 #include <memory>
-#include "util/UtilityKepler.h"
-#include "util/UtilityFunctions.h"
-#include "util/UtilityContainer.h"
-#include "model/OrbitalElements.h"
+#include "breakupModel/util/UtilityKepler.h"
+#include "breakupModel/util/UtilityFunctions.h"
+#include "breakupModel/util/UtilityContainer.h"
+#include "OrbitalElements.h"
 
 /**
  * Type of a Satellite

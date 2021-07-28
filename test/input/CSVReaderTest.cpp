@@ -3,8 +3,8 @@
 #include <string>
 #include <array>
 #include <tuple>
-#include "input/CSVReader.h"
-#include "model/Satellite.h"
+#include "breakupModel/input/CSVReader.h"
+#include "breakupModel/model/Satellite.h"
 
 class CSVReaderTest : public ::testing::Test {
 

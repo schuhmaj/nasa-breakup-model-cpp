@@ -3,9 +3,9 @@
 #include <vector>
 #include <string>
 #include <filesystem>
-#include "output/CSVWriter.h"
-#include "input/CSVReader.h"
-#include "model/Satellite.h"
+#include "breakupModel/output/CSVWriter.h"
+#include "breakupModel/input/CSVReader.h"
+#include "breakupModel/model/Satellite.h"
 
 class CSVWriterTest : public ::testing::Test {
 

@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 #include <utility>
-#include "util/UtilityFunctions.h"
+#include "breakupModel/util/UtilityFunctions.h"
 
 
 class UtilityFunctions : public ::testing::Test{

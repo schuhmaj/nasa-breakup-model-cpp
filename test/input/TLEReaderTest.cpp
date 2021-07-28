@@ -3,8 +3,8 @@
 #include <string>
 #include <array>
 #include <utility>
-#include "input/TLEReader.h"
-#include "model/OrbitalElementsFactory.h"
+#include "breakupModel/input/TLEReader.h"
+#include "breakupModel/model/OrbitalElementsFactory.h"
 
 class TLEReaderTest : public ::testing::Test {
 

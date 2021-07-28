@@ -2,8 +2,8 @@
 
 #include <vector>
 #include <string>
-#include "model/Satellite.h"
-#include "simulation/Breakup.h"
+#include "breakupModel/model/Satellite.h"
+#include "breakupModel/simulation/Breakup.h"
 
 /**
  * Interface for Output (Pure virtual).

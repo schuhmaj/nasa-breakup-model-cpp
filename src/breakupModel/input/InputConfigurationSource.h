@@ -7,7 +7,7 @@
 #include <set>
 #include <optional>
 #include <exception>
-#include "input/DataSource.h"
+#include "DataSource.h"
 
 /**
  * (Expressive) Return type for getTypeOfSimulation.
