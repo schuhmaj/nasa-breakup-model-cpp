@@ -9,13 +9,13 @@ void VTKWriter::printResult(const std::vector<Satellite> &satelliteCollection) c
     this->printProperty<double, Satellite>("mass", &Satellite::getMass, satelliteCollection);
     this->printProperty<double, Satellite>("area", &Satellite::getArea, satelliteCollection);
     this->printProperty<double, Satellite>("area-to-mass", &Satellite::getAreaToMassRatio, satelliteCollection);
-    this->printProperty<double, Satellite>("velocity", &Satellite::getVelocity, satelliteCollection);
+    this->printProperty<std::array<double, 3>, Satellite>("velocity", &Satellite::getVelocity, satelliteCollection);
 
-    //Separator between point and point-to-cell data
+    //Separator between point and point-tore-cell data
     this->printSeparator();
 
     //Point properties related to cell (position)
-    this->printProperty<double, Satellite>("position", &Satellite::getPosition, satelliteCollection);
+    this->printProperty<std::array<double, 3>, Satellite>("position", &Satellite::getPosition, satelliteCollection);
 
     //Footer
     this->printFooter();
