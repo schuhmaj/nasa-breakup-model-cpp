@@ -67,29 +67,20 @@ private:
     template<typename Property, typename Data>
     void printProperty(const std::string &name, const std::function<Property(const Data &data)> &property,
                        const std::vector<Data> &dataCollection) const {
-        _logger->info(R"(        <DataArray Name="{}" NumberOfComponents="1" format="ascii" type="Float32">)", name);
-        for (const auto &date : dataCollection) {
-            _logger->info("          {}", property(date));
-        }
-        _logger->info(R"(        </DataArray>)");
-    }
+        if constexpr (std::is_scalar<Property>::value) {
+            _logger->info(R"(        <DataArray Name="{}" NumberOfComponents="1" format="ascii" type="Float32">)",
+                          name);
+            for (const auto &date : dataCollection) {
+                _logger->info("          {}", property(date));
+            }
+        } else {
+            _logger->info(R"(        <DataArray Name="{}" NumberOfComponents="3" format="ascii" type="Float32">)", name);
+            for (const auto &date : dataCollection) {
+                const auto &array = property(date);
+                assert(std::size(array) == 3);
+                _logger->info("          {} {} {}", array[0], array[1], array[2]);
+            }
 
-    /**
-     * Prints a property of the points.
-     * @tparam Property - the type of the property
-     * @tparam Data - the class which contains this property
-     * @param name - name of the property, e.g. mass
-     * @param property - the property (normally a getter of an satellite), here return value cartesian vector
-     * @param dataCollection - the data
-     * @related I do not use the << overload because of ADL (https://en.cppreference.com/w/cpp/language/adl)
-     */
-    template<typename Property, typename Data>
-    void printProperty(const std::string &name, const std::function<std::array<Property, 3>(const Data &data)> &property,
-                       const std::vector<Data> &dataCollection) const {
-        _logger->info(R"(        <DataArray Name="{}" NumberOfComponents="3" format="ascii" type="Float32">)", name);
-        for (const auto &date : dataCollection) {
-            const auto &array = property(date);
-            _logger->info("          {} {} {}", array[0], array[1], array[2]);
         }
         _logger->info(R"(        </DataArray>)");
     }
