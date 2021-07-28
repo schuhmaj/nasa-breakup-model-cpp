@@ -228,4 +228,10 @@ namespace util {
         return os;
     }
 
+    template <typename T>
+    struct is_stdarray : std::false_type {};
+
+    template <typename T, std::size_t N>
+    struct is_stdarray<std::array<T, N>> : std::true_type {};
+
 }

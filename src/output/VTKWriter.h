@@ -58,7 +58,7 @@ private:
 
     /**
      * Prints a property of the points.
-     * @tparam Property - the type of the property
+     * @tparam Property - the type of the property, if it is an array only size = 3 is supported!!!
      * @tparam Data - the class which contains this property
      * @param name - name of the property, e.g. mass
      * @param property - the property (normally a getter of an satellite)
@@ -73,16 +73,19 @@ private:
             for (const auto &date : dataCollection) {
                 _logger->info("          {}", property(date));
             }
-        } else {
+            _logger->info(R"(        </DataArray>)");
+        } else if constexpr (util::is_stdarray<Property>::value) {
             _logger->info(R"(        <DataArray Name="{}" NumberOfComponents="3" format="ascii" type="Float32">)", name);
             for (const auto &date : dataCollection) {
                 const auto &array = property(date);
-                assert(std::size(array) == 3);
-                _logger->info("          {} {} {}", array[0], array[1], array[2]);
+                if (std::size(array) == 3) {
+                    _logger->info("          {} {} {}", array[0], array[1], array[2]);
+                }
             }
+            _logger->info(R"(        </DataArray>)");
+        } else {
 
         }
-        _logger->info(R"(        </DataArray>)");
     }
 
     /**
