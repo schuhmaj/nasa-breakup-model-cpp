@@ -97,7 +97,7 @@ private:
      */
     template<typename Tuple, typename std::size_t... I>
     void getTuple(std::istream &lineStream, Tuple &tuple, std::index_sequence<I...>) const {
-        std::initializer_list<bool>{parseCell(lineStream, std::get<I>(tuple)) ...};
+      (parseCell(lineStream, std::get<I>(tuple)), ...);
     }
 
     /**
