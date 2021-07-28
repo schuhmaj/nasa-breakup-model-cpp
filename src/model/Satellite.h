@@ -6,20 +6,37 @@
 #include <iostream>
 #include <utility>
 #include <cmath>
+#include <optional>
+#include <memory>
 #include "util/UtilityKepler.h"
 #include "util/UtilityFunctions.h"
 #include "util/UtilityContainer.h"
+#include "model/OrbitalElements.h"
 
 /**
  * Type of a Satellite
  * (Derived from the NORAD Catalog types)
+ * The type char specifier reduces the enum size to 1 byte instead of the default integer 4 byte
  */
-enum class SatType {
+enum class SatType : char {
     SPACECRAFT, ROCKET_BODY, DEBRIS, UNKNOWN
 };
 
+/**
+ * Maps the SatType to a String according to Satellite::satTypeToString which is then given to the ostream.
+ * @param os - ostream
+ * @param satType - SatType
+ * @return os
+ */
 std::ostream &operator<<(std::ostream &os, SatType satType);
 
+/**
+ * Reads in a string and maps this string to a SatType according to Satellite::stringToSatType.
+ * @param istream - istream
+ * @param satType - SatType
+ * @return istream
+ * @throws a runtime_error if SatType cannot be parsed from the istream
+ */
 std::istream &operator>>(std::istream &istream, SatType &satType);
 
 
@@ -35,10 +52,10 @@ class Satellite {
     size_t _id{0};
 
     /**
-     * The name of the Satellite, more human readable.
-     * If not given the string will be empty.
+     * The name of the Satellite, more human readable, stored as a pointer to a string.
+     * If not given the pointer will be a nullptr.
      */
-    std::string _name{};
+    std::shared_ptr<const std::string> _name{nullptr};
 
     /**
      * The type of the Satellite. Needed for determining the right equations for breakup.
@@ -93,6 +110,14 @@ class Satellite {
      */
     std::array<double, 3> _position{};
 
+    /**
+     * Contains the Orbital elements of this Satellite if the satellite is created with them or
+     * if they are once queried by using the function getOrbitalElements(). The attribute therefore
+     * can be seen as a cache for the orbital elements.
+     * This member is reset to std::nullopt if the cartesian vectors or the orbital elements are changed.
+     */
+    mutable std::optional<OrbitalElements> _orbitalElementsCache{std::nullopt};
+
 public:
 
     /**
@@ -110,11 +135,16 @@ public:
     explicit Satellite(size_t id)
             : _id{id} {}
 
-    Satellite(std::string name, SatType satType)
-            : _name{std::move(name)},
+    Satellite(const std::string& name, SatType satType)
+            : _name{std::make_shared<const std::string>(name)},
               _satType{satType} {}
 
-    Satellite(std::string name, SatType satType, std::array<double, 3> position)
+    Satellite(const std::string& name, SatType satType, std::array<double, 3> position)
+            : _name{std::make_shared<const std::string>(name)},
+              _satType{satType},
+              _position{position} {}
+
+    Satellite(std::shared_ptr<const std::string> name, SatType satType, std::array<double, 3> position)
             : _name{std::move(name)},
               _satType{satType},
               _position{position} {}
@@ -122,83 +152,23 @@ public:
     /**
      * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
      * This function sets the internal members _velocity and _position to the corresponding values.
-     * @param keplerianElements array holds the arguments in the following order:
-     * @param a - semir-major axis [m]
-     * @param e - eccentricity
-     * @param i - inclination [rad]
-     * @param W - longitude of the ascending node (big omega) [rad]
-     * @param w - argument of periapsis (small omega) [rad]
-     * @param EA - eccentric Anomaly [rad]
-     * @note Code taken and adapted
+     * @param orbitalElements holds the Keplerian Elements
+     * @note This method will also sets the value of the _orbitalElementsCache
+     * @related Code taken and adapted
      * from pykep (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/par2ic.hpp)
      * [23.06.2021]
      */
-    void setCartesianByKeplerEA(const std::array<double, 6> &keplerianElements);
-
-    /**
-     * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
-     * This function sets the internal members _velocity and _position to the corresponding values.
-     * @param keplerianElements array holds the arguments in the following order:
-     * @param a - semir-major axis [m]
-     * @param e - eccentricity
-     * @param i - inclination [rad]
-     * @param W - longitude of the ascending node (big omega) [rad]
-     * @param w - argument of periapsis (small omega) [rad]
-     * @param MA - mean Anomaly [rad]
-     */
-    void setCartesianByKeplerMA(const std::array<double, 6> &keplerianElements);
-
-    /**
-     * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
-     * This function sets the internal members _velocity and _position to the corresponding values.
-     * @param keplerianElements array holds the arguments in the following order:
-     * @param a - semir-major axis [m]
-     * @param e - eccentricity
-     * @param i - inclination [rad]
-     * @param W - longitude of the ascending node (big omega) [rad]
-     * @param w - argument of periapsis (small omega) [rad]
-     * @param TA - true Anomaly [rad]
-     */
-    void setCartesianByKeplerTA(const std::array<double, 6> &keplerianElements);
-
-    /**
-    * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
-    * This function sets the internal members _velocity and _position to the corresponding values.
-    * @param keplerianElements array holds the arguments in the following order:
-    * @param mm - mean motion [revolutions/day]
-    * @param e - eccentricity
-    * @param i - inclination [deg]
-    * @param W - longitude of the ascending node (big omega) [deg]
-    * @param w - argument of periapsis (small omega) [deg]
-    * @param MA - Mean Anomaly [deg]
-    */
-    void setCartesianByKeplerTLEFormat(const std::array<double, 6> &keplerianElements);
+    void setCartesianByOrbitalElements(const OrbitalElements &orbitalElements);
 
     /**
      * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
-     * @return an array consisting of the six Keplerian Elements in the following order [a, e, i, W, w, EA] where
-     * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
-     * w = argument of periapsis [rad]; EA = eccentric Anomaly [rad]
-     * @note Code taken and adapted from pykep
+     * @return the Orbital Elements
+     * @note This method will return the value of the cache _orbitalElementsCache if valid otherwise it will calculate
+     * the value and saves them to the cache for further use
+     * @related Code taken and adapted from pykep
      * (https://github.com/esa/pykep/blob/master/include/keplerian_toolbox/core_functions/ic2par.hpp) [25.06.2021]
      */
-    std::array<double, 6> getKeplerEA() const;
-
-    /**
-    * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
-    * @return an array consisting of the six Keplerian Elements in the following order [a, e, i, W, w, MA] where
-    * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
-    * w = argument of periapsis [rad]; MA = mean Anomaly [rad]
-    */
-    std::array<double, 6> getKeplerMA() const;
-
-    /**
-    * Calculates the Keplerian Elements by using the satellite's caretsian position and velocity vectors.
-    * @return an array consisting of the six Keplerian Elements in the following order [a, e, i, W, w, TA] where
-    * a = semi-major-axis [m]; e = eccentricity; i = inclination [rad]; W = longitude of the ascending node [rad];
-    * w = argument of periapsis [rad]; TA = true Anomaly [rad]
-    */
-    std::array<double, 6> getKeplerTA() const;
+    OrbitalElements getOrbitalElements() const;
 
     /**
      * Compares two Satellites by comparing their IDs.
@@ -221,11 +191,19 @@ public:
         return !(lhs == rhs);
     }
 
+    /**
+     * Prints the main data of the Satellite (especially for error messages).
+     * @param os - ostream
+     * @param satellite - Satellite
+     * @return os
+     */
+    friend std::ostream &operator<<(std::ostream &os, const Satellite &satellite);
+
     /*
      * Getter and Setter
      */
 
-    size_t getId() const {
+    [[nodiscard]] size_t getId() const {
         return _id;
     }
 
@@ -233,15 +211,20 @@ public:
         _id = id;
     }
 
-    const std::string &getName() const {
-        return _name;
+    [[nodiscard]] const std::string &getName() const {
+        if (_name == nullptr) {
+            static const std::string emptyString;
+            return emptyString;
+        } else {
+            return *_name;
+        }
     }
 
     void setName(const std::string &name) {
-        _name = name;
+        _name = std::make_shared<const std::string>(name);
     }
 
-    SatType getSatType() const {
+    [[nodiscard]] SatType getSatType() const {
         return _satType;
     }
 
@@ -249,7 +232,7 @@ public:
         _satType = satType;
     }
 
-    double getCharacteristicLength() const {
+    [[nodiscard]] double getCharacteristicLength() const {
         return _characteristicLength;
     }
 
@@ -257,7 +240,7 @@ public:
         _characteristicLength = characteristicLength;
     }
 
-    double getAreaToMassRatio() const {
+    [[nodiscard]] double getAreaToMassRatio() const {
         return _areaToMassRatio;
     }
 
@@ -265,7 +248,7 @@ public:
         _areaToMassRatio = areaToMassRatio;
     }
 
-    double getMass() const {
+    [[nodiscard]] double getMass() const {
         return _mass;
     }
 
@@ -273,7 +256,7 @@ public:
         _mass = mass;
     }
 
-    double getArea() const {
+    [[nodiscard]] double getArea() const {
         return _area;
     }
 
@@ -281,19 +264,33 @@ public:
         _area = area;
     }
 
-    const std::array<double, 3> &getVelocity() const {
+    [[nodiscard]] const std::array<double, 3> &getVelocity() const {
         return _velocity;
     }
 
+    /**
+     * Sets the velcoity of the Satellite.
+     * @note This modifies the state, therefore the _orbitalElementsCache is invalidated
+     * @param velocity - cartesian vector
+     */
     void setVelocity(const std::array<double, 3> &velocity) {
+        //Orbital Elements if they where previously calculated are now invalid
+        _orbitalElementsCache = std::nullopt;
         _velocity = velocity;
     }
 
-    const std::array<double, 3> &getPosition() const {
+    [[nodiscard]] const std::array<double, 3> &getPosition() const {
         return _position;
     }
 
+    /**
+     * Sets the position of the Satellite.
+     * @note This modifies the state, therefore the _orbitalElementsCache is invalidated
+     * @param position - cartesian vector
+     */
     void setPosition(const std::array<double, 3> &position) {
+        //Orbital Elements if they where previously calculated are now invalid
+        _orbitalElementsCache = std::nullopt;
         _position = position;
     }
 

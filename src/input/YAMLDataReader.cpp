@@ -1,76 +1,95 @@
 #include "YAMLDataReader.h"
 
-std::vector<Satellite> YAMLDataReader::getSatelliteCollection() {
+std::vector<Satellite> YAMLDataReader::getSatelliteCollection() const {
     std::vector<Satellite> satelliteVector{};
     SatelliteBuilder satelliteBuilder{};
 
-    if (_file["satellites"] && _file["satellites"].IsSequence()) {
-        YAML::Node satellites{_file["satellites"]};
+    if (_file[SATELLITES_TAG] && _file[SATELLITES_TAG].IsSequence()) {
+        YAML::Node satellites{_file[SATELLITES_TAG]};
         for (auto satNode : satellites) {
-            try {
-                satelliteVector.push_back(parseSatellite(satelliteBuilder, satNode));
-            } catch (const std::exception& e) {
-                std::cerr << e.what();
-            }
+            satelliteVector.push_back(parseSatellite(satelliteBuilder, satNode));
         }
+    } else {
+        throw std::runtime_error{"The was no satellites tag inside the YAML file, so no satellites were extracted!"};
     }
     return satelliteVector;
 }
 
-Satellite YAMLDataReader::parseSatellite(SatelliteBuilder &satelliteBuilder, const YAML::Node& node) {
+Satellite YAMLDataReader::parseSatellite(SatelliteBuilder &satelliteBuilder, const YAML::Node &node) {
     satelliteBuilder.reset();
-    if (node["id"]) {
-        satelliteBuilder.setID(node["id"].as<unsigned long>());
+    //Required for TLE
+    size_t id = 0;
+    if (node[ID_TAG]) {
+        id = node[ID_TAG].as<unsigned long>();
+        satelliteBuilder.setID(id);
     }
-    if (node["name"]) {
-        satelliteBuilder.setName(node["name"].as<std::string>());
+    if (node[NAME_TAG]) {
+        satelliteBuilder.setName(node[NAME_TAG].as<std::string>());
     }
-    if (node["satType"]) {
-        satelliteBuilder.setSatType(node["satType"].as<std::string>());
+    if (node[SATELLITE_TYPE_TAG]) {
+        satelliteBuilder.setSatType(node[SATELLITE_TYPE_TAG].as<std::string>());
     }
-    if (node["mass"]) {
-        satelliteBuilder.setMass(node["mass"].as<double>());
+    if (node[MASS_TAG]) {
+        satelliteBuilder.setMass(node[MASS_TAG].as<double>());
     }
-    if (node["area"]) {
-        satelliteBuilder.setMassByArea(node["area"].as<double>());
+    if (node[AREA_TAG]) {
+        satelliteBuilder.setMassByArea(node[AREA_TAG].as<double>());
     }
-    if (node["velocity"]) {
-        satelliteBuilder.setVelocity(node["velocity"].as<std::array<double, 3>>());
+    if (node[VELOCITY_TAG]) {
+        satelliteBuilder.setVelocity(node[VELOCITY_TAG].as<std::array<double, 3>>());
     }
-    if (node["position"]) {
-        satelliteBuilder.setPosition(node["position"].as<std::array<double, 3>>());
+    if (node[POSITION_TAG]) {
+        satelliteBuilder.setPosition(node[POSITION_TAG].as<std::array<double, 3>>());
     }
-    if (node["kepler"]) {
-        parseKepler(satelliteBuilder, node["kepler"]);
+    if (node[KEPLER_TAG] && node[KEPLER_TAG].IsMap()) {             //Normal Kepler Definition
+        parseKepler(satelliteBuilder, node[KEPLER_TAG]);
+    } else if (node[KEPLER_TAG] && node[KEPLER_TAG].IsScalar()) {   //Kepler located in TLE file
+        parseKepler(satelliteBuilder, id, node[KEPLER_TAG].as<std::string>());
     }
     return satelliteBuilder.getResult();
 }
 
 void YAMLDataReader::parseKepler(SatelliteBuilder &satelliteBuilder, const YAML::Node &node) {
-    if (node["semi-major-axis"] && node["eccentricity"] && node["inclination"]
-        && node["longitude-of-the-ascending-node"] && node["argument-of-periapsis"]) {
-        std::array<double, 6> keplerianElements{};
-        keplerianElements[0] = node["semi-major-axis"].as<double>();
-        keplerianElements[1] = node["eccentricity"].as<double>();
-        keplerianElements[2] = node["inclination"].as<double>();
-        keplerianElements[3] = node["longitude-of-the-ascending-node"].as<double>();
-        keplerianElements[4] = node["argument-of-periapsis"].as<double>();
+    if (node[SEMI_MAJOR_AXIS_TAG] && node[ECCENTRICITY_TAG] && node[INCLINATION_TAG]
+        && node[LONGITUDE_OF_THE_ASCENDING_NODE_TAG] && node[ARGUMENT_OF_PERIAPSIS_TAG]) {
+        OrbitalElementsFactory factory{};
+        std::array<double, 6> keplerData{};
+        keplerData[0] = node[SEMI_MAJOR_AXIS_TAG].as<double>();
+        keplerData[1] = node[ECCENTRICITY_TAG].as<double>();
+        keplerData[2] = node[INCLINATION_TAG].as<double>();
+        keplerData[3] = node[LONGITUDE_OF_THE_ASCENDING_NODE_TAG].as<double>();
+        keplerData[4] = node[ARGUMENT_OF_PERIAPSIS_TAG].as<double>();
 
-        if (node["eccentric-anomaly"]) {
-            keplerianElements[5] = node["eccentric-anomaly"].as<double>();
-            satelliteBuilder.setKeplerianElementsEA(keplerianElements);
-        } else if (node["mean-anomaly"]) {
-            keplerianElements[5] = node["mean-anomaly"].as<double>();
-            satelliteBuilder.setKeplerianElementsMA(keplerianElements);
-        } else if (node["true-anomaly"]) {
-            keplerianElements[5] = node["true-anomaly"].as<double>();
-            satelliteBuilder.setKeplerianElementsTA(keplerianElements);
+        if (node[ECCENTRIC_ANOMALY_TAG]) {
+            keplerData[5] = node[ECCENTRIC_ANOMALY_TAG].as<double>();
+            satelliteBuilder.setOrbitalElements(factory.createFromOnlyRadians(keplerData, OrbitalAnomalyType::ECCENTRIC));
+        } else if (node[MEAN_ANOMALY_TAG]) {
+            keplerData[5] = node[MEAN_ANOMALY_TAG].as<double>();
+            satelliteBuilder.setOrbitalElements(factory.createFromOnlyRadians(keplerData, OrbitalAnomalyType::MEAN));
+        } else if (node[TRUE_ANOMALY_TAG]) {
+            keplerData[5] = node[TRUE_ANOMALY_TAG].as<double>();
+            satelliteBuilder.setOrbitalElements(factory.createFromOnlyRadians(keplerData, OrbitalAnomalyType::TRUE));
         } else {
-            throw std::runtime_error{"You have to give at least one of the following orbital Anomalies"
-                                        "Eccentric Anomaly > Mean Anomaly > True Anomaly [in the order how the"
-                                        "program will prioritize an anomaly if multiple are given]"};
+            throw std::runtime_error{"One satellite input is incomplete! "
+                                     "You have to give at least one of the following orbital Anomalies "
+                                     "Eccentric Anomaly > Mean Anomaly > True Anomaly [in the order how the "
+                                     "program will prioritize an anomaly if multiple are given]"};
         }
     } else {
-        throw std::runtime_error{"The Keplerian Elements are not fully given!"};
+        throw std::runtime_error{"One satellite input is incomplete! "
+                                 "The Keplerian Elements are not fully given!"};
+    }
+}
+
+void YAMLDataReader::parseKepler(SatelliteBuilder &satelliteBuilder, size_t id, const std::string &tleFilepath) {
+    try {
+        TLEReader tleReader{tleFilepath};
+        auto mapping = tleReader.getMappingIDOrbitalElements();
+        satelliteBuilder.setOrbitalElements(mapping.at(id));
+    } catch (std::exception &e) {
+        std::stringstream message{};
+        message << "The TLE file did not contain Kepler elements for the satellite with the ID " << id
+                << ". The parsing in the YAML File Reader was therefore not successful!";
+        throw std::runtime_error{message.str()};
     }
 }

@@ -7,3 +7,9 @@ FetchContent_Declare(yaml
         )
 
 FetchContent_MakeAvailable(yaml)
+
+# Disable warnings from the library target
+target_compile_options(yaml-cpp PRIVATE -w)
+# Disable warnings from included headers
+get_target_property(propval yaml-cpp INTERFACE_INCLUDE_DIRECTORIES)
+target_include_directories(yaml-cpp SYSTEM PUBLIC "${propval}")

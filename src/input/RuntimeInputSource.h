@@ -2,21 +2,22 @@
 
 #include <utility>
 
-#include "input/ConfigurationSource.h"
+#include "input/InputConfigurationSource.h"
 #include "input/DataSource.h"
 
 /**
  * A object which defines all parameters needed for the Simulation.
  */
-class RuntimeInputSource : public ConfigurationSource, public DataSource {
+class RuntimeInputSource
+        : public InputConfigurationSource, public DataSource, public std::enable_shared_from_this<const DataSource> {
 
     const double _minimalCharacteristicLength;
 
-    const SimulationType _simulationType;
+    const SimulationType _simulationType{SimulationType::UNKNOWN};
 
-    const size_t _currentMaximalGivenID;
+    const std::optional<size_t> _currentMaximalGivenID{std::nullopt};
 
-    const std::optional<std::set<size_t>> _idFilter;
+    const std::optional<std::set<size_t>> _idFilter{std::nullopt};
 
     const std::vector<Satellite> _satellites;
 
@@ -29,82 +30,74 @@ public:
      */
     RuntimeInputSource(double minimalCharacteristicLength, std::vector<Satellite> satellites)
             : _minimalCharacteristicLength{minimalCharacteristicLength},
-              _simulationType{SimulationType::UNKNOWN},
-              _currentMaximalGivenID{0},
-              _idFilter{std::nullopt},
               _satellites{std::move(satellites)} {}
 
-    /**
-     * Constructs a new Runtime Source with four parameters available (all expect Filter)
-     * @param minimalCharacteristicLength - double
-     * @param simulationType - type of simulation --> strong definition, error handling possible
-     * @param currentMaximalGivenId - maximal given NORAD Catalog ID
-     * @param satellites - satellite vector
-     */
-    RuntimeInputSource(double minimalCharacteristicLength, SimulationType simulationType, size_t currentMaximalGivenId,
-                       std::vector<Satellite> satellites)
-            : _minimalCharacteristicLength{minimalCharacteristicLength},
-              _simulationType{simulationType},
-              _currentMaximalGivenID{currentMaximalGivenId},
-              _idFilter{std::nullopt},
-              _satellites{std::move(satellites)} {}
 
     /**
      * Constructs a new Runtime Source with all parameters available.
      * @param minimalCharacteristicLength - double
+     * @param satellites - satellite vector
      * @param simulationType - type of simulation --> strong definition, error handling possible
      * @param currentMaximalGivenId - maximal given NORAD Catalog ID
      * @param idFilter - filter which satellites to use
-     * @param satellites - satellite vector
      */
-    RuntimeInputSource(double minimalCharacteristicLength, SimulationType simulationType, size_t currentMaximalGivenId,
-                       std::optional<std::set<size_t>> idFilter, std::vector<Satellite> satellites)
+    RuntimeInputSource(double minimalCharacteristicLength, std::vector<Satellite> satellites,
+                       SimulationType simulationType, size_t currentMaximalGivenId,
+                       std::optional<std::set<size_t>> idFilter)
             : _minimalCharacteristicLength{minimalCharacteristicLength},
+              _satellites{std::move(satellites)},
+              _simulationType{simulationType},
+              _currentMaximalGivenID{std::make_optional(currentMaximalGivenId)},
+              _idFilter{std::move(idFilter)} {}
+
+
+    /**
+     * Constructs a new Runtime Source with all parameters available.
+     * @param minimalCharacteristicLength - double
+     * @param satellites - satellite vector
+     * @param simulationType - type of simulation --> strong definition, error handling possible
+     * @param currentMaximalGivenId - maximal given NORAD Catalog ID
+     * @param idFilter - filter which satellites to use
+     */
+    RuntimeInputSource(double minimalCharacteristicLength, std::vector<Satellite> satellites,
+                       SimulationType simulationType, std::optional<size_t> currentMaximalGivenId,
+                       std::optional<std::set<size_t>> idFilter)
+            : _minimalCharacteristicLength{minimalCharacteristicLength},
+              _satellites{std::move(satellites)},
               _simulationType{simulationType},
               _currentMaximalGivenID{currentMaximalGivenId},
-              _idFilter{std::move(idFilter)},
-              _satellites{std::move(satellites)} {}
+              _idFilter{std::move(idFilter)} {}
+
 
     /**
      * Constructs a new Runtime Source with all parameters available.
      * Here you give the RuntimeInputSource another DataSource like an TLESatcatReader or a YAMLDataReader to configure
      * settings via this object but with advantage of file input.
      * @param minimalCharacteristicLength - double
+     * @param dataSource - a DataSource like TLESatcatReader or YAMLDataReader
      * @param simulationType - type of simulation --> strong definition, error handling possible
      * @param currentMaximalGivenId - maximal given NORAD Catalog ID
      * @param idFilter - filter which satellites to use
-     * @param dataSource - a DataSource like TLESatcatReader or YAMLDataReader
      */
-    RuntimeInputSource(double minimalCharacteristicLength, SimulationType simulationType, size_t currentMaximalGivenId,
-                       std::optional<std::set<size_t>> idFilter, const std::shared_ptr<DataSource>& dataSource)
+    RuntimeInputSource(double minimalCharacteristicLength, const std::shared_ptr<const DataSource> &dataSource,
+                       SimulationType simulationType, size_t currentMaximalGivenId,
+                       std::optional<std::set<size_t>> idFilter)
             : _minimalCharacteristicLength{minimalCharacteristicLength},
+              _satellites{dataSource->getSatelliteCollection()},
               _simulationType{simulationType},
-              _currentMaximalGivenID{currentMaximalGivenId},
-              _idFilter{std::move(idFilter)},
-              _satellites{dataSource->getSatelliteCollection()} {}
+              _currentMaximalGivenID{std::make_optional(currentMaximalGivenId)},
+              _idFilter{std::move(idFilter)} {}
 
 
-    double getMinimalCharacteristicLength() override {
-        return _minimalCharacteristicLength;
-    }
+    double getMinimalCharacteristicLength() const final;
 
-    SimulationType getTypeOfSimulation() override {
-        return _simulationType;
-    }
+    SimulationType getTypeOfSimulation() const final;
 
-    size_t getCurrentMaximalGivenID() override {
-        return _currentMaximalGivenID;
-    }
+    std::optional<size_t> getCurrentMaximalGivenID() const final;
 
-    std::shared_ptr<DataSource> getDataReader() override {
-        return *this;
-    }
+    std::shared_ptr<const DataSource> getDataReader() const final;
 
-    std::optional<std::set<size_t>> getIDFilter() override {
-        return _idFilter;
-    }
+    std::optional<std::set<size_t>> getIDFilter() const final;
 
-    std::vector<Satellite> getSatelliteCollection() override {
-        return _satellites;
-    }
+    std::vector<Satellite> getSatelliteCollection() const final;
 };
