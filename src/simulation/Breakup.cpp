@@ -29,9 +29,10 @@ void Breakup::prepare() {
 
 void
 Breakup::createFragments(size_t fragmentCount, const std::string &debrisName, const std::array<double, 3> &position) {
-    _output.resize(fragmentCount, Satellite(debrisName, SatType::DEBRIS, position));
+    auto debrisNamePtr = std::make_shared<const std::string>(debrisName);
+    _output.resize(fragmentCount, Satellite(debrisNamePtr, SatType::DEBRIS, position));
     std::for_each(_output.begin(), _output.end(),
-                  [&](Satellite &sat) {sat.setId(++_currentMaxGivenID);});
+                  [&](Satellite &sat) { sat.setId(++_currentMaxGivenID); });
 }
 
 void Breakup::characteristicLengthDistribution(double powerLawExponent) {
@@ -117,7 +118,7 @@ double Breakup::calculateAM(double characteristicLength) {
         std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
 
         double y1 = std::pow(10, alpha(_satType, logLc) * n1(_randomNumberGenerator) +
-                                (1 - alpha(_satType, logLc)) * n2(_randomNumberGenerator));
+                                 (1 - alpha(_satType, logLc)) * n2(_randomNumberGenerator));
         double y0 = std::pow(10, n(_randomNumberGenerator));
 
         areaToMassRatio = y0 + (characteristicLength - 0.08) * (y1 - y0) / (0.03);

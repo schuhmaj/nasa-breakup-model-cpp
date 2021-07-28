@@ -46,6 +46,15 @@ namespace util {
             return EA;
         }
 
+        /**
+         * Norms the angle to positive values.
+         * @param angle in [rad], might be negative
+         * @return angle in [rad], positive
+         */
+        inline double normAngle(double angle) {
+            return angle < 0 ? angle + PI2 : angle;
+        }
+
     }
 
     /**
@@ -57,7 +66,7 @@ namespace util {
     inline double meanAnomalyToEccentricAnomaly(double MA, double e) {
         using namespace detail;
         double EA = MA + e * std::sin(MA);
-        return newtonRaphson(EA, MA, e);
+        return normAngle(newtonRaphson(EA, MA, e));
     }
 
     /**
@@ -67,7 +76,8 @@ namespace util {
      * @return Mean Anomaly in [rad]
      */
     inline double eccentricAnomalyToMeanAnomaly(double EA, double e) {
-        return EA - e * std::sin(EA);
+        using namespace detail;
+        return normAngle(EA - e * std::sin(EA));
     }
 
     /**
@@ -77,7 +87,8 @@ namespace util {
      * @return Eccentric Anomaly in [rad]
      */
     inline double trueAnomalyToEccentricAnomaly(double TA, double e) {
-        return 2 * std::atan(std::sqrt((1 - e) / (1 + e)) * std::tan(TA / 2));
+        using namespace detail;
+        return normAngle(2 * std::atan(std::sqrt((1 - e) / (1 + e)) * std::tan(TA / 2)));
     }
 
     /**
@@ -87,7 +98,8 @@ namespace util {
      * @return True Anomaly in [rad]
      */
     inline double eccentricAnomalyToTrueAnomaly(double EA, double e) {
-        return 2 * std::atan(std::sqrt((1 + e) / (1 - e)) * std::tan(EA / 2));
+        using namespace detail;
+        return normAngle(2 * std::atan(std::sqrt((1 + e) / (1 - e)) * std::tan(EA / 2)));
     }
 
     /**
@@ -99,7 +111,10 @@ namespace util {
     inline double meanMotionToSemiMajorAxis(double meanMotion) {
         //GRAVITATIONAL_PARAMETER_EARTH^(1/3)
         static constexpr double thirdRoot = 73594.59595000199;
-        return thirdRoot / std::pow(2.0 * PI * meanMotion / 86400.0, 2.0 / 3.0);
+        static constexpr double twoThird = 2.0 / 3.0;
+        static constexpr double fac = PI2 / 86400.0;
+
+        return thirdRoot / std::pow(fac * meanMotion, twoThird);
     }
 
 }

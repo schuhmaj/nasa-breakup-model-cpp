@@ -3,24 +3,27 @@
 #include <memory>
 #include <exception>
 #include <iostream>
-#include "input/ConfigurationSource.h"
+#include <sstream>
+#include <algorithm>
+#include "input/InputConfigurationSource.h"
 #include "input/DataSource.h"
 #include "Breakup.h"
 #include "Explosion.h"
 #include "Collision.h"
+#include "spdlog/spdlog.h"
 
 /**
  * Interface to easily create a Breakup Simulation.
  */
 class BreakupBuilder {
 
-    std::shared_ptr<ConfigurationSource> _configurationSource;
+    std::shared_ptr<InputConfigurationSource> _configurationSource;
 
     double _minimalCharacteristicLength;
 
     SimulationType _simulationType;
 
-    size_t _currentMaximalGivenID;
+    std::optional<size_t> _currentMaximalGivenID;
 
     std::optional<std::set<size_t>> _idFilter;
 
@@ -28,7 +31,7 @@ class BreakupBuilder {
 
 public:
 
-    explicit BreakupBuilder(const std::shared_ptr<ConfigurationSource> &configurationSource)
+    explicit BreakupBuilder(const std::shared_ptr<InputConfigurationSource> &configurationSource)
             : _configurationSource{configurationSource},
               _minimalCharacteristicLength{configurationSource->getMinimalCharacteristicLength()},
               _simulationType{configurationSource->getTypeOfSimulation()},
@@ -41,10 +44,10 @@ public:
      * @param configurationReader - a shared pointer to an input source
      * @return this
      */
-    BreakupBuilder &reconfigure(const std::shared_ptr<ConfigurationSource> &configurationReader);
+    BreakupBuilder &reconfigure(const std::shared_ptr<InputConfigurationSource> &configurationReader);
 
     /**
-     * Reloads the ConfigurationSource. This can mean e. g. to re-read the underlying file or similar actions.
+     * Reloads the InputConfigurationSource. This can mean e. g. to re-read the underlying file or similar actions.
      * This method is then useful if you have previously overridden some settings by the "set"-Methods.
      * @return this
      */
@@ -66,10 +69,11 @@ public:
 
     /**
      * Overrides/ Re-Sets the currentMaximalGivenID (e.g. maximal given NORAD Catalog ID) to a specific value.
-     * @param currentMaximalGivenID - size_t
+     * If the nullopt is chosen, the maximal ID is derived from the input satellites.
+     * @param currentMaximalGivenID - std::optional<size_t>
      * @return this
      */
-    BreakupBuilder &setCurrentMaximalGivenID(size_t currentMaximalGivenID);
+    BreakupBuilder &setCurrentMaximalGivenID(const std::optional<size_t> &currentMaximalGivenID);
 
     /**
      * Overrides/ Re-Sets the ID Filter and sets it to a new set.
@@ -91,7 +95,7 @@ public:
      * @param dataSource - a pointer to an DataSource
      * @return this
      */
-    BreakupBuilder &setDataSource(const std::shared_ptr<DataSource> &dataSource);
+    BreakupBuilder &setDataSource(const std::shared_ptr<const DataSource> &dataSource);
 
     /**
      * Creates a new Breakup Simulation with the given input.
@@ -101,7 +105,7 @@ public:
      * WEAK   --> No specified input type, but Satellite number suggests a type (error message, but simulation continues)<br>
      * NONE   --> No input type given, type cannot be derived from satellite number (throws exception)<br>
      * @return Breakup Simulation
-     * @throws an invalid_argument exception if type is not determined
+     * @throws a runtime_error if type is not determined
      */
     std::unique_ptr<Breakup> getBreakup() const;
 
@@ -113,34 +117,25 @@ private:
      * @param satelliteVector - std::vector<Satellite>
      * @return a Explosion
      */
-    inline std::unique_ptr<Breakup> createExplosion(std::vector<Satellite> &satelliteVector) const {
-        return std::make_unique<Explosion>(satelliteVector, _minimalCharacteristicLength, _currentMaximalGivenID);
-    }
+    std::unique_ptr<Breakup> createExplosion(std::vector<Satellite> &satelliteVector, size_t maxID) const;
 
     /**
      * Creates a Collision Simulation.
      * @param satelliteVector - std::vector<Satellite>
      * @return a Collision
      */
-    inline std::unique_ptr<Breakup> createCollision(std::vector<Satellite> &satelliteVector) const {
-        return std::make_unique<Collision>(satelliteVector, _minimalCharacteristicLength, _currentMaximalGivenID);
-    }
+    std::unique_ptr<Breakup> createCollision(std::vector<Satellite> &satelliteVector, size_t maxID) const;
 
     /**
      * Returns an vector containing only the satellites given in the filterSet.
      * @return a modified satellite vector
      */
-    inline std::vector<Satellite> applyFilter() const {
-        if (_idFilter.has_value()) {
-            std::vector<Satellite> satellitesFiltered{_satellites};
-            satellitesFiltered.erase(std::remove_if(satellitesFiltered.begin(), satellitesFiltered.end(),
-                                                 [&](Satellite &sat) {
-                                                     return _idFilter->count(sat.getId()) == 1;
-                                                 }),
-                                     satellitesFiltered.end());
-            return satellitesFiltered;
-        } else {
-            return _satellites;
-        }
-    }
+    [[nodiscard]] std::vector<Satellite> applyFilter() const;
+
+    /**
+     * Returns either the the maximalGivenID if this value is given via input or it derives this value from the input
+     * satellites. In case the input satellite vector is empty, this function will return zero.
+     * @return size_t - maxID
+     */
+    [[nodiscard]] size_t deriveMaximalID() const;
 };

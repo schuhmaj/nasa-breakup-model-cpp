@@ -8,3 +8,9 @@ FetchContent_Declare(googletest
         )
 
 FetchContent_MakeAvailable(googletest)
+
+# Disable warnings from the library target
+target_compile_options(gtest_main PRIVATE -w)
+# Disable warnings from included headers
+get_target_property(propval gtest_main INTERFACE_INCLUDE_DIRECTORIES)
+target_include_directories(gtest_main SYSTEM PUBLIC "${propval}")

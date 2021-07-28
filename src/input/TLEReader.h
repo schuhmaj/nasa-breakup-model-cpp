@@ -7,6 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <filesystem>
+#include "model/OrbitalElementsFactory.h"
 
 /**
  * Provides the functionality to parse a TLE (Two-Line-Format).
@@ -27,7 +28,7 @@ public:
     explicit TLEReader(std::string filepath)
         : _filepath(std::move(filepath)) {
         if (!std::filesystem::exists(_filepath)) {
-            throw std::runtime_error{"The TLE file does not exists!"};
+            throw std::runtime_error{"The TLE file " + filepath + " does not exist!"};
         }
     }
 
@@ -41,7 +42,7 @@ public:
      * @return mapping <ID, KeplerElements>
      * @throws an exception if the TLE is malformed or any other issues are encountered during the parsing
      */
-    std::map<size_t, std::array<double, 6>> getMappingIDKepler();
+    std::map<size_t, OrbitalElements> getMappingIDOrbitalElements() const;
 
 private:
 
@@ -51,7 +52,7 @@ private:
      * @return a pair of <ID, KeplerElements>
      * @throws an exception if the TLE is malformed or any other issues are encountered during the parsing
      */
-    static std::pair<size_t, std::array<double, 6>> getTwoLine(std::istream &istream);
+    std::pair<size_t, OrbitalElements> getTwoLine(std::istream &istream) const;
 
 };
 

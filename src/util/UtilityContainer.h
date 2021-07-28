@@ -176,11 +176,7 @@ namespace util {
      */
     template<typename Container>
     double euclideanNorm(const Container &container) {
-        double  sum = 0;
-        for (auto &el : container) {
-            sum += el * el;
-        }
-        return std::sqrt(sum);
+        return std::sqrt(std::inner_product(std::begin(container), std::end(container), std::begin(container), 0.0));
     }
 
     /**
@@ -231,5 +227,11 @@ namespace util {
         os << *it << "]";
         return os;
     }
+
+    template <typename T>
+    struct is_stdarray : std::false_type {};
+
+    template <typename T, std::size_t N>
+    struct is_stdarray<std::array<T, N>> : std::true_type {};
 
 }

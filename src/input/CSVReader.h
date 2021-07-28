@@ -16,6 +16,15 @@
  * to true in the constructor, the header can be read as strings by using getHeader().
  *
  * @example CSVReader{int, std::string, double} reads in rows of the kind "1234,Hello World,3.33"
+ *
+ * @note If you define the wrong types, the CSVReader will work nevertheless or not depending on the definition of the
+ * operator >> for a given type. E. g. if you define double as type, but in the the CSV is written "word" in the
+ * corresponding cell. The operator >> for double reads in zero. A reverse example would be defined type string, but
+ * in the cell is written "12.22", then "12.22" will be the result. The CSVReader has no clue if the data is correct,
+ * the checking is the obligation of the User.<br><br>
+ * Other example, where error handling is implemented: If you read in a SatType, the operator >> for SatType will throw
+ * an exception if no mapping can be found. Nevertheless this is NOT implemented here in the CSVReader whereas it is
+ * implemented by the "user".
  */
 template<typename ...T>
 class CSVReader {
@@ -36,24 +45,25 @@ public:
             : _filepath(std::move(filepath)),
               _hasHeader(hasHeader) {
         if (!std::filesystem::exists(_filepath)) {
-            throw std::runtime_error{"The CSV file does not exists!"};
+            throw std::runtime_error{"The CSV file " + filepath + " does not exist!"};
         }
     }
 
-    virtual ~CSVReader() = default;
+    ~CSVReader() = default;
 
 
 private:
 
     /**
      * Parses one cell of the CSV line file stream to a type V by using its >> operator.
+     * The getLine overhead fixes the problematic of ',' consumption.
      * @tparam V - the value to be extracted, should have an >> operator overload
      * @param istream - the line stream
      * @param value - the value extracted (non-const)
      * @return true to not cause any issues in getTuple
      */
     template<typename V>
-    bool parseCell(std::istream &istream, V &value) {
+    bool parseCell(std::istream &istream, V &value) const {
         std::string cell;
         std::getline(istream, cell, ',');
         std::stringstream cellStream {cell};
@@ -69,7 +79,7 @@ private:
     * @param value - the value extracted (non-const)
     * @return true to not cause any issues in getTuple
     */
-    bool parseCell(std::istream &istream, std::string &value) {
+    bool parseCell(std::istream &istream, std::string &value) const {
         std::string cell;
         std::getline(istream, cell, ',');
         value = cell;
@@ -86,7 +96,7 @@ private:
      * https://stackoverflow.com/questions/34314806/parsing-a-c-string-into-a-tuple [accessed 29.06.2021]
      */
     template<typename Tuple, typename std::size_t... I>
-    void getTuple(std::istream &lineStream, Tuple &tuple, std::index_sequence<I...>) {
+    void getTuple(std::istream &lineStream, Tuple &tuple, std::index_sequence<I...>) const {
         std::initializer_list<bool>{parseCell(lineStream, std::get<I>(tuple)) ...};
     }
 
@@ -98,7 +108,7 @@ private:
      * @return success of parsing a new element
      */
     template<typename Tuple>
-    bool nextLine(std::istream &fileStream, Tuple &tuple) {
+    bool nextLine(std::istream &fileStream, Tuple &tuple) const {
         std::string line;
         std::getline(fileStream, line);
         if (!line.empty()) {
@@ -116,7 +126,7 @@ public:
      * @return vector of tokenized lines
      * @throws an exception if issues are encountered during parsing
      */
-    std::vector<std::tuple<T...>> getLines() {
+    std::vector<std::tuple<T...>> getLines() const {
         //Open fileStream stream
         std::ifstream fileStream{_filepath};
         std::vector<std::tuple<T...>> lines{};
@@ -128,13 +138,9 @@ public:
             std::getline(fileStream, line);
         }
 
-        //Read row by row, if issues appear rethrow the exception
-        try {
-            while (this->nextLine(fileStream, t)) {
-                lines.push_back(t);
-            }
-        } catch (std::exception &e) {
-            throw;
+        //Read row by row
+        while (this->nextLine(fileStream, t)) {
+            lines.push_back(t);
         }
 
         return lines;
@@ -145,7 +151,7 @@ public:
      * @return vector of strings
      * @throws an exception if the CSV file does not have an header
      */
-    std::array<std::string, sizeof...(T)> getHeader() {
+    std::array<std::string, sizeof...(T)> getHeader() const {
         if (_hasHeader) {
             std::array<std::string, sizeof...(T)> header{};
             std::ifstream fileStream{_filepath};
@@ -161,7 +167,8 @@ public:
             }
             return header;
         } else {
-            throw std::runtime_error{"The CSV file has no header!"};
+            throw std::runtime_error{"The CSVReader was configured that this CSV file has no header."
+                                     "Nevertheless getHeader() was called, which is wrong!"};
         }
     }
 };

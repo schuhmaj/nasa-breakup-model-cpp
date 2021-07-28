@@ -14,10 +14,10 @@ void Explosion::generateFragments() {
 
 
     //The fragment Count, respectively Equation 2
-    double fragmentCount = 6 * std::pow(_minimalCharacteristicLength, -1.6);
+    auto fragmentCount = static_cast<size_t>(6.0 * std::pow(_minimalCharacteristicLength, -1.6));
 
     const std::string debrisName{sat.getName() + "-Explosion-Fragment"};
-    this->createFragments(static_cast<size_t>(fragmentCount), debrisName, sat.getPosition());
+    this->createFragments(fragmentCount, debrisName, sat.getPosition());
 }
 
 void Explosion::characteristicLengthDistribution() {

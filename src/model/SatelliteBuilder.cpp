@@ -34,7 +34,9 @@ SatelliteBuilder &SatelliteBuilder::setSatType(const std::string &satType) {
     try {
         this->setSatType(Satellite::stringToSatType.at(satType));
     } catch (std::exception &e) {
-        throw std::invalid_argument{"Satellite Type is not well defined!"};
+        std::stringstream message{};
+        message << _satellite << " has no well defined Satellite Type";
+        throw std::runtime_error{message.str()};
     }
     return *this;
 }
@@ -43,7 +45,9 @@ SatelliteBuilder &SatelliteBuilder::setSatType(std::string &&satType) {
     try {
         this->setSatType(Satellite::stringToSatType.at(satType));
     } catch (std::exception &e) {
-        throw std::invalid_argument{"Satellite Type is not well defined!"};
+        std::stringstream message{};
+        message << _satellite << " has no well defined Satellite Type";
+        throw std::runtime_error{message.str()};
     }
     return *this;
 }
@@ -53,6 +57,7 @@ SatelliteBuilder &SatelliteBuilder::setMass(double mass) {
     double area = util::calculateCircleArea(characteristicLength);
     _satellite.setMass(mass);
     _satellite.setArea(area);
+    _satellite.setAreaToMassRatio(area / mass);
     _satellite.setCharacteristicLength(characteristicLength);
     _hasMass = true;
     return *this;
@@ -63,6 +68,7 @@ SatelliteBuilder &SatelliteBuilder::setMassByArea(double area) {
     double mass = util::calculateSphereMass(characteristicLength);
     _satellite.setMass(mass);
     _satellite.setArea(area);
+    _satellite.setAreaToMassRatio(area / mass);
     _satellite.setCharacteristicLength(characteristicLength);
     _hasMass = true;
     return *this;
@@ -80,46 +86,31 @@ SatelliteBuilder &SatelliteBuilder::setPosition(const std::array<double, 3> &pos
     return *this;
 }
 
-SatelliteBuilder &
-SatelliteBuilder::setKeplerianElementsEA(const std::array<double, 6> &keplerianElements) {
+SatelliteBuilder &SatelliteBuilder::setOrbitalElements(const OrbitalElements &orbitalElements) {
     _hasVelocity = true;
     _hasPosition = true;
-    _satellite.setCartesianByKeplerEA(keplerianElements);
-    return *this;
-}
-
-SatelliteBuilder &
-SatelliteBuilder::setKeplerianElementsMA(const std::array<double, 6> &keplerianElements) {
-    _hasVelocity = true;
-    _hasPosition = true;
-    _satellite.setCartesianByKeplerMA(keplerianElements);
-    return *this;
-}
-
-SatelliteBuilder &
-SatelliteBuilder::setKeplerianElementsTA(const std::array<double, 6> &keplerianElements) {
-    _hasVelocity = true;
-    _hasPosition = true;
-    _satellite.setCartesianByKeplerTA(keplerianElements);
-    return *this;
-}
-
-SatelliteBuilder &SatelliteBuilder::setKeplerianElementsTLEFormat(const std::array<double, 6> &keplerianElements) {
-    _hasVelocity = true;
-    _hasPosition = true;
-    _satellite.setCartesianByKeplerTLEFormat(keplerianElements);
+    _satellite.setCartesianByOrbitalElements(orbitalElements);
     return *this;
 }
 
 Satellite &SatelliteBuilder::getResult() {
     if (!_hasID) {
-        throw std::runtime_error{"Satellite has no ID!"};
+        std::stringstream message{};
+        message << _satellite << " has no valid ID!";
+        throw std::runtime_error{message.str()};
     }
     if (!_hasMass) {
-        throw std::runtime_error{"Satellite has no mass or way to derive the mass!"};
+        std::stringstream message{};
+        message << _satellite << " has no mass or way to derive the mass!";
+        throw std::runtime_error{message.str()};
     }
     if (!_hasVelocity) {
-        throw std::runtime_error{"Satellite has no velocity or way to derive the velocity!"};
+        std::stringstream message{};
+        message << _satellite << " has no velocity or way to derive the velocity!";
+        throw std::runtime_error{message.str()};
+    }
+    if (!_hasPosition) {
+        spdlog::info("{} has no position. This is not a problem!", _satellite);
     }
     return _satellite;
 }

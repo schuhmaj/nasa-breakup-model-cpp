@@ -3,8 +3,12 @@
 #include "Satellite.h"
 #include "util/UtilityFunctions.h"
 #include <string>
+#include <sstream>
 #include <array>
 #include <exception>
+#include "model/OrbitalElements.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
 
 /**
  * General Idea is that there a multiple ways to construct a valid satellite object to run the simulation with it.
@@ -78,7 +82,7 @@ public:
      * Adds the SatelliteType. If not used the builder will use the default from Satellite class: SPACECRAFT.
      * @param satType as string
      * @return this
-     * @throws May throw an invalid_argument Exception if the satType String can not be mapped to a SatType!
+     * @throws May throw an runtime_error Exception if the satType String can not be mapped to a SatType!
      */
     SatelliteBuilder &setSatType(const std::string &satType);
 
@@ -86,7 +90,7 @@ public:
      * Adds the SatelliteType. If not used the builder will use the default from Satellite class: SPACECRAFT.
      * @param satType as string
      * @return this
-     * @throws May throw an invalid_argument Exception if the satType String can not be mapped to a SatType!
+     * @throws May throw an runtime_error Exception if the satType String can not be mapped to a SatType!
      */
     SatelliteBuilder &setSatType(std::string &&satType);
 
@@ -127,60 +131,11 @@ public:
 
     /**
      * Sets the position and velocity of the satellite by using the Keplerian Elements.
-     * @param keplerianElements array holds the arguments in the following order:
-     * @param a - semir-major axis [m]
-     * @param e - eccentricity
-     * @param i - inclination [rad]
-     * @param W - longitude of the ascending node (big omega) [rad]
-     * @param w - argument of periapsis (small omega) [rad]
-     * @param EA - eccentric Anomaly [rad]
+     * @param orbitalElements holds the Keplerian Elements
      * @return this
      * @attention This will override previous attempts of setting the velocity/ position.
      */
-    SatelliteBuilder &setKeplerianElementsEA(const std::array<double, 6> &keplerianElements);
-
-    /**
-     * Sets the position and velocity of the satellite by using the Keplerian Elements.
-     * @param keplerianElements array holds the arguments in the following order:
-     * @param a - semir-major axis [m]
-     * @param e - eccentricity
-     * @param i - inclination [rad]
-     * @param W - longitude of the ascending node (big omega) [rad]
-     * @param w - argument of periapsis (small omega) [rad]
-     * @param MA - mean Anomaly [rad]
-     * @return this
-     * @attention This will override previous attempts of setting the velocity/ position.
-     */
-    SatelliteBuilder &setKeplerianElementsMA(const std::array<double, 6> &keplerianElements);
-
-    /**
-     * Sets the position and velocity of the satellite by using the Keplerian Elements.
-     * @param keplerianElements array holds the arguments in the following order:
-     * @param a - semir-major axis [m]
-     * @param e - eccentricity
-     * @param i - inclination [rad]
-     * @param W - longitude of the ascending node (big omega) [rad]
-     * @param w - argument of periapsis (small omega) [rad]
-     * @param TA - true Anomaly [rad]
-     * @return this
-     * @attention This will override previous attempts of setting the velocity/ position.
-     */
-    SatelliteBuilder &setKeplerianElementsTA(const std::array<double, 6> &keplerianElements);
-
-    /**
-     * @attention The angle values are in [deg] in this method!!!
-     * Sets the position and velocity of the satellite by using the Keplerian Elements.
-     * @param keplerianElements array holds the arguments in the following order:
-     * @param mm - mean motion [revolutions/day]
-     * @param e - eccentricity
-     * @param i - inclination [deg]
-     * @param W - longitude of the ascending node (big omega) [deg]
-     * @param w - argument of periapsis (small omega) [deg]
-     * @param MA - Mean Anomaly [deg]
-     * @return this
-     * @attention This will override previous attempts of setting the velocity/ position.
-     */
-    SatelliteBuilder &setKeplerianElementsTLEFormat(const std::array<double, 6> &keplerianElements);
+    SatelliteBuilder &setOrbitalElements(const OrbitalElements &orbitalElements);
 
     /**
      * Returns the fully build satellite. Validates if all necessary parameters are specified.

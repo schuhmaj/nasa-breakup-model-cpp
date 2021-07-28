@@ -16,6 +16,7 @@ https://1drv.ms/u/s!Ag_epLxb0vqqgc53PKGgT8J1CdzrtQ?e=U2JT9E
 The project uses the following dependencies:
 - GoogleTest-1.10.0 (Only required for Testing, Automatically set-up by CMake)
 - yaml-cpp-0.6.3 (Required for Input, Automatically set-up by CMake)
+- spdlog Version 1.8.5 (Required for output and logging, Automatically set-up by CMake)
 
 ## Build
 The program is build by using CMake. So first make sure that you installed
@@ -36,6 +37,7 @@ After the build, the simulation can be run by executing:
 The given yaml-file should look like this:
 
 ```yaml
+  simulation:
     minimalCharacteristicLength: 0.05 #minimal fragment L_c in [m]
     simulationType: COLLISION         #Option (Alias): COLLISION (CO) or EXPLOSION (EX)
                                       #If not given type is determined
@@ -49,8 +51,14 @@ The given yaml-file should look like this:
     idFilter: [1, 2]                  #Only the satellites with these IDs will be
                                       #recognized by the simulation.
                                       #If not given, no filter is applied
-    keplerOutput: True                #Parameter is optional and only reasonable
-                                      #if the input contains Kepler based data
+  inputOutput:                        #If you want to print out the input data into specific file (optional)
+    target: ["input.csv", "input.vtu"]#Target files
+    #kepler: True                     #CSV with Kepler elements
+    #csvPattern: "IL"                 #Override "kepler" setting and prints CSV output according to pattern
+  resultOutput:                       #If you want a result, you should define here some target file for the
+    target: ["result.csv", "result.vtu"]#fragements (like vtk or csv)
+    #kepler: True                     #Option like above
+    #csvPattern: "IL"                 #Option like above, available Patterns: see below
 ```    
 A "data.yaml" should have the following form (for example):
 
@@ -79,6 +87,12 @@ A "data.yaml" should have the following form (for example):
         eccentric-anomaly: (double) #But one of them is a must.
         mean-anomaly: 0.2405604761  #The program ignores if multipe anomalies are given
                                     #expect one.The precedence is: Eccentric > Mean > True
+    - name: "Example Satellite 3"   
+      id: 24948                     
+      satType: SPACECRAFT           
+      mass: 700.0                   
+      kepler: "../tle-file.txt"     #It is also possible to parse the Kepler elements from
+                                    #a TLE file
     - ...
 ```
 
@@ -110,7 +124,22 @@ via their IDs. You find the IDs in the satcat in the third column (NORAD_CAT_ID)
 in the TLE optionally in first and second row in the beginning (example: 25544).
 
 ### Output
-The simulation will produce a CSV file.
+The simulation can produce CSV and VTK files, depending on the configuration
+it produces both, either of them or none (see YAML Configuration File)
+
+#### Available Patterns for the CSVPatternWriter:
+
+| Pattern | Meaning                   | Pattern | Meaning |
+| ---     | ---                       | ---     | --- |
+| I       | ID                        | a       | Semi-Major-Axis [m] |
+| n       | Name                      | e       | Eccentricity |
+| t       | Satellite Type            | i       | Inclination [rad] |
+| L       | Characteristic Length [m] | W       | Longitude of the ascending node [rad] |
+| R       | A/M [m^2/kg]              | w       | Argument of periapsis [rad] |
+| A       | Area [m^2]                | M       | Mean Anomaly [rad] |
+| m       | Mass [kg]                 | E       | Eccentric Anomaly [rad] |
+| v       | Velocity [m/s]            | T       | True Anomaly [rad] |
+| p       | Position [m]              |         | |
 
 ## Library
 The Breakup Simulation can be used directly from any C++ project
@@ -128,11 +157,11 @@ Example:
 
 ```cpp
     //RuntimeInput via the RuntimeInputSource Object (minmial Config: minL_c = 0.05 + inputSatellites)
-    auto configurationSource = std::shared_ptr<ConfigurationSource>{new RuntimeInputSource(0.05, satellites)};
+    auto configSource = std::make_shared<RuntimeInputSource>(0.05, satellites);
     //Give the BreakupBuilder its configuration object (YMALConfigurationReader or RuntimeInputSource or your own derived source)
-    BreakupBuilder breakupFactory{configurationSource};
+    BreakupBuilder breakupBuilder{configSource};
     //Create the Breakup Simulation
-    auto breakup = breakupFactory.getBreakup();
+    auto breakup = breakupBuilder.getBreakup();
     //Run it and get the result via breakup.getResult();
     breakup->run();
 ```
