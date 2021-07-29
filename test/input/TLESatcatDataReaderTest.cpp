@@ -170,11 +170,3 @@ TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionNoPartner) {
 
     ASSERT_EQ(actualSatellites.size(), 0);
 }
-
-TEST_F(TLESatcatDataReaderTest, getSatelliteCollectionEmptyTLE) {
-    _expectedSatellites.clear();
-    TLESatcatDataReader tleSatcatDataReader{"resources/SatcatReaderTest01.csv", "resources/TLESatcatReaderTest04.txt"};
-
-    ASSERT_THROW(tleSatcatDataReader.getSatelliteCollection(), std::runtime_error);
-
-}
