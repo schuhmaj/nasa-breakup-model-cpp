@@ -7,11 +7,6 @@ Comments to Equations or similar in the source code reference the following docu
 
 Johnson, Nicholas L., et al. “NASA’s new breakup model of EVOLVE 4.0” Advances in Space Research 28.9 (2001): 1377-1384
 
-### Additional Information (TODO: Remove when public)
-Additional Documents and Descriptions to the Implementation
-and its fundamentals can be found here:
-https://1drv.ms/u/s!Ag_epLxb0vqqgc53PKGgT8J1CdzrtQ?e=U2JT9E
-
 ### Requirements
 The project uses the following dependencies:
 - GoogleTest-1.10.0 (Only required for Testing, Automatically set-up by CMake)
