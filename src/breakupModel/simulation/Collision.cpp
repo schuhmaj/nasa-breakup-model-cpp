@@ -78,6 +78,7 @@ void Collision::assignParent() {
     }
 
     //Assign the rest with respect to the already assigned debris-mass for the big satellite
+    //first if: the mass of the bigSat is normed to the actual produced mass of the simulation
     for (auto &sat : _output) {
         if (sat.getCharacteristicLength() <= smallSat.getCharacteristicLength()
             && assignedBigMass < bigSat.getMass() * resultMass / inputMass) {
