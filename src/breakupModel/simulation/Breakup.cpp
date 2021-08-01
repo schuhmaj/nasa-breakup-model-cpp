@@ -13,6 +13,9 @@ void Breakup::run() {
     //4. Step: Calculate the A/M (area-to-mass-ratio), A (area) and M (mass) values for every Satellite
     this->areaToMassRatioDistribution();
 
+    //Checking step: Assign parent and check that the output mass does not exceed the input mass
+    this->assignParent();
+
     //5. Step: Calculate the Ejection velocity for every Satellite
     this->deltaVelocityDistribution();
 
@@ -28,9 +31,8 @@ void Breakup::prepare() {
 }
 
 void
-Breakup::createFragments(size_t fragmentCount, const std::string &debrisName, const std::array<double, 3> &position) {
-    auto debrisNamePtr = std::make_shared<const std::string>(debrisName);
-    _output.resize(fragmentCount, Satellite(debrisNamePtr, SatType::DEBRIS, position));
+Breakup::createFragments(size_t fragmentCount, const std::array<double, 3> &position) {
+    _output.resize(fragmentCount, Satellite(SatType::DEBRIS, position));
     std::for_each(_output.begin(), _output.end(),
                   [&](Satellite &sat) { sat.setId(++_currentMaxGivenID); });
 }
@@ -90,9 +92,9 @@ void Breakup::deltaVelocityDistribution(double factor, double offset) {
                       std::normal_distribution normalDistribution{mu, sigma};
                       double velocity = std::pow(10, normalDistribution(_randomNumberGenerator));
 
-                      //Transform the scalar velocity into an cartesian vector
+                      //Transform the scalar velocity into a cartesian vector
                       auto velocityVector = calculateVelocityVector(velocity);
-                      sat.setVelocity(velocityVector);
+                      sat.addEjectionVelocity(velocityVector);
                   });
 }
 

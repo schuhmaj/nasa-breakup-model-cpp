@@ -139,7 +139,7 @@ protected:
      * @param position - position of the fragment, derived from the one parent (explosion) or from first parent (collision)
      */
     virtual void
-    createFragments(size_t fragmentCount, const std::string &debrisName, const std::array<double, 3> &position);
+    createFragments(size_t fragmentCount, const std::array<double, 3> &position);
 
     /**
      * Creates the Size Distribution. After the fragments are generated this method will assign
@@ -163,7 +163,15 @@ protected:
     virtual void areaToMassRatioDistribution();
 
     /**
-     * Implements the Delta Velocity Distribution. Assigns every satellite an cartesian velocity vector.
+     * This Method does assign each fragment a parent (trivial in Explosion case) and checks that
+     * the step before did not produce more mass than the input contained.
+     * Furthermore by assigning a parent, this method also assigns the base velocity of this fragment
+     */
+    virtual void assignParent() = 0;
+
+    /**
+     * Implements the Delta Velocity Distribution (ejection velocity).
+     * Assigns every satellite an cartesian velocity vector.
      * Therefore it first calculates the velocity according to Equation 11/ 12 as an scalar and transform this
      * into an cartesian vector.
      * @note This method is implemented in the subclasses and calls the general form with parameters in the base class

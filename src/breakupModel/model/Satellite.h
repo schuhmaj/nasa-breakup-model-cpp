@@ -98,9 +98,15 @@ class Satellite {
      * The cartesian velocity vector v [m/s^2]
      * @note Directly given as input parameter, e.g. the velocity Orbital State Vector
      * @note Derived from the Keplerian elements
-     * @remark Determined by the breakup simulation
+     * @remark Determined by the breakup simulation (sum of parent velocity and ejection velocity)
      */
     std::array<double, 3> _velocity{};
+
+    /**
+     * The relative cartesian ejection velocity [m/s^2] from the breakup place
+     * @remark Determined by the breakup simulation
+     */
+    std::array<double, 3> _ejectionVelocity{};
 
     /**
      * The cartesian position vector [m]
@@ -135,11 +141,16 @@ public:
     explicit Satellite(size_t id)
             : _id{id} {}
 
-    Satellite(const std::string& name, SatType satType)
+    //TODO Remove this when position is pointer
+    Satellite(SatType satType, std::array<double, 3> position)
+            : _satType{satType},
+              _position{position} {}
+
+    Satellite(const std::string &name, SatType satType)
             : _name{std::make_shared<const std::string>(name)},
               _satType{satType} {}
 
-    Satellite(const std::string& name, SatType satType, std::array<double, 3> position)
+    Satellite(const std::string &name, SatType satType, std::array<double, 3> position)
             : _name{std::make_shared<const std::string>(name)},
               _satType{satType},
               _position{position} {}
@@ -224,6 +235,10 @@ public:
         _name = std::make_shared<const std::string>(name);
     }
 
+    void setName(const std::shared_ptr<const std::string> &name) {
+        _name = name;
+    }
+
     [[nodiscard]] SatType getSatType() const {
         return _satType;
     }
@@ -269,7 +284,7 @@ public:
     }
 
     /**
-     * Sets the velcoity of the Satellite.
+     * Sets the velocity of the Satellite.
      * @note This modifies the state, therefore the _orbitalElementsCache is invalidated
      * @param velocity - cartesian vector
      */
@@ -277,6 +292,33 @@ public:
         //Orbital Elements if they where previously calculated are now invalid
         _orbitalElementsCache = std::nullopt;
         _velocity = velocity;
+    }
+
+    [[nodiscard]] const std::array<double, 3> &getEjectionVelocity() const {
+        return _ejectionVelocity;
+    }
+
+    /**
+     * Sets the ejection velocity of this Satellite (debris-fragment).
+     * @note This does modifies the state, but the the ejection velocity is property of the breakup and not directly
+     * linked to the Satellite like it is the "whole" velocity. The _orbitalElementsCache is therefore not invalidated.
+     * @param ejectionVelocity - cartesian vector
+     */
+    void setEjectionVelocity(const std::array<double, 3> &ejectionVelocity) {
+        _ejectionVelocity = ejectionVelocity;
+    }
+
+    /**
+     * Sets the ejection velocity of this Satellite (debris-fragment)
+     * and adds in on top of the base velocity.
+     * @note This does modifies the state, but the the ejection velocity is property of the breakup and not directly
+     * linked to the Satellite like it is the "whole" velocity. The _orbitalElementsCache is therefore not invalidated.
+     * @param ejectionVelocity - cartesian vector
+     */
+    void addEjectionVelocity(const std::array<double, 3> &ejectionVelocity) {
+        using util::operator+;
+        _ejectionVelocity = ejectionVelocity;
+        _velocity = _velocity + _ejectionVelocity;
     }
 
     [[nodiscard]] const std::array<double, 3> &getPosition() const {

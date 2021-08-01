@@ -39,15 +39,56 @@ void Collision::generateFragments() {
     }
 
     //The fragment Count, respectively Equation 4
-    auto fragmentCount = static_cast<size_t>(0.1 * std::pow(mass, 0.75) * std::pow(_minimalCharacteristicLength, -1.71));
-
-    const std::string debrisName{sat1.getName() + " & " + sat2.getName() + "-Collision-Fragment"};
-    this->createFragments(fragmentCount, debrisName, sat1.getPosition());
+    auto fragmentCount = static_cast<size_t>(0.1 * std::pow(mass, 0.75) *
+                                             std::pow(_minimalCharacteristicLength, -1.71));
+    this->createFragments(fragmentCount, sat1.getPosition());
 }
 
 void Collision::characteristicLengthDistribution() {
     //The pdf for Collisions is: 0.0101914/(x^2.71)
     Breakup::characteristicLengthDistribution(-2.71);
+}
+
+void Collision::assignParent() {
+    //The names of the fragments for a given parent
+    const Satellite &bigSat = _input.at(0);
+    const Satellite &smallSat = _input.at(1);
+    auto debrisNameBigPtr = std::make_shared<const std::string>(bigSat.getName() + "-Collision-Fragment");
+    auto debrisNameSmallPtr = std::make_shared<const std::string>(smallSat.getName() + "-Collision-Fragment");
+
+    //First specify the total mass
+    double inputMass = bigSat.getMass() + smallSat.getMass();
+    double resultMass = 0;
+    auto satIt = _output.begin();
+    for (; satIt != _output.end() && resultMass < inputMass; ++satIt) {
+        resultMass += satIt->getMass();
+    }
+    //Erase potential "too-much" mass
+    resultMass = resultMass > inputMass ? resultMass - (satIt - 1)->getMass() : resultMass;
+    _output.erase(satIt, _output.end());
+
+    double assignedBigMass = 0;
+    //All debris greater than the small satellite must origin from the big one
+    for (auto &sat : _output) {
+        if (sat.getCharacteristicLength() > smallSat.getCharacteristicLength()) {
+            sat.setName(debrisNameBigPtr);
+            sat.setVelocity(bigSat.getVelocity());
+            assignedBigMass += sat.getMass();
+        }
+    }
+
+    //Assign the rest with respect to the already assigned debris-mass for the big satellite
+    for (auto &sat : _output) {
+        if (sat.getCharacteristicLength() <= smallSat.getCharacteristicLength()
+            && assignedBigMass < bigSat.getMass() * resultMass / inputMass) {
+            sat.setName(debrisNameBigPtr);
+            sat.setVelocity(bigSat.getVelocity());
+            assignedBigMass += sat.getMass();
+        } else {
+            sat.setName(debrisNameSmallPtr);
+            sat.setVelocity(smallSat.getVelocity());
+        }
+    }
 }
 
 void Collision::deltaVelocityDistribution() {
