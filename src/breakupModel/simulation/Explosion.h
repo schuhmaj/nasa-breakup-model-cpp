@@ -16,7 +16,7 @@ private:
 
     void characteristicLengthDistribution() override;
 
-    void assignParent() override;
+    void assignParentProperties() override;
 
     void deltaVelocityDistribution() override;
 

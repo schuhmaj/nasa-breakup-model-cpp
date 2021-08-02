@@ -166,8 +166,9 @@ protected:
      * This Method does assign each fragment a parent (trivial in Explosion case) and checks that
      * the step before did not produce more mass than the input contained.
      * Furthermore by assigning a parent, this method also assigns the base velocity of this fragment
+     * @note The _output of the breakup should be in a random order before this is called (this holds always true)
      */
-    virtual void assignParent() = 0;
+    virtual void assignParentProperties() = 0;
 
     /**
      * Implements the Delta Velocity Distribution (ejection velocity).

@@ -49,39 +49,37 @@ void Collision::characteristicLengthDistribution() {
     Breakup::characteristicLengthDistribution(-2.71);
 }
 
-void Collision::assignParent() {
+void Collision::assignParentProperties() {
     //The names of the fragments for a given parent
     const Satellite &bigSat = _input.at(0);
     const Satellite &smallSat = _input.at(1);
     auto debrisNameBigPtr = std::make_shared<const std::string>(bigSat.getName() + "-Collision-Fragment");
     auto debrisNameSmallPtr = std::make_shared<const std::string>(smallSat.getName() + "-Collision-Fragment");
 
-    //First specify the total mass
-    double inputMass = bigSat.getMass() + smallSat.getMass();
+    //Specify the total mass and already assign debris the big parent if they are greater than the small parent
+    const double inputMass = bigSat.getMass() + smallSat.getMass();
     double resultMass = 0;
+    double assignedBigMass = 0;
     auto satIt = _output.begin();
     for (; satIt != _output.end() && resultMass < inputMass; ++satIt) {
         resultMass += satIt->getMass();
+        if (satIt->getCharacteristicLength() > smallSat.getCharacteristicLength()) {
+            satIt->setName(debrisNameBigPtr);
+            satIt->setVelocity(bigSat.getVelocity());
+            assignedBigMass += satIt->getMass();
+        }
     }
     //Erase potential "too-much" mass
     resultMass = resultMass > inputMass ? resultMass - (satIt - 1)->getMass() : resultMass;
     _output.erase(satIt, _output.end());
 
-    double assignedBigMass = 0;
-    //All debris greater than the small satellite must origin from the big one
-    for (auto &sat : _output) {
-        if (sat.getCharacteristicLength() > smallSat.getCharacteristicLength()) {
-            sat.setName(debrisNameBigPtr);
-            sat.setVelocity(bigSat.getVelocity());
-            assignedBigMass += sat.getMass();
-        }
-    }
 
     //Assign the rest with respect to the already assigned debris-mass for the big satellite
     //first if: the mass of the bigSat is normed to the actual produced mass of the simulation
+    const double normedMassBigSat = bigSat.getMass() * resultMass / inputMass;
     for (auto &sat : _output) {
         if (sat.getCharacteristicLength() <= smallSat.getCharacteristicLength()
-            && assignedBigMass < bigSat.getMass() * resultMass / inputMass) {
+            && assignedBigMass < normedMassBigSat) {
             sat.setName(debrisNameBigPtr);
             sat.setVelocity(bigSat.getVelocity());
             assignedBigMass += sat.getMass();

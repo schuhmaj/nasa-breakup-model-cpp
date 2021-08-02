@@ -23,7 +23,7 @@ void Explosion::characteristicLengthDistribution() {
     Breakup::characteristicLengthDistribution(-2.6);
 }
 
-void Explosion::assignParent() {
+void Explosion::assignParentProperties() {
     //The name of the fragments
     const Satellite &parent = _input.at(0);
     auto debrisNamePtr = std::make_shared<const std::string>(parent.getName() + "-Explosion-Fragment");

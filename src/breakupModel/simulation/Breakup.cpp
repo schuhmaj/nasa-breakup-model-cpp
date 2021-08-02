@@ -14,7 +14,7 @@ void Breakup::run() {
     this->areaToMassRatioDistribution();
 
     //Checking step: Assign parent and check that the output mass does not exceed the input mass
-    this->assignParent();
+    this->assignParentProperties();
 
     //5. Step: Calculate the Ejection velocity for every Satellite
     this->deltaVelocityDistribution();
