@@ -13,7 +13,7 @@ void Breakup::run() {
     //4. Step: Calculate the A/M (area-to-mass-ratio), A (area) and M (mass) values for every Satellite
     this->areaToMassRatioDistribution();
 
-    //Checking step: Assign parent and check that the output mass does not exceed the input mass
+    //Checking step: Assign parent and by doing that assign each fragment a base velocity
     this->assignParentProperties();
 
     //5. Step: Calculate the Ejection velocity for every Satellite

@@ -331,7 +331,7 @@ public:
      * @param position - cartesian vector
      */
     void setPosition(const std::array<double, 3> &position) {
-        //Orbital Elements if they where previously calculated are now invalid
+        //Orbital Elements if they were previously calculated are now invalid
         _orbitalElementsCache = std::nullopt;
         _position = position;
     }
