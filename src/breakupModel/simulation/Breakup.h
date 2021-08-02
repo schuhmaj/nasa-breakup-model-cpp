@@ -51,6 +51,20 @@ protected:
     SatType _satType{SatType::SPACECRAFT};
 
     /**
+     * This is the mass-sum of the input satellites.
+     * Member which is required to check if the outputMass <= inputMass, if not some fragments have to be
+     * deleted.
+     */
+    double _inputMass{0};
+
+    /**
+     * This is the mass-sum of the output satellites (fragments).
+     * Member which is required to check if the outputMass <= inputMass, if not some fragments have to be
+     * deleted.
+     */
+    double _outputMass{0};
+
+    /**
      * The random number generator, used by the implementation.
      * It is default initialized with a random seed when the Breakup is constructed.
      */
@@ -161,6 +175,7 @@ protected:
 
     /**
      * Creates for every satellite the area-to-mass ratio according to Equation 6.
+     * This method also ensures that the output mass does not exceed the input mass.
      */
     virtual void areaToMassRatioDistribution();
 

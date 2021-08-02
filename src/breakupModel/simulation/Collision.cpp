@@ -15,6 +15,9 @@ void Collision::generateFragments() {
         _satType = SatType::ROCKET_BODY;
     }
 
+    //Sets the _input mass which will be required later for mass conservation purpose
+    _inputMass = sat1.getMass() + sat2.getMass();
+
     //Contains the mass M (later filled with an adequate value)
     double mass = 0;
 
@@ -56,27 +59,18 @@ void Collision::assignParentProperties() {
     auto debrisNameBigPtr = std::make_shared<const std::string>(bigSat.getName() + "-Collision-Fragment");
     auto debrisNameSmallPtr = std::make_shared<const std::string>(smallSat.getName() + "-Collision-Fragment");
 
-    //Specify the total mass and already assign debris the big parent if they are greater than the small parent
-    const double inputMass = bigSat.getMass() + smallSat.getMass();
-    double outputMass = 0;
+    //Assign debris the big parent if they are greater than the small parent
     double assignedMassForBigSatellite = 0;
     for (auto &sat : _output) {
-        outputMass += sat.getMass();
         if (sat.getCharacteristicLength() > smallSat.getCharacteristicLength()) {
             sat.setName(debrisNameBigPtr);
             sat.setVelocity(bigSat.getVelocity());
             assignedMassForBigSatellite += sat.getMass();
         }
     }
-    //Print a warning for the user if the _output contains more mass than the input
-    if (inputMass < outputMass) {
-        spdlog::warn("The Collision of {} and {} produced {} kg, but the input only contained {} kg",
-                     bigSat.getName(), smallSat.getName(), outputMass, inputMass);
-    }
-
     //Assign the rest with respect to the already assigned debris-mass for the big satellite
     //first if: the mass of the bigSat is normed to the actual produced mass of the simulation
-    const double normedMassBigSat = bigSat.getMass() * outputMass / inputMass;
+    const double normedMassBigSat = bigSat.getMass() * _outputMass / _inputMass;
     for (auto &sat : _output) {
         if (sat.getCharacteristicLength() <= smallSat.getCharacteristicLength()
             && assignedMassForBigSatellite < normedMassBigSat) {

@@ -12,6 +12,8 @@ void Explosion::generateFragments() {
     //The Default of this member is SPACECRAFT
     _satType = sat.getSatType();
 
+    //Sets the _input mass which will be required later for mass conservation purpose
+    _inputMass = sat.getMass();
 
     //The fragment Count, respectively Equation 2
     auto fragmentCount = static_cast<size_t>(6.0 * std::pow(_minimalCharacteristicLength, -1.6));
@@ -28,18 +30,10 @@ void Explosion::assignParentProperties() {
     const Satellite &parent = _input.at(0);
     auto debrisNamePtr = std::make_shared<const std::string>(parent.getName() + "-Explosion-Fragment");
 
-    //Check the mass and assign name + base velocity
-    const double inputMass = parent.getMass();
-    double outputMass = 0;
+    //Assign parent + property of parent: base velocity
     for (auto &sat : _output) {
         sat.setName(debrisNamePtr);
         sat.setVelocity(parent.getVelocity());
-        outputMass += sat.getMass();
-    }
-    //Print a warning for the user if the _output contains more mass than the input
-    if (inputMass < outputMass) {
-        spdlog::warn("The Explosion of {} produced {} kg, but the input only contained {} kg",
-                     parent.getName(), outputMass, inputMass);
     }
 }
 
