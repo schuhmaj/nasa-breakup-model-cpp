@@ -58,31 +58,31 @@ void Collision::assignParentProperties() {
 
     //Specify the total mass and already assign debris the big parent if they are greater than the small parent
     const double inputMass = bigSat.getMass() + smallSat.getMass();
-    double resultMass = 0;
-    double assignedBigMass = 0;
-    auto satIt = _output.begin();
-    for (; satIt != _output.end() && resultMass < inputMass; ++satIt) {
-        resultMass += satIt->getMass();
-        if (satIt->getCharacteristicLength() > smallSat.getCharacteristicLength()) {
-            satIt->setName(debrisNameBigPtr);
-            satIt->setVelocity(bigSat.getVelocity());
-            assignedBigMass += satIt->getMass();
+    double outputMass = 0;
+    double assignedMassForBigSatellite = 0;
+    for (auto &sat : _output) {
+        outputMass += sat.getMass();
+        if (sat.getCharacteristicLength() > smallSat.getCharacteristicLength()) {
+            sat.setName(debrisNameBigPtr);
+            sat.setVelocity(bigSat.getVelocity());
+            assignedMassForBigSatellite += sat.getMass();
         }
     }
-    //Erase potential "too-much" mass
-    resultMass = resultMass > inputMass ? resultMass - (satIt - 1)->getMass() : resultMass;
-    _output.erase(satIt, _output.end());
-
+    //Print a warning for the user if the _output contains more mass than the input
+    if (inputMass < outputMass) {
+        spdlog::warn("The Collision of {} and {} produced {} kg, but the input only contained {} kg",
+                     bigSat.getName(), smallSat.getName(), outputMass, inputMass);
+    }
 
     //Assign the rest with respect to the already assigned debris-mass for the big satellite
     //first if: the mass of the bigSat is normed to the actual produced mass of the simulation
-    const double normedMassBigSat = bigSat.getMass() * resultMass / inputMass;
+    const double normedMassBigSat = bigSat.getMass() * outputMass / inputMass;
     for (auto &sat : _output) {
         if (sat.getCharacteristicLength() <= smallSat.getCharacteristicLength()
-            && assignedBigMass < normedMassBigSat) {
+            && assignedMassForBigSatellite < normedMassBigSat) {
             sat.setName(debrisNameBigPtr);
             sat.setVelocity(bigSat.getVelocity());
-            assignedBigMass += sat.getMass();
+            assignedMassForBigSatellite += sat.getMass();
         } else {
             sat.setName(debrisNameSmallPtr);
             sat.setVelocity(smallSat.getVelocity());

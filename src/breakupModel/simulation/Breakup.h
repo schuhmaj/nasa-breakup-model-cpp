@@ -11,6 +11,8 @@
 #include "breakupModel/util/UtilityContainer.h"
 #include "breakupModel/util/UtilityFunctions.h"
 #include "breakupModel/util/UtilityAreaMassRatio.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
 
 /**
  * Pure virtual class which needs a Collection of Satellites as input and output and simulates a breakup

@@ -29,17 +29,18 @@ void Explosion::assignParentProperties() {
     auto debrisNamePtr = std::make_shared<const std::string>(parent.getName() + "-Explosion-Fragment");
 
     //Check the mass and assign name + base velocity
-    double inputMass = parent.getMass();
-    double resultMass = 0;
-    auto satIt = _output.begin();
-    for (;satIt != _output.end() && resultMass < inputMass; ++satIt) {
-        satIt->setName(debrisNamePtr);
-        satIt->setVelocity(parent.getVelocity());
-        resultMass += satIt->getMass();
+    const double inputMass = parent.getMass();
+    double outputMass = 0;
+    for (auto &sat : _output) {
+        sat.setName(debrisNamePtr);
+        sat.setVelocity(parent.getVelocity());
+        outputMass += sat.getMass();
     }
-
-    //Remove potential "too-much" mass
-    _output.erase(satIt, _output.end());
+    //Print a warning for the user if the _output contains more mass than the input
+    if (inputMass < outputMass) {
+        spdlog::warn("The Explosion of {} produced {} kg, but the input only contained {} kg",
+                     parent.getName(), outputMass, inputMass);
+    }
 }
 
 void Explosion::deltaVelocityDistribution() {
