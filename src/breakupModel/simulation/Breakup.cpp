@@ -44,7 +44,8 @@ void Breakup::areaToMassRatioDistribution() {
     auto amIt = _output._areaToMassRatio.begin();
     auto areaIt = _output._area.begin();
     auto massIt = _output._mass.begin();
-    for (; amIt != _output._areaToMassRatio.end(); ++amIt, ++areaIt, ++massIt) {
+    size_t size = 0;
+    for (; amIt != _output._areaToMassRatio.end(); ++amIt, ++areaIt, ++massIt, ++size) {
         const double lc = *lcIt;
 
         //Calculate the A/M value in [m^2/kg]
@@ -69,13 +70,13 @@ void Breakup::areaToMassRatioDistribution() {
         //Stop calculating further values if the produced mass already exceeds the input mass
         //and erases the elements which are no longer needed
         _outputMass += mass;
-//        if (_outputMass > _inputMass) {
-////            spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
-////                         "In other words: The random behaviour has produced heavier fragments");
-//            _outputMass -= mass;
-//            _output.erase(satIt, _output.end());
-//            break;
-//        }
+        if (_outputMass > _inputMass) {
+//            spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
+//                         "In other words: The random behaviour has produced heavier fragments");
+            _outputMass -= mass;
+            _output.resize(size);
+            break;
+        }
     }
 }
 
