@@ -1,0 +1,37 @@
+---
+satellites:
+  - name: "Nimbus 6"
+    id: 7924
+    satType: RB
+    # area: 3.2315
+    mass: 586.0
+    velocity: [0, 0, 0] #Here the velocity and position are not really required
+    position: [0, 0, 0]
+  - name: "Nimbus 4"
+    id: 4362
+    satType: RB
+    # area: 3.2315
+    mass: 960.0
+    velocity: [ 0, 0, 0 ] #Here the velocity and position are not really required
+    position: [ 0, 0, 0 ]
+  - name: "Landsat 1"
+    id: 6126
+    satType: RB
+    # area: 3.2315
+    mass: 1800.0
+    velocity: [ 0, 0, 0 ] #Here the velocity and position are not really required
+    position: [ 0, 0, 0 ]
+  - name: "Landsat 2"
+    id: 7615
+    satType: RB
+    # area: 3.2315
+    mass: 953.0
+    velocity: [ 0, 0, 0 ] #Here the velocity and position are not really required
+    position: [ 0, 0, 0 ]
+  - name: "Landsat 3"
+    id: 10702
+    satType: RB
+    # area: 3.2315
+    mass: 960.0
+    velocity: [ 0, 0, 0 ] #Here the velocity and position are not really required
+    position: [ 0, 0, 0 ]
