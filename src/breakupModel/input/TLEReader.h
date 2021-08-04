@@ -10,13 +10,20 @@
 #include "breakupModel/model/OrbitalElementsFactory.h"
 
 /**
- * Provides the functionality to parse a TLE (Two-Line-Format).
+ * Provides the functionality to parse a TLE (Two-Line-Format) with the Alpha-5 scheme.
  * @note The TLE reader ONLY extracts arguments used by the simulation the rest is "thrown away". This behavior can be
  * modified if wished.
  */
 class TLEReader {
 
     const std::string _filepath;
+
+    /**
+     * This maps the first char of the ID to the corresponding offset.
+     * Notice that letters 'I' and 'O' does not have any mapping
+     * @related For further information about the mapping have a look at https://www.space-track.org
+     */
+    static const std::map<char, size_t> alpha5NumberingSchemeOffset;
 
 public:
 
@@ -39,7 +46,7 @@ public:
      * The Keplerian Elements are sorted in the order:<br>
      * a (semir-major-axis) , e (eccentricity), i (inclination), W (longitude of the ascending node),
      * w (argument of periapsis), MA (mean Anomaly)
-     * @return mapping <ID, KeplerElements>
+     * @return mapping ID and KeplerElements
      * @throws an exception if the TLE is malformed or any other issues are encountered during the parsing
      */
     std::map<size_t, OrbitalElements> getMappingIDOrbitalElements() const;
@@ -47,12 +54,12 @@ public:
 private:
 
     /**
-     * Parses the next two lines of the given istream.
-     * @param istream - the input stream
-     * @return a pair of <ID, KeplerElements>
+     * Parses the line two of an TLE entry to a pair of ID and Kepler elements.
+     * @param line - the input stream
+     * @return a pair of ID and KeplerElements
      * @throws an exception if the TLE is malformed or any other issues are encountered during the parsing
      */
-    std::pair<size_t, OrbitalElements> getTwoLine(std::istream &istream) const;
+    std::pair<size_t, OrbitalElements> parseLineTwo(const std::string &line) const;
 
 };
 
