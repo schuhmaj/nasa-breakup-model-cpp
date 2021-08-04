@@ -81,31 +81,11 @@ struct Satellites {
 
     Satellites() = default;
 
-    Satellites(size_t startID, SatType satType, std::array<double, 3> position, size_t reserveMemory)
+    Satellites(size_t startID, SatType satType, std::array<double, 3> position, size_t size)
             : _startID{startID},
               _satType{satType},
               _position{position} {
-        _name.reserve(reserveMemory);
-        _characteristicLength.reserve(reserveMemory);
-        _areaToMassRatio.reserve(reserveMemory);
-        _mass.reserve(reserveMemory);
-        _area.reserve(reserveMemory);
-        _ejectionVelocity.reserve(reserveMemory);
-        _velocity.reserve(reserveMemory);
-    }
-
-    Satellites(size_t startID, SatType satType, std::array<double, 3> position, const std::string &name1,
-               const std::string &name2, size_t reserveMemory)
-            : _startID{startID},
-              _satType{satType},
-              _position{position} {
-        _name.reserve(reserveMemory);
-        _characteristicLength.reserve(reserveMemory);
-        _areaToMassRatio.reserve(reserveMemory);
-        _mass.reserve(reserveMemory);
-        _area.reserve(reserveMemory);
-        _ejectionVelocity.reserve(reserveMemory);
-        _velocity.reserve(reserveMemory);
+        this->resize(size);
     }
 
     /**
@@ -136,6 +116,20 @@ struct Satellites {
      */
     size_t size() const {
         return _characteristicLength.size();
+    }
+
+    /**
+     * Resizes the Satellites SoA to a new size.
+     * @param newSize
+     */
+    void resize(size_t newSize) {
+        _name.resize(newSize);
+        _characteristicLength.resize(newSize);
+        _areaToMassRatio.resize(newSize);
+        _mass.resize(newSize);
+        _area.resize(newSize);
+        _ejectionVelocity.resize(newSize);
+        _velocity.resize(newSize);
     }
 
 };
