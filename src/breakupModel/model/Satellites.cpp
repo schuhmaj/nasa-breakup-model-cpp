@@ -32,7 +32,7 @@ std::vector<Satellite> Satellites::getAoS() const {
     size_t id = _startID;
     vector.reserve(size);
     for (auto const &[namePtr, lc, am, m, a, ev, v] : this->getAsTuple()) {
-        vector.emplace_back(id++, namePtr, _satType, lc, am, m, a, ev, v, _position);
+        vector.emplace_back(id++, namePtr, _satType, lc, am, m, a, v, ev, _position);
     }
     return vector;
 }

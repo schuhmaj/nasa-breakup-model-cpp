@@ -1,11 +1,8 @@
 #include "Breakup.h"
 
 void Breakup::run() {
-    //1. Step: Remove all old stuff which there possible is and makes the Breakup ready to go
-    this->prepare();
-
     //2. Step: Generate the new Satellites
-    this->generateFragments();
+    this->calculateFragmentCount();
 
     //3. Step: Assign every new Satellite a value for L_c
     this->characteristicLengthDistribution();
@@ -19,6 +16,8 @@ void Breakup::run() {
     //6. Step: Calculate the Ejection velocity for every Satellite
     this->deltaVelocityDistribution();
 
+    //Sets the size (maybe move elsewhere)
+    _currentMaxGivenID += _output.size();
 }
 
 Breakup &Breakup::setSeed(unsigned long seed) {
@@ -26,37 +25,27 @@ Breakup &Breakup::setSeed(unsigned long seed) {
     return *this;
 }
 
-void Breakup::prepare() {
-    _output.clear();
-}
-
 void
-Breakup::createFragments(size_t fragmentCount, const std::array<double, 3> &position) {
-    _output.resize(fragmentCount, Satellite(SatType::DEBRIS, position));
-    std::for_each(_output.begin(), _output.end(),
-                  [&](Satellite &sat) { sat.setId(++_currentMaxGivenID); });
+Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3> &position) {
+    _output = Satellites{_currentMaxGivenID+1, SatType::DEBRIS, position, fragmentCount};
 }
 
 void Breakup::characteristicLengthDistribution(double powerLawExponent) {
     using util::transformUniformToPowerLaw;
-
     std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
-    std::for_each(_output.begin(),
-                  _output.end(),
-                  [&](Satellite &sat) {
-                      const double y = uniformRealDistribution(_randomNumberGenerator);
-                      const double L_c = transformUniformToPowerLaw(_minimalCharacteristicLength,
-                                                                    _maximalCharacteristicLength,
-                                                                    powerLawExponent,
-                                                                    y);
-                      sat.setCharacteristicLength(L_c);
-                  });
+    for (auto &lc : _output._characteristicLength) {
+        const double y = uniformRealDistribution(_randomNumberGenerator);
+        lc = transformUniformToPowerLaw(_minimalCharacteristicLength, _maximalCharacteristicLength, powerLawExponent, y);
+    }
 }
 
 void Breakup::areaToMassRatioDistribution() {
-    auto satIt = _output.begin();
-    for (; satIt != _output.end(); ++satIt) {
-        const double lc = satIt->getCharacteristicLength();
+    auto lcIt = _output._characteristicLength.begin();
+    auto amIt = _output._areaToMassRatio.begin();
+    auto areaIt = _output._area.begin();
+    auto massIt = _output._mass.begin();
+    for (; amIt != _output._areaToMassRatio.end(); ++amIt, ++areaIt, ++massIt) {
+        const double lc = *lcIt;
 
         //Calculate the A/M value in [m^2/kg]
         const double areaToMassRatio = calculateAM(lc);
@@ -73,38 +62,40 @@ void Breakup::areaToMassRatioDistribution() {
         const double mass = area / areaToMassRatio;
 
         //Finally set every value in the satellite
-        satIt->setAreaToMassRatio(areaToMassRatio);
-        satIt->setArea(area);
-        satIt->setMass(mass);
+        *amIt = areaToMassRatio;
+        *areaIt = area;
+        *massIt = mass;
 
         //Stop calculating further values if the produced mass already exceeds the input mass
         //and erases the elements which are no longer needed
         _outputMass += mass;
-        if (_outputMass > _inputMass) {
-//            spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
-//                         "In other words: The random behaviour has produced heavier fragments");
-            _outputMass -= mass;
-            _output.erase(satIt, _output.end());
-            break;
-        }
+//        if (_outputMass > _inputMass) {
+////            spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
+////                         "In other words: The random behaviour has produced heavier fragments");
+//            _outputMass -= mass;
+//            _output.erase(satIt, _output.end());
+//            break;
+//        }
     }
 }
 
 void Breakup::deltaVelocityDistribution(double factor, double offset) {
-    std::for_each(_output.begin(),
-                  _output.end(),
-                  [&](Satellite &sat) {
-                      //Calculates the velocity as an scalar based on Equation 11/ 12
-                      const double chi = log10(sat.getAreaToMassRatio());
-                      const double mu = factor * chi + offset;
-                      static constexpr double sigma = 0.4;
-                      std::normal_distribution normalDistribution{mu, sigma};
-                      double velocity = std::pow(10, normalDistribution(_randomNumberGenerator));
+    using namespace util;
+    auto amIt = _output._areaToMassRatio.begin();
+    auto evIt = _output._ejectionVelocity.begin();
+    auto vIt = _output._velocity.begin();
+    for (; amIt != _output._areaToMassRatio.end(); ++amIt, ++evIt, ++vIt) {
+        //Calculates the velocity as a scalar based on Equation 11/ 12
+        const double chi = log10(*amIt);
+        const double mu = factor * chi + offset;
+        static constexpr double sigma = 0.4;
+        std::normal_distribution normalDistribution{mu, sigma};
+        double velocity = std::pow(10, normalDistribution(_randomNumberGenerator));
 
-                      //Transform the scalar velocity into a cartesian vector
-                      auto velocityVector = calculateVelocityVector(velocity);
-                      sat.addEjectionVelocity(velocityVector);
-                  });
+        //Transform the scalar velocity into a cartesian vector
+        *evIt = calculateVelocityVector(velocity);
+        *vIt = *vIt + *evIt;
+    }
 }
 
 double Breakup::calculateAM(double characteristicLength) {

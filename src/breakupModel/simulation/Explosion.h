@@ -12,7 +12,7 @@ public:
     using Breakup::Breakup;
 
 private:
-    void generateFragments() override;
+    void calculateFragmentCount() override;
 
     void characteristicLengthDistribution() override;
 

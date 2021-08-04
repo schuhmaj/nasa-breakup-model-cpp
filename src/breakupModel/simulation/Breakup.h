@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <memory>
 #include "breakupModel/model/Satellite.h"
+#include "breakupModel/model/Satellites.h"
 #include "breakupModel/util/UtilityContainer.h"
 #include "breakupModel/util/UtilityFunctions.h"
 #include "breakupModel/util/UtilityAreaMassRatio.h"
@@ -79,7 +80,7 @@ protected:
     /**
      * Contains the output satellites aka fragments of the collision or explosion
      */
-    std::vector<Satellite> _output;
+    Satellites _output;
 
 
 public:
@@ -121,6 +122,14 @@ public:
      * @return vector of satellites containing the generated fragments
      */
     [[nodiscard]] std::vector<Satellite> getResult() const {
+        return _output.getAoS();
+    }
+
+    /**
+     * Return the result of the breakup event.
+     * @return vector of satellites containing the generated fragments in an SoA
+     */
+    [[nodiscard]] Satellites getResultSoA() const {
         return _output;
     }
 
@@ -136,16 +145,10 @@ public:
 protected:
 
     /**
-     * This method contains every step required to re-run the simulation.
-     * The method for example resets the _output's size to zero.
-     */
-    virtual void prepare();
-
-    /**
      * Creates the a number of fragments, following the Equation 2 for Explosions and
      * Equation 4 for Collisions.
      */
-    virtual void generateFragments() = 0;
+    virtual void calculateFragmentCount() = 0;
 
     /**
      * Actually creates the fragments (Resizes the vector and assigns a unique ID and name to each fragment)
@@ -155,7 +158,7 @@ protected:
      * @param position - position of the fragment, derived from the one parent (explosion) or from first parent (collision)
      */
     virtual void
-    createFragments(size_t fragmentCount, const std::array<double, 3> &position);
+    generateFragments(size_t fragmentCount, const std::array<double, 3> &position);
 
     /**
      * Creates the Size Distribution. After the fragments are generated this method will assign

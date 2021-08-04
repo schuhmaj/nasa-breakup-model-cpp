@@ -1,7 +1,7 @@
 #include "Explosion.h"
 #include "Breakup.h"
 
-void Explosion::generateFragments() {
+void Explosion::calculateFragmentCount() {
     //Gets the one satellite from the input
     Satellite &sat = _input.at(0);
 
@@ -17,7 +17,7 @@ void Explosion::generateFragments() {
 
     //The fragment Count, respectively Equation 2
     auto fragmentCount = static_cast<size_t>(6.0 * std::pow(_minimalCharacteristicLength, -1.6));
-    this->createFragments(fragmentCount, sat.getPosition());
+    this->generateFragments(fragmentCount, sat.getPosition());
 }
 
 void Explosion::characteristicLengthDistribution() {
@@ -31,9 +31,11 @@ void Explosion::assignParentProperties() {
     auto debrisNamePtr = std::make_shared<const std::string>(parent.getName() + "-Explosion-Fragment");
 
     //Assign parent + property of parent: base velocity
-    for (auto &sat : _output) {
-        sat.setName(debrisNamePtr);
-        sat.setVelocity(parent.getVelocity());
+    auto nameIt = _output._name.begin();
+    auto vIt = _output._velocity.begin();
+    for (; nameIt != _output._name.end(); ++nameIt, ++vIt) {
+        *nameIt = debrisNamePtr;
+        *vIt = parent.getVelocity();
     }
 }
 
