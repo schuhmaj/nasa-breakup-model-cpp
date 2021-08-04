@@ -12,7 +12,7 @@ Satellites::getAsTuple() {
     return vector;
 }
 
-std::vector<std::tuple<const std::shared_ptr<const std::string> &, const double &, const double &,
+const std::vector<std::tuple<const std::shared_ptr<const std::string> &, const double &, const double &,
         const double &, const double &, const std::array<double, 3> &, const std::array<double, 3> &>>
 Satellites::getAsTuple() const {
     std::vector<std::tuple<const std::shared_ptr<const std::string> &, const double &, const double &,

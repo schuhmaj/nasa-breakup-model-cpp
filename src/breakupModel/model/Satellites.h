@@ -121,7 +121,7 @@ struct Satellites {
     * @return vector of tuples [namePtr, L_c, A/M, m, a, V_ejection, V]
     * @note Especially useful for the advanced for loop
     */
-    std::vector<std::tuple<const std::shared_ptr<const std::string> &, const double &, const double &,
+    const std::vector<std::tuple<const std::shared_ptr<const std::string> &, const double &, const double &,
     const double &, const double &, const std::array<double, 3> &, const std::array<double, 3> &>> getAsTuple() const;
 
     /**
