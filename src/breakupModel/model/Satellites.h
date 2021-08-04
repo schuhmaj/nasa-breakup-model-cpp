@@ -15,7 +15,7 @@
  * properties of the fragment satellites created.
  * @note This class provides a method to transform the SoA structure into an AoS approach (std::vector<Satellite>)
  */
-class Satellites {
+struct Satellites {
 
     /*
      * Shared Properties
@@ -23,19 +23,20 @@ class Satellites {
 
     /**
      * The NORAD Catalog ID of the first Satellite in the SoA
+     * That means this contains Satellites from [StartID, StartID+size]
      */
-    size_t _startID;
+    size_t _startID{};
 
     /**
      * The SatType of the Satellites in the SoA
      */
-    SatType _satType;
+    SatType _satType{SatType::DEBRIS};
 
     /**
      * The position base of the Satellites in the SoA
      * This is a cartesian position vector in [m]
      */
-    std::array<double, 3> _position;
+    std::array<double, 3> _position{};
 
     /*
      * Unique Properties
@@ -78,6 +79,8 @@ class Satellites {
      */
     std::vector<std::array<double, 3>> _velocity;
 
+    Satellites() = default;
+
     Satellites(size_t startID, SatType satType, std::array<double, 3> position, size_t reserveMemory)
             : _startID{startID},
               _satType{satType},
@@ -114,9 +117,17 @@ class Satellites {
     double &, double &, std::array<double, 3> &, std::array<double, 3> &>> getAsTuple();
 
     /**
+    * Returns a const tuple view for the unique attributes of the Satellites.
+    * @return vector of tuples [namePtr, L_c, A/M, m, a, V_ejection, V]
+    * @note Especially useful for the advanced for loop
+    */
+    std::vector<std::tuple<const std::shared_ptr<const std::string> &, const double &, const double &,
+    const double &, const double &, const std::array<double, 3> &, const std::array<double, 3> &>> getAsTuple() const;
+
+    /**
      * Returns this Structure of Arrays as an Array of Structures.
      * @return vector of Satellites
      */
-    std::vector<Satellite> getAoS();
+    std::vector<Satellite> getAoS() const;
 
 };
