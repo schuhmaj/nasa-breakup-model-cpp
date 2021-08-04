@@ -81,8 +81,8 @@ void Breakup::areaToMassRatioDistribution() {
         //and erases the elements which are no longer needed
         _outputMass += mass;
         if (_outputMass > _inputMass) {
-            spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
-                         "In other words: The random behaviour has produced heavier fragments");
+//            spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
+//                         "In other words: The random behaviour has produced heavier fragments");
             _outputMass -= mass;
             _output.erase(satIt, _output.end());
             break;
