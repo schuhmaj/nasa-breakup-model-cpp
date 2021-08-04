@@ -1,9 +1,0 @@
----
-satellites:
-  - name: "Nimbus 6"
-    id: 7924
-    satType: RB
-    # area: 3.2315
-    mass: 586.0
-    velocity: [0, 0, 0] #Here the velocity and position are not really required
-    position: [0, 0, 0]

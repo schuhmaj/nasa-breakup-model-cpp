@@ -3,7 +3,7 @@
 simulation:
   minimalCharacteristicLength: 0.05
   simulationType: COLLISION
-  inputSource: ["../satcat.csv", "../iridium_cosmos_tle.txt"]
+  inputSource: ["../example-config/data_iridium_cosmos2.yaml"]
   idFilter: [24946, 22675]
 inputOutput:
   target: ["input.csv", "input.vtu"]

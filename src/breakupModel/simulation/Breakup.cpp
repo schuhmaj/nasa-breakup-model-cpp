@@ -13,7 +13,10 @@ void Breakup::run() {
     //4. Step: Calculate the A/M (area-to-mass-ratio), A (area) and M (mass) values for every Satellite
     this->areaToMassRatioDistribution();
 
-    //5. Step: Calculate the Ejection velocity for every Satellite
+    //5. Step: Assign parent and by doing that assign each fragment a base velocity
+    this->assignParentProperties();
+
+    //6. Step: Calculate the Ejection velocity for every Satellite
     this->deltaVelocityDistribution();
 
 }
@@ -28,9 +31,8 @@ void Breakup::prepare() {
 }
 
 void
-Breakup::createFragments(size_t fragmentCount, const std::string &debrisName, const std::array<double, 3> &position) {
-    auto debrisNamePtr = std::make_shared<const std::string>(debrisName);
-    _output.resize(fragmentCount, Satellite(debrisNamePtr, SatType::DEBRIS, position));
+Breakup::createFragments(size_t fragmentCount, const std::array<double, 3> &position) {
+    _output.resize(fragmentCount, Satellite(SatType::DEBRIS, position));
     std::for_each(_output.begin(), _output.end(),
                   [&](Satellite &sat) { sat.setId(++_currentMaxGivenID); });
 }
@@ -52,31 +54,40 @@ void Breakup::characteristicLengthDistribution(double powerLawExponent) {
 }
 
 void Breakup::areaToMassRatioDistribution() {
-    std::for_each(_output.begin(),
-                  _output.end(),
-                  [&](Satellite &sat) {
-                      const double lc = sat.getCharacteristicLength();
+    auto satIt = _output.begin();
+    for (; satIt != _output.end(); ++satIt) {
+        const double lc = satIt->getCharacteristicLength();
 
-                      //Calculate the A/M value in [m^2/kg]
-                      const double areaToMassRatio = calculateAM(lc);
+        //Calculate the A/M value in [m^2/kg]
+        const double areaToMassRatio = calculateAM(lc);
 
-                      //Calculate the are A in [m^2]
-                      double area = 0;
-                      if (lc < 0.00167) {
-                          area = 0.540424 * lc * lc;
-                      } else {
-                          area = 0.556945 * std::pow(lc, 2.0047077);
-                      }
+        //Calculate the are A in [m^2]
+        double area = 0;
+        if (lc < 0.00167) {
+            area = 0.540424 * lc * lc;
+        } else {
+            area = 0.556945 * std::pow(lc, 2.0047077);
+        }
 
-                      //Calculate the mass m in [kg]
-                      const double mass = area / areaToMassRatio;
+        //Calculate the mass m in [kg]
+        const double mass = area / areaToMassRatio;
 
-                      //Finally set every value in the satellite
-                      sat.setAreaToMassRatio(areaToMassRatio);
-                      sat.setArea(area);
-                      sat.setMass(mass);
-                  });
+        //Finally set every value in the satellite
+        satIt->setAreaToMassRatio(areaToMassRatio);
+        satIt->setArea(area);
+        satIt->setMass(mass);
 
+        //Stop calculating further values if the produced mass already exceeds the input mass
+        //and erases the elements which are no longer needed
+        _outputMass += mass;
+        if (_outputMass > _inputMass) {
+//            spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
+//                         "In other words: The random behaviour has produced heavier fragments");
+            _outputMass -= mass;
+            _output.erase(satIt, _output.end());
+            break;
+        }
+    }
 }
 
 void Breakup::deltaVelocityDistribution(double factor, double offset) {
@@ -90,9 +101,9 @@ void Breakup::deltaVelocityDistribution(double factor, double offset) {
                       std::normal_distribution normalDistribution{mu, sigma};
                       double velocity = std::pow(10, normalDistribution(_randomNumberGenerator));
 
-                      //Transform the scalar velocity into an cartesian vector
+                      //Transform the scalar velocity into a cartesian vector
                       auto velocityVector = calculateVelocityVector(velocity);
-                      sat.setVelocity(velocityVector);
+                      sat.addEjectionVelocity(velocityVector);
                   });
 }
 

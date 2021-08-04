@@ -12,17 +12,29 @@ void Explosion::generateFragments() {
     //The Default of this member is SPACECRAFT
     _satType = sat.getSatType();
 
+    //Sets the _input mass which will be required later for mass conservation purpose
+    _inputMass = sat.getMass();
 
     //The fragment Count, respectively Equation 2
     auto fragmentCount = static_cast<size_t>(6.0 * std::pow(_minimalCharacteristicLength, -1.6));
-
-    const std::string debrisName{sat.getName() + "-Explosion-Fragment"};
-    this->createFragments(fragmentCount, debrisName, sat.getPosition());
+    this->createFragments(fragmentCount, sat.getPosition());
 }
 
 void Explosion::characteristicLengthDistribution() {
     //The pdf for Explosions is: 0.0132578/x^2.6
     Breakup::characteristicLengthDistribution(-2.6);
+}
+
+void Explosion::assignParentProperties() {
+    //The name of the fragments
+    const Satellite &parent = _input.at(0);
+    auto debrisNamePtr = std::make_shared<const std::string>(parent.getName() + "-Explosion-Fragment");
+
+    //Assign parent + property of parent: base velocity
+    for (auto &sat : _output) {
+        sat.setName(debrisNamePtr);
+        sat.setVelocity(parent.getVelocity());
+    }
 }
 
 void Explosion::deltaVelocityDistribution() {
