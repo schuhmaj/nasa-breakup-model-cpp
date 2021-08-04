@@ -16,7 +16,7 @@ void Breakup::run() {
     //6. Step: Calculate the Ejection velocity for every Satellite
     this->deltaVelocityDistribution();
 
-    //Sets the size (maybe move elsewhere)
+    //As a last step set the _currentMaxGivenID to the new valid value
     _currentMaxGivenID += _output.size();
 }
 
@@ -45,7 +45,7 @@ void Breakup::areaToMassRatioDistribution() {
     auto areaIt = _output._area.begin();
     auto massIt = _output._mass.begin();
     size_t size = 0;
-    for (; amIt != _output._areaToMassRatio.end(); ++amIt, ++areaIt, ++massIt, ++size) {
+    for (; amIt != _output._areaToMassRatio.end(); ++lcIt, ++amIt, ++areaIt, ++massIt, ++size) {
         const double lc = *lcIt;
 
         //Calculate the A/M value in [m^2/kg]
