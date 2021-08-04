@@ -89,22 +89,6 @@ struct Satellites {
     }
 
     /**
-     * Returns a manipulatable tuple view for the unique attributes of the Satellites.
-     * @return vector of tuples [namePtr, L_c, A/M, m, a, V_ejection, V]
-     * @note Especially useful for the advanced for loop
-     */
-    std::vector<std::tuple<std::shared_ptr<const std::string> &, double &, double &,
-    double &, double &, std::array<double, 3> &, std::array<double, 3> &>> getAsTuple();
-
-    /**
-    * Returns a const tuple view for the unique attributes of the Satellites.
-    * @return vector of tuples [namePtr, L_c, A/M, m, a, V_ejection, V]
-    * @note Especially useful for the advanced for loop
-    */
-    std::vector<std::tuple<const std::shared_ptr<const std::string> &, const double &, const double &,
-    const double &, const double &, const std::array<double, 3> &, const std::array<double, 3> &>> getAsTuple() const;
-
-    /**
      * Returns this Structure of Arrays as an Array of Structures.
      * @return vector of Satellites
      */
