@@ -2,6 +2,7 @@
 #include <string>
 #include <memory>
 #include <exception>
+#include <chrono>
 
 #include "breakupModel/input/YAMLDataReader.h"
 #include "breakupModel/input/YAMLConfigurationReader.h"
@@ -32,7 +33,13 @@ int main(int argc, char *argv[]) {
         //Create and run the simulation or catch an exception in case something is wrong with the simulation
         //Creates and Runs the simulation
         auto breakUpSimulation = breakupBuilder.getBreakup();
+        auto start = std::chrono::high_resolution_clock::now();
         breakUpSimulation->run();
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = end - start;
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
+        spdlog::info("The simulation took {} ms", ms.count());
+        spdlog::info("The simulation produced {} fragments", breakUpSimulation->getResult().size());
 
         //Prints the the output to files defined by the OutputConfigurationSource aka the YAMLConfigurationReader
         auto outputTargets = configSource->getOutputTargets();
