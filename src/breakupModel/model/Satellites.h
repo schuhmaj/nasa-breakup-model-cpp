@@ -94,7 +94,19 @@ struct Satellites {
      */
     std::vector<Satellite> getAoS() const;
 
+    /**
+     * Returns a tuple view of this Satellites collection containing in the order of appearance:
+     * characteristic Length, velocity, ejection velocity
+     * @return vector of tuple of characteristic Length, velocity, ejection velocity
+     */
     std::vector<std::tuple<double &, std::array<double, 3> &, std::array<double, 3>&>> getVelocityTuple();
+
+    /**
+    * Returns a tuple view of this Satellites collection containing in the order of appearance:
+    * characteristic Length, area-to-mass-ratio, area, mass
+    * @return characteristic Length, area-to-mass-ratio, area, mass
+    */
+    std::vector<std::tuple<double &, double &, double &, double &>> getAreaMassTuple();
 
     /**
      * Returns the size of this element.

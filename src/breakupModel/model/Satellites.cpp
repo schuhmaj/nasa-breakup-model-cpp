@@ -9,6 +9,15 @@ std::vector<std::tuple<double &, std::array<double, 3> &, std::array<double, 3> 
     return vector;
 }
 
+std::vector<std::tuple<double &, double &, double &, double &>> Satellites::getAreaMassTuple() {
+    std::vector<std::tuple<double &, double &, double &, double &>> vector{};
+    vector.reserve(size());
+    for (size_t i = 0; i < size(); ++i) {
+        vector.emplace_back(_characteristicLength[i], _areaToMassRatio[i], _area[i], _mass[i]);
+    }
+    return vector;
+}
+
 std::vector<Satellite> Satellites::getAoS() const {
     std::vector<Satellite> vector{};
     size_t size = this->size();
