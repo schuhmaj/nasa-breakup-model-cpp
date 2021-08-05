@@ -20,8 +20,12 @@ void Breakup::run() {
     _currentMaxGivenID += _output.size();
 }
 
-Breakup &Breakup::setSeed(unsigned long seed) {
-    _randomNumberGenerator = std::mt19937{seed};
+Breakup &Breakup::setSeed(std::optional<unsigned long> seed) {
+    if (seed.has_value()) {
+        _fixRNG = std::mt19937 {seed.value()};
+    } else {
+        _fixRNG = std::nullopt;
+    }
     return *this;
 }
 

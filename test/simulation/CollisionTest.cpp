@@ -34,7 +34,7 @@ protected:
 
 
         _collision = std::make_unique<Collision>(_input, _minimalCharacteristicLength);
-        _collision->setSeed(1234).run();
+        _collision->setSeed(std::make_optional(1234)).run();
         _output = _collision->getResult();
 
     }
