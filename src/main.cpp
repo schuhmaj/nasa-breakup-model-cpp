@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
         auto duration = end - start;
         auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
         spdlog::info("The simulation took {} ms", ms.count());
-        spdlog::info("The simulation produced {} fragments", breakUpSimulation->getResult().size());
+        spdlog::info("The simulation produced {} fragments", breakUpSimulation->getResultSoA().size());
 
         //Prints the the output to files defined by the OutputConfigurationSource aka the YAMLConfigurationReader
         auto outputTargets = configSource->getOutputTargets();
