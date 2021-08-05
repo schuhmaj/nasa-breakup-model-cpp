@@ -13,6 +13,13 @@ The project uses the following dependencies:
 - yaml-cpp-0.6.3 (Required for Input, Automatically set-up by CMake)
 - spdlog Version 1.8.5 (Required for output and logging, Automatically set-up by CMake)
 
+Furthermore, the Breakup simulation does use ``std::execution`` to parallelize
+the fragment calculation. Not every compiler does already implement the C++ 17 feature
+"Standardization of Parallelism TS". To avoid this issue, install:
+
+      sudo apt install libtbb-dev
+
+
 ## Build
 The program is build by using CMake. So first make sure that you installed
 CMake and then follow these steps:
@@ -26,6 +33,8 @@ CMake and then follow these steps:
 After the build, the simulation can be run by executing:
 
     ./breakupModel [yaml-file]
+
+where the yaml-file contains a Configuration.
 
 ### Input
 
