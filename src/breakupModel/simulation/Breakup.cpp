@@ -35,9 +35,9 @@ Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3> &po
 void Breakup::characteristicLengthDistribution(double powerLawExponent) {
     using util::transformUniformToPowerLaw;
     std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
-    std::for_each(std::execution::par_unseq, _output._characteristicLength.begin(), _output._characteristicLength.end(),
+    std::for_each(std::execution::par, _output._characteristicLength.begin(), _output._characteristicLength.end(),
                   [&](double &lc) {
-        const double y = uniformRealDistribution(_randomNumberGenerator);
+        const double y = getRandomNumber(uniformRealDistribution);
         lc = transformUniformToPowerLaw(_minimalCharacteristicLength, _maximalCharacteristicLength, powerLawExponent, y);
     });
 }
@@ -86,14 +86,14 @@ void Breakup::areaToMassRatioDistribution() {
 void Breakup::deltaVelocityDistribution(double factor, double offset) {
     using namespace util;
     auto tuple = _output.getVelocityTuple();
-    std::for_each(std::execution::par_unseq, tuple.begin(), tuple.end(),
+    std::for_each(std::execution::par, tuple.begin(), tuple.end(),
                   [&](auto &tuple) {
         //Calculates the velocity as a scalar based on Equation 11/ 12
         const double chi = log10(std::get<0>(tuple));
         const double mu = factor * chi + offset;
         static constexpr double sigma = 0.4;
         std::normal_distribution normalDistribution{mu, sigma};
-        double velocity = std::pow(10, normalDistribution(_randomNumberGenerator));
+        double velocity = std::pow(10, getRandomNumber(normalDistribution));
 
         //Transform the scalar velocity into a cartesian vector
         std::get<2>(tuple) = calculateVelocityVector(velocity);
@@ -111,20 +111,20 @@ double Breakup::calculateAM(double characteristicLength) {
         std::normal_distribution n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
         std::normal_distribution n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
 
-        areaToMassRatio = std::pow(10, alpha(_satType, logLc) * n1(_randomNumberGenerator) +
-                                       (1 - alpha(_satType, logLc)) * n2(_randomNumberGenerator));
+        areaToMassRatio = std::pow(10, alpha(_satType, logLc) * getRandomNumber(n1) +
+        (1 - alpha(_satType, logLc)) * getRandomNumber(n2));
     } else if (characteristicLength < 0.08) {   //Case smaller than 8 cm
         std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
 
-        areaToMassRatio = std::pow(10, n(_randomNumberGenerator));
+        areaToMassRatio = std::pow(10, getRandomNumber(n));
     } else {                                    //Case between 8 cm and 11 cm
         std::normal_distribution n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
         std::normal_distribution n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
         std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
 
-        double y1 = std::pow(10, alpha(_satType, logLc) * n1(_randomNumberGenerator) +
-                                 (1 - alpha(_satType, logLc)) * n2(_randomNumberGenerator));
-        double y0 = std::pow(10, n(_randomNumberGenerator));
+        double y1 = std::pow(10, alpha(_satType, logLc) * getRandomNumber(n1) +
+                                 (1 - alpha(_satType, logLc)) * getRandomNumber(n2));
+        double y0 = std::pow(10, getRandomNumber(n));
 
         areaToMassRatio = y0 + (characteristicLength - 0.08) * (y1 - y0) / (0.03);
     }
@@ -135,8 +135,8 @@ double Breakup::calculateAM(double characteristicLength) {
 std::array<double, 3> Breakup::calculateVelocityVector(double velocity) {
     std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
 
-    double u = uniformRealDistribution(_randomNumberGenerator) * 2.0 - 1.0;
-    double theta = uniformRealDistribution(_randomNumberGenerator) * 2.0 * util::PI;
+    double u = getRandomNumber(uniformRealDistribution) * 2.0 - 1.0;
+    double theta = getRandomNumber(uniformRealDistribution) * 2.0 * util::PI;
     double v = std::sqrt(1.0 - u * u);
 
     return std::array<double, 3>

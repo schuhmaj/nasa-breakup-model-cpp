@@ -228,6 +228,20 @@ private:
      */
     std::array<double, 3> calculateVelocityVector(double velocity);
 
+
+    /**
+     * Returns a random number according to a specific distribution.
+     * @tparam Distribution - should be a Distribution (e. g. a uniform Distribution) which returns doubles
+     * @param distribution
+     * @return a random number
+     * @note This method is thread safe
+     */
+    template<class Distribution>
+    static double getRandomNumber(Distribution &distribution) {
+        thread_local std::mt19937 rng{std::random_device{}()};
+        return distribution(rng);
+    }
+
 public:
 
     [[nodiscard]] double getMinimalCharacteristicLength() const {

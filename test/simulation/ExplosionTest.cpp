@@ -69,8 +69,8 @@ TEST_F(ExplosionTest, FragmentSizeDsitributionTest) {
         size_t expectedUpperBound = static_cast<size_t>(expectedCount + deviation);
         size_t expectedLowerBound = expectedCount - deviation > 0 ? static_cast<size_t>(expectedCount - deviation) : 0;
 
-        ASSERT_GE(count, expectedLowerBound);
-        ASSERT_LE(count, expectedUpperBound);
+        ASSERT_GE(count, expectedLowerBound) << "L_c was " << Lc;
+        ASSERT_LE(count, expectedUpperBound) << "L_c was " << Lc;
 
         Lc += 0.1;
     }
