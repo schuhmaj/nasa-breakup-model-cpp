@@ -104,9 +104,23 @@ struct Satellites {
     /**
     * Returns a tuple view of this Satellites collection containing in the order of appearance:
     * characteristic Length, area-to-mass-ratio, area, mass
-    * @return characteristic Length, area-to-mass-ratio, area, mass
+    * @return vector of tuple of characteristic Length, area-to-mass-ratio, area, mass
     */
     std::vector<std::tuple<double &, double &, double &, double &>> getAreaMassTuple();
+
+    /**
+    * Returns a tuple view of this Satellites collection containing in the order of appearance:
+    * characteristic Length, mass, velocity and name pointer
+    * @return vector of tuple of characteristic Length, mass, velocity and name pointer
+    */
+    std::vector<std::tuple<double &, double &, std::array<double, 3> &, std::shared_ptr<const std::string> &>> getCMVNTuple();
+
+    /**
+    * Returns a tuple view of this Satellites collection containing in the order of appearance:
+    * velocity and name pointer
+    * @return vector of tuple of velocity and name pointer
+    */
+    std::vector<std::tuple<std::array<double, 3> &, std::shared_ptr<const std::string> &>> getVNTuple();
 
     /**
      * Returns the size of this element.

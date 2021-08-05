@@ -30,13 +30,13 @@ void Explosion::assignParentProperties() {
     const Satellite &parent = _input.at(0);
     auto debrisNamePtr = std::make_shared<const std::string>(parent.getName() + "-Explosion-Fragment");
 
-    //Assign parent + property of parent: base velocity
-    auto nameIt = _output._name.begin();
-    auto vIt = _output._velocity.begin();
-    for (; nameIt != _output._name.end(); ++nameIt, ++vIt) {
-        *nameIt = debrisNamePtr;
-        *vIt = parent.getVelocity();
-    }
+    auto tupleView = _output.getVNTuple();
+    std::for_each(std::execution::par, tupleView.begin(), tupleView.end(),
+                  [&](auto &tuple) {
+        //Order in the tuple: 0: Velocity | 1: NamePtr
+        std::get<0>(tuple) = parent.getVelocity();
+        std::get<1>(tuple) = debrisNamePtr;
+    });
 }
 
 void Explosion::deltaVelocityDistribution() {

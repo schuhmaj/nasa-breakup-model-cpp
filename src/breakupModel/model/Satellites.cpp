@@ -18,6 +18,25 @@ std::vector<std::tuple<double &, double &, double &, double &>> Satellites::getA
     return vector;
 }
 
+std::vector<std::tuple<double &, double &, std::array<double, 3> &, std::shared_ptr<const std::string> &>>
+Satellites::getCMVNTuple() {
+    std::vector<std::tuple<double &, double &, std::array<double, 3> &, std::shared_ptr<const std::string> &>> vector{};
+    vector.reserve(size());
+    for (size_t i = 0; i < size(); ++i) {
+        vector.emplace_back(_characteristicLength[i], _mass[i], _velocity[i], _name[i]);
+    }
+    return vector;
+}
+
+std::vector<std::tuple<std::array<double, 3> &, std::shared_ptr<const std::string> &>> Satellites::getVNTuple() {
+    std::vector<std::tuple<std::array<double, 3> &, std::shared_ptr<const std::string> &>> vector{};
+    vector.reserve(size());
+    for (size_t i = 0; i < size(); ++i) {
+        vector.emplace_back(_velocity[i], _name[i]);
+    }
+    return vector;
+}
+
 std::vector<Satellite> Satellites::getAoS() const {
     std::vector<Satellite> vector{};
     size_t size = this->size();

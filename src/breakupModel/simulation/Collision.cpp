@@ -62,35 +62,35 @@ void Collision::assignParentProperties() {
     //Assign debris the big parent if they are greater than the small parent
     double assignedMassForBigSatellite = 0;
 
-    auto lcIt = _output._characteristicLength.begin();
-    auto mIt = _output._mass.begin();
-    auto nameIt = _output._name.begin();
-    auto vIt = _output._velocity.begin();
-    for (; lcIt != _output._characteristicLength.end(); ++lcIt, ++nameIt, ++vIt, ++mIt) {
-        if (*lcIt > smallSat.getCharacteristicLength()) {
-            *nameIt = debrisNameBigPtr;
-            *vIt = bigSat.getVelocity();
-            assignedMassForBigSatellite += *mIt;
+    auto tupleView = _output.getCMVNTuple();
+    //Not parallel! We do not want any race conditions on assignedMassForBigSatellite
+    std::for_each(tupleView.begin(), tupleView.end(),
+                  [&](auto &tuple) {
+        //Order in the tuple: 0: Characteristic Length | 1: Mass | 2: Velocity | 3: NamePtr
+        if (std::get<0>(tuple) > smallSat.getCharacteristicLength()) {
+            std::get<3>(tuple) = debrisNameBigPtr;
+            std::get<2>(tuple) = bigSat.getVelocity();
+            assignedMassForBigSatellite += std::get<1>(tuple);
         }
-    }
+    });
+
     //Assign the rest with respect to the already assigned debris-mass for the big satellite
     //first if: the mass of the bigSat is normed to the actual produced mass of the simulation
-    lcIt = _output._characteristicLength.begin();
-    mIt = _output._mass.begin();
-    nameIt = _output._name.begin();
-    vIt = _output._velocity.begin();
     const double normedMassBigSat = bigSat.getMass() * _outputMass / _inputMass;
-    for (; lcIt != _output._characteristicLength.end(); ++lcIt, ++nameIt, ++vIt, ++mIt) {
-        if (*lcIt <= smallSat.getCharacteristicLength()
-            && assignedMassForBigSatellite < normedMassBigSat) {
-            *nameIt = debrisNameBigPtr;
-            *vIt = bigSat.getVelocity();
-            assignedMassForBigSatellite += *mIt;
+    //Not parallel! We do not want any race conditions on assignedMassForBigSatellite
+    std::for_each(tupleView.begin(), tupleView.end(),
+                  [&](auto &tuple) {
+        //Order in the tuple: 0: Characteristic Length | 1: Mass | 2: Velocity | 3: NamePtr
+        if (std::get<0>(tuple) <= smallSat.getCharacteristicLength()
+        && assignedMassForBigSatellite < normedMassBigSat) {
+            std::get<3>(tuple) = debrisNameBigPtr;
+            std::get<2>(tuple) = bigSat.getVelocity();
+            assignedMassForBigSatellite += std::get<1>(tuple);
         } else {
-            *nameIt = debrisNameSmallPtr;
-            *vIt = smallSat.getVelocity();
+            std::get<3>(tuple) = debrisNameSmallPtr;
+            std::get<2>(tuple) = smallSat.getVelocity();
         }
-    }
+    });
 }
 
 void Collision::deltaVelocityDistribution() {
