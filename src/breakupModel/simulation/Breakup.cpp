@@ -47,51 +47,43 @@ void Breakup::characteristicLengthDistribution(double powerLawExponent) {
 }
 
 void Breakup::areaToMassRatioDistribution() {
-    auto lcIt = _output._characteristicLength.begin();
-    auto amIt = _output._areaToMassRatio.begin();
-    auto areaIt = _output._area.begin();
-    auto massIt = _output._mass.begin();
-    size_t size = 0;
-    for (; amIt != _output._areaToMassRatio.end(); ++lcIt, ++amIt, ++areaIt, ++massIt, ++size) {
-        const double lc = *lcIt;
-
+    auto tupleView = _output.getAreaMassTuple();
+    std::for_each(std::execution::par, tupleView.begin(), tupleView.end(),
+                  [&](auto &tuple) {
+        //Order in the tuple: 0: L_c | 1: A/M | 2: Area | 3: Mass
         //Calculate the A/M value in [m^2/kg]
-        const double areaToMassRatio = calculateAM(lc);
+        std::get<1>(tuple) = calculateAM(std::get<0>(tuple));
 
         //Calculate the are A in [m^2]
-        double area = 0;
-        if (lc < 0.00167) {
-            area = 0.540424 * lc * lc;
+        if (std::get<0>(tuple) < 0.00167) {
+            std::get<2>(tuple) = 0.540424 * std::get<0>(tuple) * std::get<0>(tuple);
         } else {
-            area = 0.556945 * std::pow(lc, 2.0047077);
+            std::get<2>(tuple) = 0.556945 * std::pow(std::get<0>(tuple), 2.0047077);
         }
-
         //Calculate the mass m in [kg]
-        const double mass = area / areaToMassRatio;
-
-        //Finally set every value in the satellite
-        *amIt = areaToMassRatio;
-        *areaIt = area;
-        *massIt = mass;
-
-        //Stop calculating further values if the produced mass already exceeds the input mass
-        //and erases the elements which are no longer needed
-        _outputMass += mass;
-        if (_outputMass > _inputMass) {
-//            spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
-//                         "In other words: The random behaviour has produced heavier fragments");
-            _outputMass -= mass;
-            _output.resize(size);
-            break;
-        }
+        std::get<3>(tuple) = std::get<2>(tuple) / std::get<1>(tuple);
+    });
+    //Enforce Mass Conservation if the output mass is greater than the input mass
+    _outputMass = std::accumulate(_output._mass.begin(), _output._mass.end(), 0.0);
+    size_t oldSize = _output.size();
+    size_t newSize = _output.size();
+    while (_outputMass > _inputMass) {
+        _outputMass -= _output._mass.back();
+        newSize -= 1;
+    }
+    if (oldSize != newSize) {
+        spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
+                     "In other words: The random behaviour has produced heavier fragments");
+        _output.resize(newSize);
     }
 }
 
 void Breakup::deltaVelocityDistribution(double factor, double offset) {
     using namespace util;
-    auto tuple = _output.getVelocityTuple();
-    std::for_each(std::execution::par, tuple.begin(), tuple.end(),
+    auto tupleView = _output.getVelocityTuple();
+    std::for_each(std::execution::par, tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
+        //Order in the tuple: 0: A/M | 1: Velocity | 2: Ejection Velocity
         //Calculates the velocity as a scalar based on Equation 11/ 12
         const double chi = log10(std::get<0>(tuple));
         const double mu = factor * chi + offset;
