@@ -26,14 +26,9 @@ protected:
 
 
         _explosion = std::make_unique<Explosion>(_input, _minimalCharacteristicLength);
-        _explosion->setSeed(std::make_optional(1234)).run();
-        _output = _explosion->getResult();
-
     }
 
     std::vector<Satellite> _input{};
-    std::vector<Satellite> _output{};
-
     Satellite sat;
 
     double _minimalCharacteristicLength{0.05};
@@ -44,12 +39,18 @@ protected:
 
 
 TEST_F(ExplosionTest, FragmentCountTest) {
+    _explosion->setSeed(std::make_optional(1234)).run();
+    auto output = _explosion->getResult();
+
     size_t expectedFragmentCount = 724; //L_c = 0.05
-    ASSERT_EQ(_output.size(), expectedFragmentCount);
+    ASSERT_EQ(output.size(), expectedFragmentCount);
 }
 
 
 TEST_F(ExplosionTest, FragmentSizeDsitributionTest) {
+    _explosion->setSeed(std::make_optional(1234)).run();
+    auto output = _explosion->getResult();
+
     double expectedMaximalCharacteristicLength = sat.getCharacteristicLength();
 
     ASSERT_FLOAT_EQ(_explosion->getMaximalCharacteristicLength(), expectedMaximalCharacteristicLength);
@@ -57,10 +58,10 @@ TEST_F(ExplosionTest, FragmentSizeDsitributionTest) {
     double Lc = _minimalCharacteristicLength;
 
     //2% Deviation for the Test Case (--> +-14 Fragments)
-    double deviation = static_cast<double>(_output.size()) * 0.02;
+    double deviation = static_cast<double>(output.size()) * 0.02;
 
     while(Lc < expectedMaximalCharacteristicLength) {
-        size_t count = std::count_if(_output.begin(), _output.end(),[Lc](Satellite &sat) {
+        size_t count = std::count_if(output.begin(), output.end(),[Lc](Satellite &sat) {
             return sat.getCharacteristicLength() > Lc;
         });
 
@@ -77,10 +78,26 @@ TEST_F(ExplosionTest, FragmentSizeDsitributionTest) {
 
 }
 
-TEST_F(ExplosionTest, AMDistributionTest) {
-
-}
-
-TEST_F(ExplosionTest, DeltaVelocityDistributionTest) {
-
+TEST_F(ExplosionTest, CheckNoRaceCondition) {
+    for (size_t x = 0; x < 50; ++x) {
+        size_t count = 0;
+        _explosion->run();
+        auto output = _explosion->getResultSoA();
+        for (double lc1 : output._characteristicLength) {
+            for (double lc2 : output._characteristicLength) {
+                bool condition = std::abs(lc1 - lc2) < 1e-16;
+                if (condition) {
+                    count += 1;
+                }
+            }
+        }
+        count -= output._characteristicLength.size();
+        //10 is threshold
+        //If we would have race conditions, it can be assumed that there are a lot more than 10 duplicates
+        EXPECT_LT(count, 10) << "Count of Duplicates in Iteration " << x << "\n"
+        << "If this test fails this not necessarily bad. This checks if we have any duplicates in the L_c set.\n"
+           "If there are any, this might be an issue and a hint for a race condition but not necessarily\n"
+           "It could also be just a random coincidence of the RNG\n"
+           "Rerun this in such a case!\n";
+    }
 }

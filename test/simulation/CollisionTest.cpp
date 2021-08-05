@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <cmath>
@@ -34,13 +35,9 @@ protected:
 
 
         _collision = std::make_unique<Collision>(_input, _minimalCharacteristicLength);
-        _collision->setSeed(std::make_optional(1234)).run();
-        _output = _collision->getResult();
-
     }
 
     std::vector<Satellite> _input{};
-    std::vector<Satellite> _output{};
 
     Satellite sat1;
     Satellite sat2;
@@ -53,15 +50,21 @@ protected:
 
 
 TEST_F(CollisionTest, FragmentCountTest) {
+    _collision->setSeed(std::make_optional(1234)).run();
+    auto output = _collision->getResult();
+
     ASSERT_TRUE(_collision->isIsCatastrophic()) << "This collision was catastrophic";
 
     size_t expectedFragmentCount = 4064; //M=m_1+m_2 & L_c = 0.05 --> Equation 4
 
-    ASSERT_EQ(_output.size(), expectedFragmentCount);
+    ASSERT_EQ(output.size(), expectedFragmentCount);
 }
 
 
 TEST_F(CollisionTest, FragmentSizeDsitributionTest) {
+    _collision->setSeed(std::make_optional(1234)).run();
+    auto output = _collision->getResult();
+
     double Lc1 = sat1.getCharacteristicLength();
     double Lc2 = sat2.getCharacteristicLength();
     double expectedMaximalCharacteristicLength = Lc1 > Lc2 ? Lc1 : Lc2;
@@ -71,10 +74,10 @@ TEST_F(CollisionTest, FragmentSizeDsitributionTest) {
     double Lc = _minimalCharacteristicLength;
 
     //1% Deviation for the Test Case (--> +-40 Fragments)
-    double deviation = static_cast<double>(_output.size()) * 0.01;
+    double deviation = static_cast<double>(output.size()) * 0.01;
 
     while(Lc < expectedMaximalCharacteristicLength) {
-        size_t count = std::count_if(_output.begin(), _output.end(),[Lc](Satellite &sat) {
+        size_t count = std::count_if(output.begin(), output.end(),[Lc](Satellite &sat) {
             return sat.getCharacteristicLength() > Lc;
         });
 
@@ -91,12 +94,26 @@ TEST_F(CollisionTest, FragmentSizeDsitributionTest) {
 
 }
 
-TEST_F(CollisionTest, AMDistributionTest) {
-
-
-}
-
-TEST_F(CollisionTest, DeltaVelocityDistributionTest) {
-
-
+TEST_F(CollisionTest, CheckNoRaceCondition) {
+    for (size_t x = 0; x < 50; ++x) {
+        size_t count = 0;
+        _collision->run();
+        auto output = _collision->getResultSoA();
+        for (double lc1 : output._characteristicLength) {
+            for (double lc2 : output._characteristicLength) {
+                bool condition = std::abs(lc1 - lc2) < 1e-16;
+                if (condition) {
+                    count += 1;
+                }
+            }
+        }
+        count -= output._characteristicLength.size();
+        //10 is threshold
+        //If we would have race conditions, it can be assumed that there are a lot more than 10 duplicates
+        EXPECT_LT(count, 10) << "Count of Duplicates in Iteration " << x << "\n"
+        << "If this test fails this not necessarily bad. This checks if we have any duplicates in the L_c set.\n"
+           "If there are any, this might be an issue and a hint for a race condition but not necessarily\n"
+           "It could also be just a random coincidence of the RNG\n"
+           "Rerun this in such a case!\n";
+    }
 }

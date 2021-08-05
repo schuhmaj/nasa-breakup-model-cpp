@@ -70,6 +70,7 @@ void Breakup::areaToMassRatioDistribution() {
     while (_outputMass > _inputMass) {
         _outputMass -= _output._mass.back();
         newSize -= 1;
+        _output._mass.pop_back();
     }
     if (oldSize != newSize) {
         spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
