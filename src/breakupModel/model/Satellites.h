@@ -94,6 +94,8 @@ struct Satellites {
      */
     std::vector<Satellite> getAoS() const;
 
+    std::vector<std::tuple<double &, std::array<double, 3> &, std::array<double, 3>&>> getVelocityTuple();
+
     /**
      * Returns the size of this element.
      * @return size

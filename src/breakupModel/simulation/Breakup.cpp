@@ -35,10 +35,11 @@ Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3> &po
 void Breakup::characteristicLengthDistribution(double powerLawExponent) {
     using util::transformUniformToPowerLaw;
     std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
-    for (auto &lc : _output._characteristicLength) {
+    std::for_each(std::execution::par_unseq, _output._characteristicLength.begin(), _output._characteristicLength.end(),
+                  [&](double &lc) {
         const double y = uniformRealDistribution(_randomNumberGenerator);
         lc = transformUniformToPowerLaw(_minimalCharacteristicLength, _maximalCharacteristicLength, powerLawExponent, y);
-    }
+    });
 }
 
 void Breakup::areaToMassRatioDistribution() {
@@ -84,21 +85,20 @@ void Breakup::areaToMassRatioDistribution() {
 
 void Breakup::deltaVelocityDistribution(double factor, double offset) {
     using namespace util;
-    auto amIt = _output._areaToMassRatio.begin();
-    auto evIt = _output._ejectionVelocity.begin();
-    auto vIt = _output._velocity.begin();
-    for (; amIt != _output._areaToMassRatio.end(); ++amIt, ++evIt, ++vIt) {
+    auto tuple = _output.getVelocityTuple();
+    std::for_each(std::execution::par_unseq, tuple.begin(), tuple.end(),
+                  [&](auto &tuple) {
         //Calculates the velocity as a scalar based on Equation 11/ 12
-        const double chi = log10(*amIt);
+        const double chi = log10(std::get<0>(tuple));
         const double mu = factor * chi + offset;
         static constexpr double sigma = 0.4;
         std::normal_distribution normalDistribution{mu, sigma};
         double velocity = std::pow(10, normalDistribution(_randomNumberGenerator));
 
         //Transform the scalar velocity into a cartesian vector
-        *evIt = calculateVelocityVector(velocity);
-        *vIt = *vIt + *evIt;
-    }
+        std::get<2>(tuple) = calculateVelocityVector(velocity);
+        std::get<1>(tuple) = std::get<1>(tuple) + std::get<2>(tuple);
+    });
 }
 
 double Breakup::calculateAM(double characteristicLength) {

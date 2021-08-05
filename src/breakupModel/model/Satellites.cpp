@@ -1,5 +1,14 @@
 #include "Satellites.h"
 
+std::vector<std::tuple<double &, std::array<double, 3> &, std::array<double, 3> &>> Satellites::getVelocityTuple() {
+    std::vector<std::tuple<double &, std::array<double, 3> &, std::array<double, 3> &>> vector{};
+    vector.reserve(size());
+    for (size_t i = 0; i < size(); ++i) {
+        vector.emplace_back(_areaToMassRatio[i], _velocity[i], _ejectionVelocity[i]);
+    }
+    return vector;
+}
+
 std::vector<Satellite> Satellites::getAoS() const {
     std::vector<Satellite> vector{};
     size_t size = this->size();

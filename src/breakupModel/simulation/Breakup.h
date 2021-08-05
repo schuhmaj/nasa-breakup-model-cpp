@@ -7,6 +7,7 @@
 #include <random>
 #include <algorithm>
 #include <memory>
+#include <execution>
 #include "breakupModel/model/Satellite.h"
 #include "breakupModel/model/Satellites.h"
 #include "breakupModel/util/UtilityContainer.h"
