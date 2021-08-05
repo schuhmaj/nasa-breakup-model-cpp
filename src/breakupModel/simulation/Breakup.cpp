@@ -1,22 +1,22 @@
 #include "Breakup.h"
 
 void Breakup::run() {
-    //2. Step: Generate the new Satellites
+    //1. Step: Generate the new Satellites
     this->calculateFragmentCount();
 
-    //3. Step: Assign every new Satellite a value for L_c
+    //2. Step: Assign every new Satellite a value for L_c
     this->characteristicLengthDistribution();
 
-    //4. Step: Calculate the A/M (area-to-mass-ratio), A (area) and M (mass) values for every Satellite
+    //3. Step: Calculate the A/M (area-to-mass-ratio), A (area) and M (mass) values for every Satellite
     this->areaToMassRatioDistribution();
 
-    //5. Step: Assign parent and by doing that assign each fragment a base velocity
+    //4. Step: Assign parent and by doing that assign each fragment a base velocity
     this->assignParentProperties();
 
-    //6. Step: Calculate the Ejection velocity for every Satellite
+    //5. Step: Calculate the Ejection velocity for every Satellite
     this->deltaVelocityDistribution();
 
-    //As a last step set the _currentMaxGivenID to the new valid value
+    //6. Step: As a last step set the _currentMaxGivenID to the new valid value
     _currentMaxGivenID += _output.size();
 }
 
@@ -27,6 +27,8 @@ Breakup &Breakup::setSeed(unsigned long seed) {
 
 void
 Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3> &position) {
+    //Just in case of a rerun - reset the outputMass to zero
+    _outputMass = 0;
     _output = Satellites{_currentMaxGivenID+1, SatType::DEBRIS, position, fragmentCount};
 }
 
