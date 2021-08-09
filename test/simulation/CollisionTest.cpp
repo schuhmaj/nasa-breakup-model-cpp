@@ -62,36 +62,37 @@ TEST_F(CollisionTest, FragmentCountTest) {
 
 
 TEST_F(CollisionTest, FragmentSizeDsitributionTest) {
-    _collision->setSeed(std::make_optional(1234)).run();
-    auto output = _collision->getResult();
+    for (size_t t = 0; t < 100; ++t) {
+        _collision->setSeed(std::make_optional(1234)).run();
+        auto output = _collision->getResult();
 
-    double Lc1 = sat1.getCharacteristicLength();
-    double Lc2 = sat2.getCharacteristicLength();
-    double expectedMaximalCharacteristicLength = Lc1 > Lc2 ? Lc1 : Lc2;
+        double Lc1 = sat1.getCharacteristicLength();
+        double Lc2 = sat2.getCharacteristicLength();
+        double expectedMaximalCharacteristicLength = Lc1 > Lc2 ? Lc1 : Lc2;
 
-    ASSERT_FLOAT_EQ(_collision->getMaximalCharacteristicLength(), expectedMaximalCharacteristicLength);
+        ASSERT_FLOAT_EQ(_collision->getMaximalCharacteristicLength(), expectedMaximalCharacteristicLength);
 
-    double Lc = _minimalCharacteristicLength;
+        double Lc = _minimalCharacteristicLength;
 
-    //1% Deviation for the Test Case (--> +-40 Fragments)
-    double deviation = static_cast<double>(output.size()) * 0.01;
+        //1% Deviation for the Test Case (--> +-40 Fragments)
+        double deviation = static_cast<double>(output.size()) * 0.01;
 
-    while(Lc < expectedMaximalCharacteristicLength) {
-        size_t count = std::count_if(output.begin(), output.end(),[Lc](Satellite &sat) {
-            return sat.getCharacteristicLength() > Lc;
-        });
+        while(Lc < expectedMaximalCharacteristicLength) {
+            size_t count = std::count_if(output.begin(), output.end(),[Lc](Satellite &sat) {
+                return sat.getCharacteristicLength() > Lc;
+            });
 
-        double expectedCount = 0.1 * std::pow(sat1.getMass() + sat2.getMass(), 0.75) * std::pow(Lc, -1.71);
+            double expectedCount = 0.1 * std::pow(sat1.getMass() + sat2.getMass(), 0.75) * std::pow(Lc, -1.71);
 
-        size_t expectedUpperBound = static_cast<size_t>(expectedCount + deviation);
-        size_t expectedLowerBound = expectedCount - deviation > 0 ? static_cast<size_t>(expectedCount - deviation) : 0;
+            size_t expectedUpperBound = static_cast<size_t>(expectedCount + deviation);
+            size_t expectedLowerBound = expectedCount - deviation > 0 ? static_cast<size_t>(expectedCount - deviation) : 0;
 
-        ASSERT_GE(count, expectedLowerBound) << "L_c was " << Lc;;
-        ASSERT_LE(count, expectedUpperBound) << "L_c was " << Lc;;
+            ASSERT_GE(count, expectedLowerBound) << "L_c was " << Lc;;
+            ASSERT_LE(count, expectedUpperBound) << "L_c was " << Lc;;
 
-        Lc += 0.1;
+            Lc += 0.1;
+        }
     }
-
 }
 
 TEST_F(CollisionTest, CheckNoRaceCondition) {
