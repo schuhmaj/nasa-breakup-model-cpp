@@ -1,5 +1,12 @@
 #include "Collision.h"
 
+void Collision::init() {
+    //The pdf for Collisions is: 0.0101914/(x^2.71)
+    _lcPowerLawExponent = -2.71;
+    //Equation 12 mu = 0.9 * chi + 2.9
+    _deltaVelocityFactorOffset = std::make_pair(0.9, 2.9);
+}
+
 void Collision::calculateFragmentCount() {
     using util::operator-, util::euclideanNorm;
     //Get the two satellites from the input
@@ -47,11 +54,6 @@ void Collision::calculateFragmentCount() {
     this->generateFragments(fragmentCount, sat1.getPosition());
 }
 
-void Collision::characteristicLengthDistribution() {
-    //The pdf for Collisions is: 0.0101914/(x^2.71)
-    Breakup::characteristicLengthDistribution(-2.71);
-}
-
 void Collision::assignParentProperties() {
     //The names of the fragments for a given parent
     const Satellite &bigSat = _input.at(0);
@@ -91,9 +93,4 @@ void Collision::assignParentProperties() {
             std::get<2>(tuple) = smallSat.getVelocity();
         }
     });
-}
-
-void Collision::deltaVelocityDistribution() {
-    //Equation 12 mu = 0.9 * chi + 2.9
-    Breakup::deltaVelocityDistribution(0.9, 2.9);
 }

@@ -69,6 +69,18 @@ protected:
     double _outputMass{0};
 
     /**
+     * Contains the Power Law Exponent for the L_c distribution.
+     * This constant is correctly set-up in the subclasses by an init method.
+     */
+    double _lcPowerLawExponent{0};
+
+    /**
+     * Contains Factor and Offset of the Delta (Ejection) Velocity Distribution.
+     * This constant is correctly set-up in the subclasses by an init method.
+     */
+    std::pair<double, double> _deltaVelocityFactorOffset{std::make_pair(0, 0)};
+
+    /**
      * This is potential member for testing purpose. It allows the user to fixate a specific seed (with the
      * method setSeed()). The produced std::mt19937 is then saved in this member and used to calculate random
      * values. The access on this member must be thread safe!
@@ -156,6 +168,12 @@ public:
 protected:
 
     /**
+     * This method does set up the process and correctly inits the required variables.
+     * Implementation depends on the subclass.
+     */
+    virtual void init() = 0;
+
+    /**
      * Creates the a number of fragments, following the Equation 2 for Explosions and
      * Equation 4 for Collisions.
      */
@@ -168,24 +186,14 @@ protected:
      * @param debrisName - the name for the fragments
      * @param position - position of the fragment, derived from the one parent (explosion) or from first parent (collision)
      */
-    virtual void
-    generateFragments(size_t fragmentCount, const std::array<double, 3> &position);
-
-    /**
-     * Creates the Size Distribution. After the fragments are generated this method will assign
-     * every fragment a L_c value based on the corresponding power law distribution (Equation 2 and 4).
-     * Contains the specific part, so this method is for each subclass different.
-     * @note This method is implemented in the subclasses and calls the general form with parameters in the base class
-     */
-    virtual void characteristicLengthDistribution() = 0;
+    virtual void generateFragments(size_t fragmentCount, const std::array<double, 3> &position);
 
     /**
      * Creates the Size Distribution according to an specific powerLaw Exponent.
-     * The Exponent comes from the probability density function (pdf).
-     * @attention Implemented in the base class, called by the subclasses with their parameters
-     * @param powerLawExponent - double
+     * The Exponent comes from the probability density function (pdf) and depends on the subclass.
+     * The subclasses therefore init _lcPowerLawExponent differently.
      */
-    virtual void characteristicLengthDistribution(double powerLawExponent);
+    virtual void characteristicLengthDistribution();
 
     /**
      * Creates for every satellite the area-to-mass ratio according to Equation 6.
@@ -202,23 +210,13 @@ protected:
     virtual void assignParentProperties() = 0;
 
     /**
-     * Implements the Delta Velocity Distribution (ejection velocity).
-     * Assigns every satellite an cartesian velocity vector.
-     * Therefore it first calculates the velocity according to Equation 11/ 12 as an scalar and transform this
-     * into an cartesian vector.
-     * @note This method is implemented in the subclasses and calls the general form with parameters in the base class
-     */
-    virtual void deltaVelocityDistribution() = 0;
-
-    /**
      * Implements the Delta Velocity Distribution according to Equation 11/ 12.
      * The parameters can be described as the following: mu = factor * chi + offset where mu is the mean value of the
-     * normal distribution.
-     * @attention Implemented in the base class, called by the subclasses with their parameters
-     * @param factor - for the chi
-     * @param offset - on top of the chi
+     * normal distribution. The factor and the offset are both saved,
+     * depending on the subclass with different values, in _deltaVelocityFactorOffset
+     * The subclasses therefore init _deltaVelocityFactorOffset differently.
      */
-    virtual void deltaVelocityDistribution(double factor, double offset);
+    virtual void deltaVelocityDistribution();
 
 private:
 

@@ -1,6 +1,9 @@
 #include "Breakup.h"
 
 void Breakup::run() {
+    //0. Step: Prepare constants, etc.
+    this->init();
+
     //1. Step: Generate the new Satellites
     this->calculateFragmentCount();
 
@@ -29,20 +32,19 @@ Breakup &Breakup::setSeed(std::optional<unsigned long> seed) {
     return *this;
 }
 
-void
-Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3> &position) {
+void Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3> &position) {
     //Just in case of a rerun - reset the outputMass to zero
     _outputMass = 0;
     _output = Satellites{_currentMaxGivenID+1, SatType::DEBRIS, position, fragmentCount};
 }
 
-void Breakup::characteristicLengthDistribution(double powerLawExponent) {
+void Breakup::characteristicLengthDistribution() {
     using util::transformUniformToPowerLaw;
     std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
     std::for_each(std::execution::par, _output._characteristicLength.begin(), _output._characteristicLength.end(),
                   [&](double &lc) {
         const double y = getRandomNumber(uniformRealDistribution);
-        lc = transformUniformToPowerLaw(_minimalCharacteristicLength, _maximalCharacteristicLength, powerLawExponent, y);
+        lc = transformUniformToPowerLaw(_minimalCharacteristicLength, _maximalCharacteristicLength, _lcPowerLawExponent, y);
     });
 }
 
@@ -54,7 +56,7 @@ void Breakup::areaToMassRatioDistribution() {
         //Calculate the A/M value in [m^2/kg]
         std::get<1>(tuple) = calculateAM(std::get<0>(tuple));
 
-        //Calculate the are A in [m^2]
+        //Calculate the area A in [m^2]
         if (std::get<0>(tuple) < 0.00167) {
             std::get<2>(tuple) = 0.540424 * std::get<0>(tuple) * std::get<0>(tuple);
         } else {
@@ -79,7 +81,7 @@ void Breakup::areaToMassRatioDistribution() {
     }
 }
 
-void Breakup::deltaVelocityDistribution(double factor, double offset) {
+void Breakup::deltaVelocityDistribution() {
     using namespace util;
     auto tupleView = _output.getVelocityTuple();
     std::for_each(std::execution::par, tupleView.begin(), tupleView.end(),
@@ -87,7 +89,7 @@ void Breakup::deltaVelocityDistribution(double factor, double offset) {
         //Order in the tuple: 0: A/M | 1: Velocity | 2: Ejection Velocity
         //Calculates the velocity as a scalar based on Equation 11/ 12
         const double chi = log10(std::get<0>(tuple));
-        const double mu = factor * chi + offset;
+        const double mu = _deltaVelocityFactorOffset.first * chi + _deltaVelocityFactorOffset.second;
         static constexpr double sigma = 0.4;
         std::normal_distribution normalDistribution{mu, sigma};
         double velocity = std::pow(10, getRandomNumber(normalDistribution));
