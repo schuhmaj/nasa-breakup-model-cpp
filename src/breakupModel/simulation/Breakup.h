@@ -220,13 +220,19 @@ protected:
 
 private:
 
+    double calculateCharacteristicLength();
+
     /**
      * Calculates an A/M Value for a given L_c.
      * The utilised equation is chosen based on L_c and the SatType attribute of this Breakup.
      * @param characteristicLength in [m]
      * @return A/M value
      */
-    double calculateAM(double characteristicLength);
+    double calculateAreaMassRatio(double characteristicLength);
+
+    double calculateArea(double characteristicLength);
+
+    double calculateMass(double area, double areaMassRatio);
 
     /**
      * Transforms a scalar velocity into a 3-dimensional cartesian velocity vector.

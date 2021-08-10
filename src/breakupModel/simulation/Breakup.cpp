@@ -39,31 +39,23 @@ void Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3
 }
 
 void Breakup::characteristicLengthDistribution() {
-    using util::transformUniformToPowerLaw;
-    std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
-    std::for_each(std::execution::par, _output._characteristicLength.begin(), _output._characteristicLength.end(),
+    std::for_each(std::execution::par_unseq, _output._characteristicLength.begin(), _output._characteristicLength.end(),
                   [&](double &lc) {
-        const double y = getRandomNumber(uniformRealDistribution);
-        lc = transformUniformToPowerLaw(_minimalCharacteristicLength, _maximalCharacteristicLength, _lcPowerLawExponent, y);
+        lc = calculateCharacteristicLength();
     });
 }
 
 void Breakup::areaToMassRatioDistribution() {
     auto tupleView = _output.getAreaMassTuple();
-    std::for_each(std::execution::par, tupleView.begin(), tupleView.end(),
+    std::for_each(std::execution::par_unseq, tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: L_c | 1: A/M | 2: Area | 3: Mass
         //Calculate the A/M value in [m^2/kg]
-        std::get<1>(tuple) = calculateAM(std::get<0>(tuple));
-
+        std::get<1>(tuple) = calculateAreaMassRatio(std::get<0>(tuple));
         //Calculate the area A in [m^2]
-        if (std::get<0>(tuple) < 0.00167) {
-            std::get<2>(tuple) = 0.540424 * std::get<0>(tuple) * std::get<0>(tuple);
-        } else {
-            std::get<2>(tuple) = 0.556945 * std::pow(std::get<0>(tuple), 2.0047077);
-        }
+        std::get<2>(tuple) = calculateArea(std::get<0>(tuple));
         //Calculate the mass m in [kg]
-        std::get<3>(tuple) = std::get<2>(tuple) / std::get<1>(tuple);
+        std::get<3>(tuple) = calculateMass(std::get<2>(tuple), std::get<1>(tuple));
     });
     //Enforce Mass Conservation if the output mass is greater than the input mass
     _outputMass = std::accumulate(_output._mass.begin(), _output._mass.end(), 0.0);
@@ -84,7 +76,7 @@ void Breakup::areaToMassRatioDistribution() {
 void Breakup::deltaVelocityDistribution() {
     using namespace util;
     auto tupleView = _output.getVelocityTuple();
-    std::for_each(std::execution::par, tupleView.begin(), tupleView.end(),
+    std::for_each(std::execution::par_unseq, tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: A/M | 1: Velocity | 2: Ejection Velocity
         //Calculates the velocity as a scalar based on Equation 11/ 12
@@ -100,7 +92,14 @@ void Breakup::deltaVelocityDistribution() {
     });
 }
 
-double Breakup::calculateAM(double characteristicLength) {
+double Breakup::calculateCharacteristicLength() {
+    using util::transformUniformToPowerLaw;
+    static std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
+    const double y = getRandomNumber(uniformRealDistribution);
+    return transformUniformToPowerLaw(_minimalCharacteristicLength, _maximalCharacteristicLength, _lcPowerLawExponent, y);
+}
+
+double Breakup::calculateAreaMassRatio(double characteristicLength) {
     using namespace util;
     const double logLc = std::log10(characteristicLength);
 
@@ -129,6 +128,18 @@ double Breakup::calculateAM(double characteristicLength) {
     }
 
     return areaToMassRatio;
+}
+
+double Breakup::calculateArea(double characteristicLength) {
+    if (characteristicLength < 0.00167) {
+        return 0.540424 * characteristicLength * characteristicLength;
+    } else {
+        return 0.556945 * std::pow(characteristicLength, 2.0047077);
+    }
+}
+
+double Breakup::calculateMass(double area, double areaMassRatio) {
+    return area / areaMassRatio;
 }
 
 std::array<double, 3> Breakup::calculateVelocityVector(double velocity) {
