@@ -77,10 +77,23 @@ void Breakup::enforceMassConservation() {
         _output.resize(newSize);
     } else if (_enforceMassConservation) {
         //This is written in an else if, because if the former condition was true, we already had too many fragments
-        //So we only need to check this here when no fragments had to be removed.
+        //But we only need to check this here when no fragments had to be removed.
         while (_outputMass < _inputMass) {
-            //TODO
+            //Order in the tuple: 0: L_c | 1: A/M | 2: Area | 3: Mass
+
+            //Create new element and assign values
+            auto tuple = _output.appendElement();
+            std::get<0>(tuple) = calculateCharacteristicLength();
+            std::get<1>(tuple) = calculateAreaMassRatio(std::get<0>(tuple));
+            std::get<2>(tuple) = calculateArea(std::get<0>(tuple));
+            std::get<3>(tuple) = calculateMass(std::get<2>(tuple), std::get<1>(tuple));
+
+            //Calculate new mass
+            _outputMass += std::get<3>(tuple);
         }
+        //Remove the element which has lead to the exceeding of the mass budget
+        _outputMass -= _output._mass.back();
+        _output.popBack();
     }
 }
 
