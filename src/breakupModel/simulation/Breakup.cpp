@@ -94,6 +94,7 @@ void Breakup::enforceMassConservation() {
         //Remove the element which has lead to the exceeding of the mass budget
         _outputMass -= _output._mass.back();
         _output.popBack();
+        spdlog::warn("The simulation increased the number of fragments to enforce the mass conservation.");
     }
 }
 
