@@ -193,13 +193,15 @@ protected:
      * The Exponent comes from the probability density function (pdf) and depends on the subclass.
      * The subclasses therefore init _lcPowerLawExponent differently.
      */
-    virtual void characteristicLengthDistribution();
+    void characteristicLengthDistribution();
 
     /**
      * Creates for every satellite the area-to-mass ratio according to Equation 6.
      * This method also ensures that the output mass does not exceed the input mass.
      */
-    virtual void areaToMassRatioDistribution();
+    void areaToMassRatioDistribution();
+
+    void enforceMassConservation();
 
     /**
      * This Method does assign each fragment a parent (trivial in Explosion case) and checks that
@@ -216,7 +218,7 @@ protected:
      * depending on the subclass with different values, in _deltaVelocityFactorOffset
      * The subclasses therefore init _deltaVelocityFactorOffset differently.
      */
-    virtual void deltaVelocityDistribution();
+    void deltaVelocityDistribution();
 
 private:
 
@@ -234,6 +236,7 @@ private:
 
     static double calculateMass(double area, double areaMassRatio);
 
+
     /**
      * Transforms a scalar velocity into a 3-dimensional cartesian velocity vector.
      * The transformation is based around a uniform Distribution.
@@ -241,7 +244,6 @@ private:
      * @return 3-dimensional cartesian velocity vector
      */
     std::array<double, 3> calculateVelocityVector(double velocity);
-
 
     /**
      * Returns a random number according to a specific distribution.
@@ -275,7 +277,6 @@ public:
     [[nodiscard]] size_t getCurrentMaxGivenId() const {
         return _currentMaxGivenID;
     }
-
 };
 
 

@@ -13,6 +13,8 @@ void Breakup::run() {
     //3. Step: Calculate the A/M (area-to-mass-ratio), A (area) and M (mass) values for every Satellite
     this->areaToMassRatioDistribution();
 
+    this->enforceMassConservation();
+
     //4. Step: Assign parent and by doing that assign each fragment a base velocity
     this->assignParentProperties();
 
@@ -57,6 +59,9 @@ void Breakup::areaToMassRatioDistribution() {
         //Calculate the mass m in [kg]
         std::get<3>(tuple) = calculateMass(std::get<2>(tuple), std::get<1>(tuple));
     });
+}
+
+void Breakup::enforceMassConservation() {
     //Enforce Mass Conservation if the output mass is greater than the input mass
     _outputMass = std::accumulate(_output._mass.begin(), _output._mass.end(), 0.0);
     size_t oldSize = _output.size();
