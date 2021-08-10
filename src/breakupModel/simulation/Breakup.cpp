@@ -75,6 +75,12 @@ void Breakup::enforceMassConservation() {
         spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
                      "In other words: The random behaviour has produced heavier fragments");
         _output.resize(newSize);
+    } else if (_enforceMassConservation) {
+        //This is written in an else if, because if the former condition was true, we already had too many fragments
+        //So we only need to check this here when no fragments had to be removed.
+        while (_outputMass < _inputMass) {
+            //TODO
+        }
     }
 }
 

@@ -69,6 +69,13 @@ protected:
     double _outputMass{0};
 
     /**
+     * This is per default false.
+     * If this is set top true then the method enforceMassConservation() will add additional fragments to the
+     * output until the output mass approximately equals the input mass.
+     */
+    bool _enforceMassConservation{false};
+
+    /**
      * Contains the Power Law Exponent for the L_c distribution.
      * This constant is correctly set-up in the subclasses by an init method.
      */
