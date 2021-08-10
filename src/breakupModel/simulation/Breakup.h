@@ -230,9 +230,9 @@ private:
      */
     double calculateAreaMassRatio(double characteristicLength);
 
-    double calculateArea(double characteristicLength);
+    static double calculateArea(double characteristicLength);
 
-    double calculateMass(double area, double areaMassRatio);
+    static double calculateMass(double area, double areaMassRatio);
 
     /**
      * Transforms a scalar velocity into a 3-dimensional cartesian velocity vector.
