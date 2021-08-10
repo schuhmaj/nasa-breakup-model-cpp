@@ -57,3 +57,13 @@ std::vector<Satellite> Satellites::getAoS() const {
     return vector;
 }
 
+void Satellites::popBack() {
+    this->resize(this->size() - 1);
+}
+
+std::tuple<double &, double &, double &, double &> Satellites::appendElement() {
+    this->resize(this->size() + 1);
+    return std::tuple<double &, double &, double &, double &>
+            {_characteristicLength.back(), _areaToMassRatio.back(), _area.back(), _mass.back()};
+}
+

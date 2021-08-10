@@ -144,4 +144,17 @@ struct Satellites {
         _velocity.resize(newSize);
     }
 
+    /**
+     * Removes the last element from this Satellites Structure.
+     * This resizes the interior vectors to a size one smaller than before the method call.
+     */
+    void popBack();
+
+    /**
+     * This resizes the Structure by one additional Slot and returns references to the
+     * characteristic length, area-mass-ratio, area and mass of the new element.
+     * @return tuple of references to characteristic length, area-mass-ratio, area and mass
+     */
+    std::tuple<double &, double &, double &, double &> appendElement();
+
 };
