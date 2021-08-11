@@ -69,6 +69,8 @@ where the yaml-file contains a Configuration.
     not be produced but approximated
   - Notice that the case outputMass > inputMass is not affected by this option;
     the removal of a mass excess is always applied
+  - Notice that this option kills some performance because of the random nature, there
+    is no possibility to schedule how many particles will be produced in the end
 
 ### Input
 
