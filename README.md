@@ -90,7 +90,7 @@ The given yaml-file should look like this:
     idFilter: [1, 2]                  #Only the satellites with these IDs will be
                                       #recognized by the simulation.
                                       #If not given, no filter is applied
-    enforceMassConservation: True     #When this is et to true, the simulation will
+    enforceMassConservation: True     #When this is set to true, the simulation will
                                       #try to enforce mass conservation
                                       #if not given, this is always false
   inputOutput:                        #If you want to print out the input data into specific file (optional)
