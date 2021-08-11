@@ -13,6 +13,9 @@
 
 int main(int argc, char *argv[]) {
 
+    //Enable to get debug messages
+    //spdlog::default_logger()->set_level(spdlog::level::debug);
+
     if (argc != 2) {
         spdlog::error(
                 "Wrong program call. Please call the program in the following way:\n"
