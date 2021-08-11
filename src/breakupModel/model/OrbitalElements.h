@@ -25,14 +25,50 @@ enum class OrbitalAnomalyType {
  * This enum fulfills the more "readability" purpose.
  */
 enum OrbitalElement {
-    SEMI_MAJOR_AXIS=0,
-    ECCENTRICITY=1,
-    INCLINATION=2,
-    LONGITUDE_OF_THE_ASCENDING_NODE=3,
-    ARGUMENT_OF_PERIAPSIS=4,
-    ECCENTRIC_ANOMALY=5
+    SEMI_MAJOR_AXIS = 0,
+    ECCENTRICITY = 1,
+    INCLINATION = 2,
+    LONGITUDE_OF_THE_ASCENDING_NODE = 3,
+    ARGUMENT_OF_PERIAPSIS = 4,
+    ECCENTRIC_ANOMALY = 5
 };
 
+/**
+ * This struct saves an Epoch for Orbital Elements. It contains of two elements:<br>
+ * - The year (e. g. 2006)<br>
+ * - The day + fraction of a day (e. g. 31.25992506 --> translates to day 31 of the year (would be January) and
+ *   6 hours 14 minutes and 17.52 second)
+ *  Calculation of the hours follows this scheme: floor(0.25992506 * 24) = 6 hours
+ *  The Epoch is invalid if the values inside are negative
+ */
+struct Epoch {
+
+    /**
+     * The year of the Epoch
+     */
+    const int year;
+
+    /**
+     * The day + the fraction of the day
+     */
+    const double fraction;
+
+    Epoch()
+            : year{-1},
+              fraction{-1} {}
+
+    Epoch(int year, double fraction)
+            : year{year},
+              fraction{fraction} {}
+
+    /**
+     * Returns true if this Epoch contains invalid numbers.
+     * @return true if invalid
+     */
+    bool isInvalid() const {
+        return year < 0 || fraction < 0;
+    }
+};
 
 class OrbitalElements {
 
