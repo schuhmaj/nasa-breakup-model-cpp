@@ -85,15 +85,15 @@ TEST_F(ExplosionTest, CheckNoRaceCondition) {
         size_t count = 0;
         _explosion->run();
         auto output = _explosion->getResultSoA();
-        for (double lc1 : output._characteristicLength) {
-            for (double lc2 : output._characteristicLength) {
+        for (double lc1 : output.characteristicLength) {
+            for (double lc2 : output.characteristicLength) {
                 bool condition = std::abs(lc1 - lc2) < 1e-16;
                 if (condition) {
                     count += 1;
                 }
             }
         }
-        count -= output._characteristicLength.size();
+        count -= output.characteristicLength.size();
         //10 is threshold
         //If we would have race conditions, it can be assumed that there are a lot more than 10 duplicates
         EXPECT_LT(count, 10) << "Count of Duplicates in Iteration " << x << "\n"

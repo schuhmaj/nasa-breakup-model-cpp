@@ -25,18 +25,18 @@ struct Satellites {
      * The NORAD Catalog ID of the first Satellite in the SoA
      * That means this contains Satellites from [StartID, StartID+size]
      */
-    size_t _startID{};
+    size_t startId{};
 
     /**
      * The SatType of the Satellites in the SoA
      */
-    SatType _satType{SatType::DEBRIS};
+    SatType satType{SatType::DEBRIS};
 
     /**
      * The position base of the Satellites in the SoA
      * This is a cartesian position vector in [m]
      */
-    std::array<double, 3> _position{};
+    std::array<double, 3> position{};
 
     /*
      * Unique Properties
@@ -45,46 +45,46 @@ struct Satellites {
     /**
      * The name of each of the Satellites in the SoA
      */
-    std::vector<std::shared_ptr<const std::string>> _name;
+    std::vector<std::shared_ptr<const std::string>> name;
 
     /**
      * The characteristic length of each satellite in [m]
      */
-    std::vector<double> _characteristicLength;
+    std::vector<double> characteristicLength;
 
     /**
      * The area-to-mass ratio of each satellite in [m^2/kg]
      */
-    std::vector<double> _areaToMassRatio;
+    std::vector<double> areaToMassRatio;
 
     /**
      * The mass of each satellite in [kg]
      */
-    std::vector<double> _mass;
+    std::vector<double> mass;
 
     /**
      * The area/ Radar-Cross-Section of each satellite in [m^2]
      */
-    std::vector<double> _area;
+    std::vector<double> area;
 
     /**
      * The ejection velocity of each satellite in [m/s]
      * This is a cartesian velocity vector.
      */
-    std::vector<std::array<double, 3>> _ejectionVelocity;
+    std::vector<std::array<double, 3>> ejectionVelocity;
 
     /**
      * The velocity of each satellite in [m/s]
      * This is a cartesian velocity vector in which each element is the sum of ejection and (parental) base velocity
      */
-    std::vector<std::array<double, 3>> _velocity;
+    std::vector<std::array<double, 3>> velocity;
 
     Satellites() = default;
 
     Satellites(size_t startID, SatType satType, std::array<double, 3> position, size_t size)
-            : _startID{startID},
-              _satType{satType},
-              _position{position} {
+            : startId{startID},
+              satType{satType},
+              position{position} {
         this->resize(size);
     }
 
@@ -127,7 +127,7 @@ struct Satellites {
      * @return size
      */
     size_t size() const {
-        return _characteristicLength.size();
+        return characteristicLength.size();
     }
 
     /**
@@ -135,13 +135,13 @@ struct Satellites {
      * @param newSize
      */
     void resize(size_t newSize) {
-        _name.resize(newSize);
-        _characteristicLength.resize(newSize);
-        _areaToMassRatio.resize(newSize);
-        _mass.resize(newSize);
-        _area.resize(newSize);
-        _ejectionVelocity.resize(newSize);
-        _velocity.resize(newSize);
+        name.resize(newSize);
+        characteristicLength.resize(newSize);
+        areaToMassRatio.resize(newSize);
+        mass.resize(newSize);
+        area.resize(newSize);
+        ejectionVelocity.resize(newSize);
+        velocity.resize(newSize);
     }
 
     /**

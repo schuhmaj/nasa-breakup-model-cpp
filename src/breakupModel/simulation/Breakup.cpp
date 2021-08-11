@@ -42,7 +42,7 @@ void Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3
 }
 
 void Breakup::characteristicLengthDistribution() {
-    std::for_each(std::execution::par_unseq, _output._characteristicLength.begin(), _output._characteristicLength.end(),
+    std::for_each(std::execution::par_unseq, _output.characteristicLength.begin(), _output.characteristicLength.end(),
                   [&](double &lc) {
         lc = calculateCharacteristicLength();
     });
@@ -64,15 +64,15 @@ void Breakup::areaToMassRatioDistribution() {
 
 void Breakup::enforceMassConservation() {
     //Enforce Mass Conservation if the output mass is greater than the input mass
-    _outputMass = std::accumulate(_output._mass.begin(), _output._mass.end(), 0.0);
+    _outputMass = std::accumulate(_output.mass.begin(), _output.mass.end(), 0.0);
     spdlog::debug("The simulation got {} kg of input mass", _inputMass);
     spdlog::debug("The simulation produced {} kg of debris", _outputMass);
     size_t oldSize = _output.size();
     size_t newSize = _output.size();
     while (_outputMass > _inputMass) {
-        _outputMass -= _output._mass.back();
+        _outputMass -= _output.mass.back();
         newSize -= 1;
-        _output._mass.pop_back();
+        _output.mass.pop_back();
     }
     if (oldSize != newSize) {
         spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
@@ -96,7 +96,7 @@ void Breakup::enforceMassConservation() {
             _outputMass += std::get<3>(tuple);
         }
         //Remove the element which has lead to the exceeding of the mass budget
-        _outputMass -= _output._mass.back();
+        _outputMass -= _output.mass.back();
         _output.popBack();
         spdlog::warn("The simulation increased the number of fragments to enforce the mass conservation.");
         spdlog::debug("The simulation corrected to {} kg of debris", _outputMass);

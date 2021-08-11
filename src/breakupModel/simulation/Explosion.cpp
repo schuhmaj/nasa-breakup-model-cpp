@@ -15,7 +15,7 @@ void Explosion::calculateFragmentCount() {
     //Sets the maximalCharacteristicLength which will be required later
     _maximalCharacteristicLength = sat.getCharacteristicLength();
 
-    //Sets the _satType attribute to the correct type (later required for the A/M)
+    //Sets the satType attribute to the correct type (later required for the A/M)
     //The Default of this member is SPACECRAFT
     _satType = sat.getSatType();
 

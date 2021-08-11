@@ -16,7 +16,7 @@ void Collision::calculateFragmentCount() {
     //Sets the maximalCharacteristicLength which will be required later
     _maximalCharacteristicLength = std::max(sat1.getCharacteristicLength(), sat2.getCharacteristicLength());
 
-    //Sets the _satType attribute to the correct type (later required for the A/M)
+    //Sets the satType attribute to the correct type (later required for the A/M)
     //The Default of this member is SPACECRAFT
     if (sat1.getSatType() == SatType::ROCKET_BODY || sat2.getSatType() == SatType::ROCKET_BODY) {
         _satType = SatType::ROCKET_BODY;
