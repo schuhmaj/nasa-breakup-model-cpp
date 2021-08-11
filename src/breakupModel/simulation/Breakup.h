@@ -210,6 +210,11 @@ protected:
      */
     void areaToMassRatioDistribution();
 
+    /**
+     * This method enforces the Mass Conservation.
+     * It removes fragments if outputMass > inputMass and
+     * it generates more fragments if outputMass < inputMass && _enforceMassConservation is enabled
+     */
     void enforceMassConservation();
 
     /**
@@ -231,18 +236,33 @@ protected:
 
 private:
 
+    /**
+     * This Method calculates one characteristic Length for one Debris Particle.
+     * @return L_c in [m]
+     */
     double calculateCharacteristicLength();
 
     /**
      * Calculates an A/M Value for a given L_c.
      * The utilised equation is chosen based on L_c and the SatType attribute of this Breakup.
      * @param characteristicLength in [m]
-     * @return A/M value
+     * @return A/M value in [m^2/kg]
      */
     double calculateAreaMassRatio(double characteristicLength);
 
+    /**
+     * Calculates the Area for one fragment.
+     * @param characteristicLength in [m]
+     * @return Area in [m^2]
+     */
     static double calculateArea(double characteristicLength);
 
+    /**
+     * Calculates the Mass for one fragment.
+     * @param area in [m^2]
+     * @param areaMassRatio in [m^2/kg]
+     * @return Mass in [kg]
+     */
     static double calculateMass(double area, double areaMassRatio);
 
 

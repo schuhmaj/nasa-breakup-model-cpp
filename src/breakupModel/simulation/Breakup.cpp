@@ -13,15 +13,16 @@ void Breakup::run() {
     //3. Step: Calculate the A/M (area-to-mass-ratio), A (area) and M (mass) values for every Satellite
     this->areaToMassRatioDistribution();
 
+    //4. Step: Enforce the Mass Conservation and remove (or add) fragments
     this->enforceMassConservation();
 
-    //4. Step: Assign parent and by doing that assign each fragment a base velocity
+    //5. Step: Assign parent and by doing that assign each fragment a base velocity
     this->assignParentProperties();
 
-    //5. Step: Calculate the Ejection velocity for every Satellite
+    //6. Step: Calculate the Ejection velocity for every Satellite
     this->deltaVelocityDistribution();
 
-    //6. Step: As a last step set the _currentMaxGivenID to the new valid value
+    //7. Step: As a last step set the _currentMaxGivenID to the new valid value
     _currentMaxGivenID += _output.size();
 }
 
