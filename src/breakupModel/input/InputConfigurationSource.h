@@ -82,4 +82,11 @@ public:
      */
     virtual std::optional<std::set<size_t>> getIDFilter() const = 0;
 
+    /**
+     * Returns a bool which states if the simulation should enforce the mass conservation through the generation
+     * of additional fragments if the mass budget was not yet exceeded (after the normal run)
+     * @return a bool
+     */
+    virtual bool getEnforcedMassConservation() const = 0;
+
 };

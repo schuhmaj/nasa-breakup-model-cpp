@@ -75,6 +75,14 @@ std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() const {
     return std::nullopt;
 }
 
+bool YAMLConfigurationReader::getEnforcedMassConservation() const {
+    if (_file[SIMULATION_TAG][ENFORCE_MASS_CONSERVATION_TAG]) {
+        return _file[SIMULATION_TAG][ENFORCE_MASS_CONSERVATION_TAG].as<bool>();
+    } else {
+        return false;
+    }
+}
+
 std::vector<std::shared_ptr<OutputWriter>> YAMLConfigurationReader::getOutputTargets() const {
     if (_file[RESULT_OUTPUT_TAG]) {
         return extractOutputWriter(_file[RESULT_OUTPUT_TAG]);
