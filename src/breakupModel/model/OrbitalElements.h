@@ -3,6 +3,8 @@
 #include <array>
 #include <stdexcept>
 #include <ostream>
+#include <ctime>
+#include <map>
 #include "breakupModel/util/UtilityKepler.h"
 #include "breakupModel/util/UtilityFunctions.h"
 
@@ -44,14 +46,33 @@ enum OrbitalElement {
 struct Epoch {
 
     /**
+     * Mapping of Month to number of Days
+     * (Counting from zero in case of months, [see ctime std::tm])
+     */
+    static const inline std::map<int, int> monthToDaysMap{
+            {0,  31},    //January 31 days
+            {1,  28},    //February 28 days
+            {2,  31},    //March 31 days
+            {3,  30},    //April 30 days
+            {4,  31},    //May 31 days
+            {5,  30},    //June 30 days
+            {6,  31},    //July 31 days
+            {7,  31},    //August 31 days
+            {8,  30},    //September 30 days
+            {9,  31},    //October 31 days
+            {10, 30},    //November 30 days
+            {11, 30}     //December 31 days
+    };
+
+    /**
      * The year of the Epoch
      */
-    const int year;
+    int year;
 
     /**
      * The day + the fraction of the day
      */
-    const double fraction;
+    double fraction;
 
     Epoch()
             : year{-1},
@@ -65,9 +86,13 @@ struct Epoch {
      * Returns true if this Epoch contains invalid numbers.
      * @return true if invalid
      */
-    bool isInvalid() const {
-        return year < 0 || fraction < 0;
-    }
+    [[nodiscard]] bool isInvalid() const;
+
+    /**
+     * Transforms the epoch into an ctime std::tm instance.
+     * @return std::tm from ctime
+     */
+    [[nodiscard]] std::tm toTm() const;
 };
 
 class OrbitalElements {
@@ -102,6 +127,11 @@ class OrbitalElements {
      */
     double _eccentricAnomaly{0};
 
+    /**
+     * The epoch (time stamp) of this orbital elements
+     */
+    Epoch _epoch{};
+
 public:
 
     OrbitalElements() = default;
@@ -114,17 +144,19 @@ public:
     * @param W - longitude of the ascending node (big omega) [rad]
     * @param w - argument of periapsis (small omega) [rad]
     * @param EA - eccentric Anomaly [rad]
+    * @param epoch - the epoch of these Orbital Elements (default empty)
     * This is the "inverse" of getAsArray.
     * @note Use the OrbitalElementsFactory instead of this constructor!
     */
     OrbitalElements(double semiMajorAxis, double eccentricity, double inclination, double longitudeOfTheAscendingNode,
-                    double argumentOfPeriapsis, double eccentricAnomaly) :
+                    double argumentOfPeriapsis, double eccentricAnomaly, const Epoch &epoch = Epoch{}) :
             _semiMajorAxis{semiMajorAxis},
             _eccentricity{eccentricity},
             _inclination{inclination},
             _longitudeOfTheAscendingNode{longitudeOfTheAscendingNode},
             _argumentOfPeriapsis{argumentOfPeriapsis},
-            _eccentricAnomaly{eccentricAnomaly} {}
+            _eccentricAnomaly{eccentricAnomaly},
+            _epoch{epoch} {}
 
     /**
      * Creates the Orbital Elements from an array which contains the six elements in the following order:
@@ -135,16 +167,18 @@ public:
      * W - longitude of the ascending node (big omega) [rad]<br>
      * w - argument of periapsis (small omega) [rad]<br>
      * EA - eccentric Anomaly [rad]<br>
+     * @param epoch - the epoch of these Orbital Elements (default empty)
      * This is the "inverse" of getAsArray.
      * @note Use the OrbitalElementsFactory instead of this constructor!
      */
-    explicit OrbitalElements(const std::array<double, 6> &uniformOrbitalElements)
+    explicit OrbitalElements(const std::array<double, 6> &uniformOrbitalElements, Epoch epoch = Epoch{})
             : _semiMajorAxis{uniformOrbitalElements[0]},
               _eccentricity{uniformOrbitalElements[1]},
               _inclination{uniformOrbitalElements[2]},
               _longitudeOfTheAscendingNode{uniformOrbitalElements[3]},
               _argumentOfPeriapsis{uniformOrbitalElements[4]},
-              _eccentricAnomaly{uniformOrbitalElements[5]} {}
+              _eccentricAnomaly{uniformOrbitalElements[5]},
+              _epoch{epoch} {}
 
     /**
      * Returns the orbital Element in an array. The semi-major-axis in [m], the eccentricity unit-less,
@@ -202,6 +236,12 @@ public:
     */
     [[nodiscard]] double getAnomaly(AngularUnit angularUnit = AngularUnit::RADIAN,
                                     OrbitalAnomalyType orbitalAnomalyType = OrbitalAnomalyType::ECCENTRIC) const;
+
+    /**
+     * Returns the epoch of these Orbital Elements
+     * @return Epoch
+     */
+    [[nodiscard]] Epoch getEpoch() const;
 
     /**
      * Compares two OrbitalElements for equality.

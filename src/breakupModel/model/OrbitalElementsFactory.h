@@ -25,8 +25,10 @@ public:
     * W - longitude of the ascending node (big omega) [deg]<br>
     * w - argument of periapsis (small omega) [deg]<br>
     * MA - Mean Anomaly [deg]<br>
+    * @param epoch - the Epoch of these Elements (default empty)
     */
-    [[nodiscard]] OrbitalElements createFromTLEData(const std::array<double, 6> &tleData) const;
+    [[nodiscard]] OrbitalElements createFromTLEData(const std::array<double, 6> &tleData,
+                                                    const Epoch &epoch = Epoch{}) const;
 
     /**
     * Constructs the Orbital Elements from the standard keplerian Elements in the following order:
@@ -38,9 +40,11 @@ public:
     * w - argument of periapsis (small omega) [rad]<br>
     * A - an anomaly in [rad]<br>
     * @param orbitalAnomalyType - this defines the last element in the array, either: ECCENTRIC, MEAN or TRUE
+    * @param epoch - the Epoch of these Elements (default empty)
     */
     [[nodiscard]] OrbitalElements
-    createFromOnlyRadians(const std::array<double, 6> &standardKepler, OrbitalAnomalyType orbitalAnomalyType) const;
+    createFromOnlyRadians(const std::array<double, 6> &standardKepler, OrbitalAnomalyType orbitalAnomalyType,
+                          const Epoch &epoch = Epoch{}) const;
 
     /**
     * Constructs the Orbital Elements from the standard keplerian Elements in the following order:
@@ -52,9 +56,11 @@ public:
     * w - argument of periapsis (small omega) [deg]<br>
     * A - an anomaly in [deg]<br>
     * @param orbitalAnomalyType - this defines the last element in the array, either: ECCENTRIC, MEAN or TRUE
+    * @param epoch - the Epoch of these Elements (default empty)
     */
     [[nodiscard]] OrbitalElements
-    createFromOnlyDegree(const std::array<double, 6> &standardKepler, OrbitalAnomalyType orbitalAnomalyType) const;
+    createFromOnlyDegree(const std::array<double, 6> &standardKepler, OrbitalAnomalyType orbitalAnomalyType,
+                         const Epoch &epoch = Epoch{}) const;
 
     /**
      * Creates the orbital elements from the user's wish units:

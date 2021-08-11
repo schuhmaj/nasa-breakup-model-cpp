@@ -1,5 +1,44 @@
 #include "OrbitalElements.h"
 
+bool Epoch::isInvalid() const  {
+    return year < 0 || fraction < 0;
+}
+
+std::tm Epoch::toTm() const {
+    std::tm tmInstance{};
+    //Year
+    tmInstance.tm_year = year;
+
+    //Month and Day
+    const int dayInYear = static_cast<int>(fraction);
+    int dayInMonth = dayInYear;
+    for (const auto&[month, days] : monthToDaysMap) {
+        if (dayInMonth <= days) {
+            tmInstance.tm_mon = month;
+            tmInstance.tm_mday = dayInMonth;
+            break;
+        } else {
+            dayInMonth -= days;
+        }
+    }
+    //Hours
+    double fractionOfDay = fraction - dayInYear;
+    double hours = fractionOfDay * 24;
+    tmInstance.tm_hour = static_cast<int>(hours);
+
+    //Minutes
+    fractionOfDay = hours - tmInstance.tm_hour;
+    double minutes = fractionOfDay * 60;
+    tmInstance.tm_min = static_cast<int>(minutes);
+
+    //Seconds
+    fractionOfDay = minutes - tmInstance.tm_min;
+    double seconds = fractionOfDay * 60;
+    tmInstance.tm_sec = static_cast<int>(seconds);
+
+    return tmInstance;
+}
+
 std::array<double, 6> OrbitalElements::getAsArray() const {
     return std::array<double, 6>{_semiMajorAxis, _eccentricity, _inclination,
                                  _longitudeOfTheAscendingNode, _argumentOfPeriapsis, _eccentricAnomaly};
@@ -46,6 +85,10 @@ double OrbitalElements::getArgumentOfPeriapsis(AngularUnit angularUnit) const {
 
 double OrbitalElements::getAnomaly(AngularUnit angularUnit, OrbitalAnomalyType anomalyType) const {
     return convertEccentricAnomaly(_eccentricAnomaly, _eccentricity, angularUnit, anomalyType);
+}
+
+Epoch OrbitalElements::getEpoch() const {
+    return _epoch;
 }
 
 bool operator==(const OrbitalElements &lhs, const OrbitalElements &rhs) {

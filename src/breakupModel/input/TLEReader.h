@@ -55,11 +55,11 @@ private:
 
     /**
      * Parses the line two of an TLE entry to a pair of ID and Kepler elements.
-     * @param line - the input stream
+     * @param line1 - the input stream
      * @return a pair of ID and KeplerElements
      * @throws an exception if the TLE is malformed or any other issues are encountered during the parsing
      */
-    std::pair<size_t, OrbitalElements> parseLineTwo(const std::string &line) const;
+    std::pair<size_t, OrbitalElements> parseLineTwo(const std::string &line1, const std::string &line2) const;
 
 };
 
