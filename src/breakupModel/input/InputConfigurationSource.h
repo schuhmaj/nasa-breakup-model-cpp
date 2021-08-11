@@ -87,6 +87,6 @@ public:
      * of additional fragments if the mass budget was not yet exceeded (after the normal run)
      * @return a bool
      */
-    virtual bool getEnforcedMassConservation() const = 0;
+    virtual bool getEnforceMassConservation() const = 0;
 
 };

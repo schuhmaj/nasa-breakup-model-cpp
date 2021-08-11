@@ -25,6 +25,6 @@ std::vector<Satellite> RuntimeInputSource::getSatelliteCollection() const {
     return _satellites;
 }
 
-bool RuntimeInputSource::getEnforcedMassConservation() const {
+bool RuntimeInputSource::getEnforceMassConservation() const {
     return _enforceMassConservation;
 }

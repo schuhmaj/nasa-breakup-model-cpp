@@ -75,7 +75,7 @@ std::optional<std::set<size_t>> YAMLConfigurationReader::getIDFilter() const {
     return std::nullopt;
 }
 
-bool YAMLConfigurationReader::getEnforcedMassConservation() const {
+bool YAMLConfigurationReader::getEnforceMassConservation() const {
     if (_file[SIMULATION_TAG][ENFORCE_MASS_CONSERVATION_TAG]) {
         return _file[SIMULATION_TAG][ENFORCE_MASS_CONSERVATION_TAG].as<bool>();
     } else {

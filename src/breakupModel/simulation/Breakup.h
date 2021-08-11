@@ -124,10 +124,12 @@ public:
             : _input{std::move(input)},
               _minimalCharacteristicLength{minimalCharacteristicLength} {};
 
-    Breakup(std::vector<Satellite> input, double minimalCharacteristicLength, size_t currentMaxGivenID)
+    Breakup(std::vector<Satellite> input, double minimalCharacteristicLength,
+            size_t currentMaxGivenID, bool enforceMassConservation)
             : _input{std::move(input)},
               _minimalCharacteristicLength{minimalCharacteristicLength},
-              _currentMaxGivenID{currentMaxGivenID} {}
+              _currentMaxGivenID{currentMaxGivenID},
+              _enforceMassConservation{enforceMassConservation} {}
 
 
     virtual ~Breakup() = default;

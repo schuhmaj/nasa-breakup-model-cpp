@@ -109,5 +109,5 @@ public:
 
     std::vector<Satellite> getSatelliteCollection() const final;
 
-    bool getEnforcedMassConservation() const final;
+    bool getEnforceMassConservation() const final;
 };

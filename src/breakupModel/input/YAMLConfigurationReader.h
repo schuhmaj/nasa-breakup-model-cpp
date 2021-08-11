@@ -102,7 +102,7 @@ public:
      * of additional fragments if the mass budget was not yet exceeded (after the normal run)
      * @return true or false if a value is given for this TAG in the YAML file, otherwise always false
      */
-    bool getEnforcedMassConservation() const override;
+    bool getEnforceMassConservation() const override;
 
     /**
      * Reads in which Output is wished by the YAML file.
