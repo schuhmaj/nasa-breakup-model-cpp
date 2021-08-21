@@ -2,6 +2,7 @@
 #include "Breakup.h"
 
 void Explosion::init() {
+    Breakup::init();
     //The pdf for Explosions is: 0.0132578/x^2.6
     _lcPowerLawExponent = -2.6;
     //Equation 11 mu = 0.2 * chi + 1.85

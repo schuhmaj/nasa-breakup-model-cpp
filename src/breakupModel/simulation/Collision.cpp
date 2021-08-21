@@ -1,6 +1,7 @@
 #include "Collision.h"
 
 void Collision::init() {
+    Breakup::init();
     //The pdf for Collisions is: 0.0101914/(x^2.71)
     _lcPowerLawExponent = -2.71;
     //Equation 12 mu = 0.9 * chi + 2.9

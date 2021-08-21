@@ -35,9 +35,11 @@ Breakup &Breakup::setSeed(std::optional<unsigned long> seed) {
     return *this;
 }
 
-void Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3> &position) {
-    //Just in case of a rerun - reset the outputMass to zero
+void Breakup::init() {
     _outputMass = 0;
+}
+
+void Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3> &position) {
     _output = Satellites{_currentMaxGivenID+1, SatType::DEBRIS, position, fragmentCount};
 }
 
@@ -119,7 +121,7 @@ void Breakup::deltaVelocityDistribution() {
         const double mu = _deltaVelocityFactorOffset.first * chi + _deltaVelocityFactorOffset.second;
         constexpr double sigma = 0.4;
         std::normal_distribution<> normalDistribution{mu, sigma};
-        double velocityScalar = std::pow(10, getRandomNumber(normalDistribution));
+        double velocityScalar = std::pow(10.0, getRandomNumber(normalDistribution));
 
         //Transform the scalar velocity into a cartesian vector
         ejectionVelocity = calculateVelocityVector(velocityScalar);
@@ -138,31 +140,30 @@ double Breakup::calculateAreaMassRatio(double characteristicLength) {
     using namespace util;
     const double logLc = std::log10(characteristicLength);
 
-    double areaToMassRatio{0};
-
-    if (characteristicLength > 0.11) {          //Case bigger than 11 cm
+    if (characteristicLength > 0.11) {
+        //Case bigger than 11 cm
         std::normal_distribution<> n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
         std::normal_distribution<> n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
 
-        areaToMassRatio = std::pow(10, alpha(_satType, logLc) * getRandomNumber(n1) +
-        (1 - alpha(_satType, logLc)) * getRandomNumber(n2));
-    } else if (characteristicLength < 0.08) {   //Case smaller than 8 cm
+        return std::pow(10.0, alpha(_satType, logLc) * getRandomNumber(n1) +
+            (1 - alpha(_satType, logLc)) * getRandomNumber(n2));
+    } else if (characteristicLength < 0.08) {
+        //Case smaller than 8 cm
         std::normal_distribution<> n{mu_soc(logLc), sigma_soc(logLc)};
 
-        areaToMassRatio = std::pow(10, getRandomNumber(n));
-    } else {                                    //Case between 8 cm and 11 cm
+        return std::pow(10.0, getRandomNumber(n));
+    } else {
+        //Case between 8 cm and 11 cm
         std::normal_distribution<> n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
         std::normal_distribution<> n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
         std::normal_distribution<> n{mu_soc(logLc), sigma_soc(logLc)};
 
-        double y1 = std::pow(10, alpha(_satType, logLc) * getRandomNumber(n1) +
-                                 (1 - alpha(_satType, logLc)) * getRandomNumber(n2));
-        double y0 = std::pow(10, getRandomNumber(n));
+        double y1 = std::pow(10.0, alpha(_satType, logLc) * getRandomNumber(n1) +
+                                 (1.0 - alpha(_satType, logLc)) * getRandomNumber(n2));
+        double y0 = std::pow(10.0, getRandomNumber(n));
 
-        areaToMassRatio = y0 + (characteristicLength - 0.08) * (y1 - y0) / (0.03);
+        return y0 + (characteristicLength - 0.08) * (y1 - y0) / (0.03);
     }
-
-    return areaToMassRatio;
 }
 
 double Breakup::calculateArea(double characteristicLength) {

@@ -181,7 +181,7 @@ protected:
      * This method does set up the process and correctly inits the required variables.
      * Implementation depends on the subclass.
      */
-    virtual void init() = 0;
+    virtual void init();
 
     /**
      * Creates the a number of fragments, following the Equation 2 for Explosions and

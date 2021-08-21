@@ -13,11 +13,11 @@ public:
 
 private:
 
-    void init() override;
+    void init() final;
 
-    void calculateFragmentCount() override;
+    void calculateFragmentCount() final;
 
-    void assignParentProperties() override;
+    void assignParentProperties() final;
 
 };
 

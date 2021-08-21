@@ -76,7 +76,7 @@ namespace util {
     inline double calculateCharacteristicLengthFromMass(double mass) {
         static constexpr double Mul92_937PI = 92.937 * PI;
         static constexpr double Inv2_26 = 1.0 / 2.26;
-        return std::pow((6 * mass) / (Mul92_937PI), Inv2_26);
+        return std::pow((6.0 * mass) / (Mul92_937PI), Inv2_26);
     }
 
     /**
@@ -91,8 +91,8 @@ namespace util {
      * @return the transformed x following the power law distribution
      */
     inline double transformUniformToPowerLaw(double x0, double x1, double n, double y) {
-        double step = (std::pow(x1, n+1) - std::pow(x0, n+1)) * y + std::pow(x0, n+1);
-        return std::pow(step, 1/ (n + 1) );
+        double step = (std::pow(x1, n + 1.0) - std::pow(x0, n + 1.0)) * y + std::pow(x0, n + 1.0);
+        return std::pow(step, 1.0 / (n + 1.0));
     }
 
     /**
