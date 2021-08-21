@@ -30,6 +30,12 @@ target_link_libraries(${PROJECT_NAME}_lib
         spdlog
         )
 
+if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    message("-- Linking tbb libary")
+    target_link_libraries(${PROJECT_NAME}_lib
+            tbb)
+endif()
+
 #Option to simulation or not
 option(BUILD_BREAKUP_MODEL_SIM "Set to on if the simulation should be built (Default: ON)" ON)
 if(BUILD_BREAKUP_MODEL_SIM)

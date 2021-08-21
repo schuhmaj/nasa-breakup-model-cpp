@@ -160,6 +160,20 @@ public:
               _satType{satType},
               _position{position} {}
 
+    Satellite(size_t id, std::shared_ptr<const std::string> name, SatType satType, double characteristicLength,
+              double areaToMassRatio, double mass, double area, const std::array<double, 3> &velocity,
+              const std::array<double, 3> &ejectionVelocity, const std::array<double, 3> &position)
+            : _id(id),
+              _name(std::move(name)),
+              _satType(satType),
+              _characteristicLength(characteristicLength),
+              _areaToMassRatio(areaToMassRatio),
+              _mass(mass),
+              _area(area),
+              _velocity(velocity),
+              _ejectionVelocity(ejectionVelocity),
+              _position(position) {}
+
     /**
      * Calculates the cartesian velocity and cartesian position of this satellite by using the Keplerian Elements.
      * This function sets the internal members _velocity and _position to the corresponding values.
