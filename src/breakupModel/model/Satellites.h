@@ -15,7 +15,9 @@
  * properties of the fragment satellites created.
  * @note This class provides a method to transform the SoA structure into an AoS approach (std::vector<Satellite>)
  */
-struct Satellites {
+class Satellites {
+
+public:
 
     /*
      * Shared Properties
