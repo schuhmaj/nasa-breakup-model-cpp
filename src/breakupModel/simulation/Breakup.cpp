@@ -78,6 +78,7 @@ void Breakup::enforceMassConservation() {
     if (oldSize != newSize) {
         spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
                      "In other words: The random behaviour has produced heavier fragments");
+        spdlog::warn("The fragment count was reduced from {} to {} fragments.", oldSize, newSize);
         spdlog::debug("The simulation corrected to {} kg of debris", _outputMass);
         _output.resize(newSize);
     } else if (_enforceMassConservation) {
@@ -99,7 +100,9 @@ void Breakup::enforceMassConservation() {
         //Remove the element which has lead to the exceeding of the mass budget
         _outputMass -= _output.mass.back();
         _output.popBack();
+        newSize = _output.size();
         spdlog::warn("The simulation increased the number of fragments to enforce the mass conservation.");
+        spdlog::warn("The fragment count was increased from {} to {} fragments.", oldSize, newSize);
         spdlog::debug("The simulation corrected to {} kg of debris", _outputMass);
     }
 }
