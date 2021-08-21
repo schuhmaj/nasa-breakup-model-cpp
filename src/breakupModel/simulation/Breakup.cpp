@@ -118,7 +118,7 @@ void Breakup::deltaVelocityDistribution() {
         const double chi = log10(areaToMassRatio);
         const double mu = _deltaVelocityFactorOffset.first * chi + _deltaVelocityFactorOffset.second;
         constexpr double sigma = 0.4;
-        std::normal_distribution normalDistribution{mu, sigma};
+        std::normal_distribution<> normalDistribution{mu, sigma};
         double velocityScalar = std::pow(10, getRandomNumber(normalDistribution));
 
         //Transform the scalar velocity into a cartesian vector
@@ -141,19 +141,19 @@ double Breakup::calculateAreaMassRatio(double characteristicLength) {
     double areaToMassRatio{0};
 
     if (characteristicLength > 0.11) {          //Case bigger than 11 cm
-        std::normal_distribution n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
-        std::normal_distribution n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
+        std::normal_distribution<> n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
+        std::normal_distribution<> n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
 
         areaToMassRatio = std::pow(10, alpha(_satType, logLc) * getRandomNumber(n1) +
         (1 - alpha(_satType, logLc)) * getRandomNumber(n2));
     } else if (characteristicLength < 0.08) {   //Case smaller than 8 cm
-        std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
+        std::normal_distribution<> n{mu_soc(logLc), sigma_soc(logLc)};
 
         areaToMassRatio = std::pow(10, getRandomNumber(n));
     } else {                                    //Case between 8 cm and 11 cm
-        std::normal_distribution n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
-        std::normal_distribution n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
-        std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
+        std::normal_distribution<> n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
+        std::normal_distribution<> n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
+        std::normal_distribution<> n{mu_soc(logLc), sigma_soc(logLc)};
 
         double y1 = std::pow(10, alpha(_satType, logLc) * getRandomNumber(n1) +
                                  (1 - alpha(_satType, logLc)) * getRandomNumber(n2));
