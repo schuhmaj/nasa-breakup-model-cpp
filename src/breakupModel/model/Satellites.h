@@ -13,7 +13,7 @@
  * This class implements the Satellites in an SoA (Structure of Array) way.
  * This is especially useful for the BreakupSimulation to vectorized calculation and save memory for shared
  * properties of the fragment satellites created.
- * @note This class provides a method to transform the SoA structure into an AoS approach (std::vector<Satellite>)
+ * @note This class provides a method to copy the SoA structure into an AoS approach (std::vector<Satellite>)
  */
 class Satellites {
 
