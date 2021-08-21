@@ -238,6 +238,7 @@ private:
 
     /**
      * This Method calculates one characteristic Length for one Debris Particle.
+     * This method uses equation (2) and (4) from the the NASA Breakup Model Paper.
      * @return L_c in [m]
      */
     double calculateCharacteristicLength();
@@ -245,6 +246,7 @@ private:
     /**
      * Calculates an A/M Value for a given L_c.
      * The utilised equation is chosen based on L_c and the SatType attribute of this Breakup.
+     * This method uses equation (5), (6) and (7) from the the NASA Breakup Model Paper.
      * @param characteristicLength in [m]
      * @return A/M value in [m^2/kg]
      */
@@ -252,6 +254,7 @@ private:
 
     /**
      * Calculates the Area for one fragment.
+     * This method uses equation (8) and (9) from the the NASA Breakup Model Paper.
      * @param characteristicLength in [m]
      * @return Area in [m^2]
      */
@@ -259,6 +262,7 @@ private:
 
     /**
      * Calculates the Mass for one fragment.
+     * This method uses equation (10) from the the NASA Breakup Model Paper.
      * @param area in [m^2]
      * @param areaMassRatio in [m^2/kg]
      * @return Mass in [kg]

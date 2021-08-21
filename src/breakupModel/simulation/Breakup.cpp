@@ -163,10 +163,14 @@ double Breakup::calculateAreaMassRatio(double characteristicLength) {
 }
 
 double Breakup::calculateArea(double characteristicLength) {
-    if (characteristicLength < 0.00167) {
-        return 0.540424 * characteristicLength * characteristicLength;
+    constexpr double lcBound = 0.00167;
+    if (characteristicLength < lcBound) {
+        constexpr double factorLittle = 0.540424;
+        return factorLittle * characteristicLength * characteristicLength;
     } else {
-        return 0.556945 * std::pow(characteristicLength, 2.0047077);
+        constexpr double exponentBig = 2.0047077;
+        constexpr double factorBig = 0.556945;
+        return factorBig * std::pow(characteristicLength, exponentBig);
     }
 }
 
