@@ -36,7 +36,8 @@ void Explosion::assignParentProperties() {
     std::for_each(std::execution::par, tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: Velocity | 1: NamePtr
-        std::get<0>(tuple) = parent.getVelocity();
-        std::get<1>(tuple) = debrisNamePtr;
+        auto &[velocity, name] = tuple;
+        velocity = parent.getVelocity();
+        name = debrisNamePtr;
     });
 }

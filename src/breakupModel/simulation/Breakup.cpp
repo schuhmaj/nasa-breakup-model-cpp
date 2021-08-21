@@ -53,12 +53,13 @@ void Breakup::areaToMassRatioDistribution() {
     std::for_each(std::execution::par_unseq, tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: L_c | 1: A/M | 2: Area | 3: Mass
+        auto &[lc, areaToMassRatio, area, mass] = tuple;
         //Calculate the A/M value in [m^2/kg]
-        std::get<1>(tuple) = calculateAreaMassRatio(std::get<0>(tuple));
+        areaToMassRatio = calculateAreaMassRatio(lc);
         //Calculate the area A in [m^2]
-        std::get<2>(tuple) = calculateArea(std::get<0>(tuple));
+        area = calculateArea(lc);
         //Calculate the mass m in [kg]
-        std::get<3>(tuple) = calculateMass(std::get<2>(tuple), std::get<1>(tuple));
+        mass = calculateMass(area, areaToMassRatio);
     });
 }
 
@@ -84,16 +85,16 @@ void Breakup::enforceMassConservation() {
         //But we only need to check this here when no fragments had to be removed.
         while (_outputMass < _inputMass) {
             //Order in the tuple: 0: L_c | 1: A/M | 2: Area | 3: Mass
-
             //Create new element and assign values
             auto tuple = _output.appendElement();
-            std::get<0>(tuple) = calculateCharacteristicLength();
-            std::get<1>(tuple) = calculateAreaMassRatio(std::get<0>(tuple));
-            std::get<2>(tuple) = calculateArea(std::get<0>(tuple));
-            std::get<3>(tuple) = calculateMass(std::get<2>(tuple), std::get<1>(tuple));
+            auto &[lc, areaToMassRatio, area, mass] = tuple;
+            lc = calculateCharacteristicLength();
+            areaToMassRatio = calculateAreaMassRatio(lc);
+            area = calculateArea(lc);
+            mass = calculateMass(area, areaToMassRatio);
 
             //Calculate new mass
-            _outputMass += std::get<3>(tuple);
+            _outputMass += mass;
         }
         //Remove the element which has lead to the exceeding of the mass budget
         _outputMass -= _output.mass.back();
@@ -109,16 +110,17 @@ void Breakup::deltaVelocityDistribution() {
     std::for_each(std::execution::par_unseq, tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: A/M | 1: Velocity | 2: Ejection Velocity
+        auto &[areaToMassRatio, velocity, ejectionVelocity] = tuple;
         //Calculates the velocity as a scalar based on Equation 11/ 12
-        const double chi = log10(std::get<0>(tuple));
+        const double chi = log10(areaToMassRatio);
         const double mu = _deltaVelocityFactorOffset.first * chi + _deltaVelocityFactorOffset.second;
-        static constexpr double sigma = 0.4;
+        constexpr double sigma = 0.4;
         std::normal_distribution normalDistribution{mu, sigma};
-        double velocity = std::pow(10, getRandomNumber(normalDistribution));
+        double velocityScalar = std::pow(10, getRandomNumber(normalDistribution));
 
         //Transform the scalar velocity into a cartesian vector
-        std::get<2>(tuple) = calculateVelocityVector(velocity);
-        std::get<1>(tuple) = std::get<1>(tuple) + std::get<2>(tuple);
+        ejectionVelocity = calculateVelocityVector(velocityScalar);
+        velocity = velocity + ejectionVelocity;
     });
 }
 

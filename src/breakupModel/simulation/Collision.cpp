@@ -69,10 +69,11 @@ void Collision::assignParentProperties() {
     std::for_each(tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: Characteristic Length | 1: Mass | 2: Velocity | 3: NamePtr
-        if (std::get<0>(tuple) > smallSat.getCharacteristicLength()) {
-            std::get<3>(tuple) = debrisNameBigPtr;
-            std::get<2>(tuple) = bigSat.getVelocity();
-            assignedMassForBigSatellite += std::get<1>(tuple);
+        auto &[lc, mass, velocity, name] = tuple;
+        if (lc > smallSat.getCharacteristicLength()) {
+            name = debrisNameBigPtr;
+            velocity = bigSat.getVelocity();
+            assignedMassForBigSatellite += mass;
         }
     });
 
@@ -83,14 +84,15 @@ void Collision::assignParentProperties() {
     std::for_each(tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: Characteristic Length | 1: Mass | 2: Velocity | 3: NamePtr
-        if (std::get<0>(tuple) <= smallSat.getCharacteristicLength()
+        auto &[lc, mass, velocity, name] = tuple;
+        if (lc <= smallSat.getCharacteristicLength()
         && assignedMassForBigSatellite < normedMassBigSat) {
-            std::get<3>(tuple) = debrisNameBigPtr;
-            std::get<2>(tuple) = bigSat.getVelocity();
-            assignedMassForBigSatellite += std::get<1>(tuple);
+            name = debrisNameBigPtr;
+            velocity = bigSat.getVelocity();
+            assignedMassForBigSatellite += mass;
         } else {
-            std::get<3>(tuple) = debrisNameSmallPtr;
-            std::get<2>(tuple) = smallSat.getVelocity();
+            name = debrisNameSmallPtr;
+            velocity = smallSat.getVelocity();
         }
     });
 }
