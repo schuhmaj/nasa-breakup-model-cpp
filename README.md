@@ -34,7 +34,8 @@ After the build, the simulation can be run by executing:
 
     ./breakupModel [yaml-file]
 
-where the yaml-file contains a Configuration.
+where the yaml-file contains a Configuration. Examples for Configuration Files
+can be found in the folder example-config of this repository.
 
 ### Brief overview on the available options
 
