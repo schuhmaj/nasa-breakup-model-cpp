@@ -65,7 +65,7 @@ void Breakup::areaToMassRatioDistribution() {
 
 void Breakup::enforceMassConservation() {
     //Enforce Mass Conservation if the output mass is greater than the input mass
-    _outputMass = std::accumulate(_output.mass.begin(), _output.mass.end(), 0.0);
+    _outputMass = std::reduce(std::execution::par_unseq,_output.mass.begin(), _output.mass.end(), 0.0);
     spdlog::debug("The simulation got {} kg of input mass", _inputMass);
     spdlog::debug("The simulation produced {} kg of debris", _outputMass);
     size_t oldSize = _output.size();
