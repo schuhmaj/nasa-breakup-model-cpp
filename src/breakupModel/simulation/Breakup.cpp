@@ -36,6 +36,7 @@ Breakup &Breakup::setSeed(std::optional<unsigned long> seed) {
 }
 
 void Breakup::init() {
+    _inputMass = 0;
     _outputMass = 0;
 }
 
