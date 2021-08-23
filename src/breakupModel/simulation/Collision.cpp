@@ -29,6 +29,12 @@ void Collision::calculateFragmentCount() {
         std::swap(sat1, sat2);
     }
 
+    //Sets the _input mass which will be required later for mass conservation purpose (maximal upper bound)
+    _inputMass = sat1.getMass() + sat2.getMass();
+
+    //Contains the mass M (later filled with an adequate value)
+    double mass = 0;
+
     //The Relative Collision Velocity
     double dv = euclideanNorm(sat1.getVelocity() - sat2.getVelocity());
 
@@ -39,14 +45,14 @@ void Collision::calculateFragmentCount() {
     if (catastrophicRatio < 40.0) {
         _isCatastrophic = false;
         //The paper states this as product of the projectile's mass in [kg] and the collision velocity in [km/s]
-        _inputMass = sat2.getMass() * dv / 1000.0;
+        mass = sat2.getMass() * dv / 1000.0;
     } else {
         _isCatastrophic = true;
-        _inputMass = sat1.getMass() + sat2.getMass();
+        mass = sat1.getMass() + sat2.getMass();
     }
 
     //The fragment Count, respectively Equation 4
-    auto fragmentCount = static_cast<size_t>(0.1 * std::pow(_inputMass, 0.75) *
+    auto fragmentCount = static_cast<size_t>(0.1 * std::pow(mass, 0.75) *
                                              std::pow(_minimalCharacteristicLength, -1.71));
     this->generateFragments(fragmentCount, sat1.getPosition());
 }
