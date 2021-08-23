@@ -11,6 +11,7 @@ std::tm Epoch::toTm() const {
 
     //Month and Day
     const int dayInYear = static_cast<int>(fraction);
+    tmInstance.tm_yday = dayInYear;
     int dayInMonth = dayInYear;
     for (const auto&[month, days] : monthToDaysMap) {
         if (dayInMonth <= days) {
