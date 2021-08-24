@@ -66,6 +66,9 @@ can be found in the folder example-config of this repository.
   - The simulation does produce the debris according to power law distribution
   - If this is enabled more fragments than specified for the minimal L_c will be
     produced if the former simulation ended with outputMass < inputMass
+  - **Caution!** The filling of the mass budget is not always reasonable! E.g. In case
+    of a non-catastrophic collision the bigger object is NOT fully fragmented,
+    hence a fulfilling inputMass == outputMass in the end is not desirable!
   - Notice that to maintain the correct distribution, outputMass == inputMass will
     not be produced but approximated
   - Notice that the case outputMass > inputMass is not affected by this option;
@@ -184,6 +187,7 @@ it produces both, either of them or none (see YAML Configuration File)
 | A       | Area [m^2]                | M       | Mean Anomaly [rad] |
 | m       | Mass [kg]                 | E       | Eccentric Anomaly [rad] |
 | v       | Velocity [m/s]            | T       | True Anomaly [rad] |
+| j       | Ejection Velocity [m/s]   |         | |
 | p       | Position [m]              |         | |
 
 ## Library

@@ -13,6 +13,10 @@ const std::map<char, std::function<void(const Satellite &sat,
             using util::operator<<;
             stream << sat.getVelocity();
         }},
+        {'j', [](const Satellite &sat, std::stringstream &stream) -> void {
+            using util::operator<<;
+            stream << sat.getEjectionVelocity();
+        }},
         {'p', [](const Satellite &sat, std::stringstream &stream) -> void {
             using util::operator<<;
             stream << sat.getPosition();
@@ -52,6 +56,7 @@ const std::map<char, std::string> CSVPatternWriter::headerMap{
         {'A', "Area [m^2]"},
         {'m', "Mass [kg]"},
         {'v', "Velocity [m/s]"},
+        {'j', "Ejection Velocity [m/s]"},
         {'p', "Position [m]"},
         {'a', "Semi-Major-Axis [m]"},
         {'e', "Eccentricity"},
@@ -75,6 +80,7 @@ void CSVPatternWriter::printResult(const std::vector<Satellite> &satelliteCollec
     //CSV Lines
     for (const auto &sat : satelliteCollection) {
         std::stringstream stream{};
+        stream.precision(17);
         for (auto funIt = _myToDo.begin(); funIt != _myToDo.end() - 1; ++funIt) {
             (*funIt)(sat, stream);
             stream << ',';

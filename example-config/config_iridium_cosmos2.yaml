@@ -11,3 +11,4 @@ inputOutput:
 resultOutput:
   target: ["result.csv", "result.vtu"]
   kepler: True
+  # csvPattern: "IntLRAmvjpaeiWwM"

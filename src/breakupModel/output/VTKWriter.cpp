@@ -10,6 +10,7 @@ void VTKWriter::printResult(const std::vector<Satellite> &satelliteCollection) c
     this->printProperty<double, Satellite>("area", &Satellite::getArea, satelliteCollection);
     this->printProperty<double, Satellite>("area-to-mass", &Satellite::getAreaToMassRatio, satelliteCollection);
     this->printProperty<std::array<double, 3>, Satellite>("velocity", &Satellite::getVelocity, satelliteCollection);
+    this->printProperty<std::array<double, 3>, Satellite>("ejection-velocity", &Satellite::getEjectionVelocity, satelliteCollection);
 
     //Separator between point and point-tore-cell data
     this->printSeparator();

@@ -17,6 +17,7 @@ protected:
             Satellite satellite{i};
             satellite.setPosition({d, d, d});
             satellite.setVelocity({d, d, d});
+            satellite.setEjectionVelocity({d*100, d, d});
             satellite.setMass(d * 10);
             satellite.setCharacteristicLength(d * 100);
             _satelliteCollection.push_back(satellite);
@@ -66,5 +67,5 @@ TEST_F(VTKWriterTest, DataCheck) {
         ASSERT_EQ(actualLine, expectedLine) << "The error was in line " << actualLineNumber;
         actualLineNumber += 1;
     }
-    ASSERT_EQ(actualLineNumber, 52);
+    ASSERT_EQ(actualLineNumber, 58);
 }
