@@ -25,7 +25,7 @@ def histogram_lc(data, title, cumulative):
 def histogram_am(data, title, cumulative):
     am = data["A/M [m^2/kg]"]
     weights = np.ones_like(am) / float(len(am))
-    plt.hist(am, density=False, bins=5000, color='b', weights=weights, cumulative=cumulative)
+    plt.hist(am, bins=np.logspace(np.log10(0.001),np.log10(10.0), 50), color='b', weights=weights, cumulative=cumulative)
     plt.xscale("log")
     plt.xlim(10e-4, 10)
     plt.xlabel('$\log(A/M) [m^2/kg]$')
