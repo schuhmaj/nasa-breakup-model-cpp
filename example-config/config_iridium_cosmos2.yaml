@@ -6,9 +6,8 @@ simulation:
   inputSource: ["../example-config/data_iridium_cosmos2.yaml"]
   idFilter: [24946, 22675]
 inputOutput:
-  target: ["input.csv", "input.vtu"]
+  target: ["iridium_cosmos_input.csv", "iridium_cosmos_input.vtu"]
   kepler: True
 resultOutput:
-  target: ["result.csv", "result.vtu"]
-  kepler: True
-  # csvPattern: "IntLRAmvjpaeiWwM"
+  target: ["iridium_cosmos_result.csv", "iridium_cosmos_result.vtu"]
+  csvPattern: "IntLRAmvjpaeiWwM"
