@@ -28,13 +28,25 @@ def histogram_am(data, title, cumulative=False):
     plt.hist(am, bins=np.logspace(np.log10(0.001), np.log10(10.0), 25), color='b', weights=weights,
              cumulative=cumulative)
     plt.xscale("log")
-    plt.xlabel('$\log(A/M) [m^2/kg]$')
+    plt.xlabel('A/M [m^2/kg]$')
     plt.ylabel('Relative Probability')
     if cumulative:
         plt.title(title + ' $A/M$ Cumulative Distribution')
     else:
         plt.title(title + ' $A/M$ Distribution')
     plt.savefig("histogram_am_" + title, dpi=300)
+    plt.close(fig)
+
+
+def histogram_am_log(data, title):
+    fig = plt.figure(figsize=(6, 4), dpi=300)
+    am = np.log10(data["A/M [m^2/kg]"])
+    weights = np.ones_like(am) / float(len(am))
+    plt.hist(am, bins=np.linspace(-3, 2, 25), color='b', weights=weights)
+    plt.xlabel('$\log(A/M) [m^2/kg]$')
+    plt.ylabel('Relative Probability')
+    plt.title(title + " $A/M$ Distribution")
+    plt.savefig("histogram_am_log_" + title, dpi=300)
     plt.close(fig)
 
 
@@ -45,8 +57,8 @@ def scatter_lc_am(data, title):
     plt.title(title)
     plt.xlabel('$L_c [m]$')
     plt.ylabel('$A/M [m^2/kg]$')
-    plt.xlim(10e-3, 10)
-    plt.ylim(10e-4, 10)
+    plt.xlim(0.001, 10)
+    plt.ylim(0.001, 100)
     plt.savefig("scatter_lc_am_" + title, dpi=300)
     plt.close(fig)
 
@@ -93,6 +105,7 @@ def main():
 
     histogram_lc(df, plot_name)
     histogram_am(df, plot_name)
+    histogram_am_log(df, plot_name)
     scatter_lc_am(df, plot_name)
     scatter_dv_am(df, plot_name)
     scatter_dv_am_log(df, plot_name)
