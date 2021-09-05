@@ -52,6 +52,23 @@ def scatter_lc_am(data, title):
     plt.close(fig)
 
 
+def scatter_dv_am(data, title):
+    fig = plt.figure(figsize=(6, 4), dpi=300)
+    velocity = np.array([np.fromstring(ele[1:-1], sep=' ') for ele in data["Ejection Velocity [m/s]"].to_numpy()])
+    scalar = np.linalg.norm(velocity, axis=1)
+
+    plt.scatter(x=scalar, y=data["A/M [m^2/kg]"], alpha=0.2, color='b', marker='.')
+    plt.title(title)
+    plt.xlabel('$\Delta V [m/s]$')
+    plt.ylabel('$A/M [m^2/kg]$')
+    plt.yscale("log")
+    # plt.xscale("log")
+    plt.xlim(0, 10000)
+    plt.ylim(0.001, 100)
+    plt.savefig("scatter_dv_am_" + title, dpi=300)
+    plt.close(fig)
+
+
 def main():
     file_name = sys.argv[1]
     plot_name = sys.argv[2]
@@ -61,6 +78,7 @@ def main():
     histogram_lc(df, plot_name)
     histogram_am(df, plot_name)
     scatter_lc_am(df, plot_name)
+    scatter_dv_am(df, plot_name)
 
 
 if __name__ == '__main__':

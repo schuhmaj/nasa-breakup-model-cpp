@@ -50,6 +50,34 @@ def compare_histogram_dv(data_cpp, data_python, title):
     plt.close(fig)
 
 
+def compare_histogram_lc_log(data_cpp, data_python, title):
+    fig = plt.figure(figsize=(6, 4), dpi=300)
+    log_cpp = np.log10(data_cpp["Characteristic Length [m]"])
+    log_python = np.log10(data_python["Characteristic Length [m]"])
+    plt.hist(log_cpp, bins=50, alpha=0.5, log=True, label="C++", color='blue')
+    plt.hist(log_python, bins=50, alpha=0.5, log=True, label="Python", color='red')
+    plt.legend(loc='upper right')
+    plt.xlabel("$\log_{10}(L_c)$")
+    plt.ylabel("Number")
+    plt.title("$\log_{10}(L_c)$ Distribution C++ vs. Python for " + title)
+    plt.savefig("compare_histogram_lc_CPP_vs_Python_log", dpi=300)
+    plt.close(fig)
+
+
+def compare_histogram_am_log(data_cpp, data_python, title):
+    fig = plt.figure(figsize=(6, 4), dpi=300)
+    log_cpp = np.log10(data_cpp["A/M [m^2/kg]"])
+    log_python = np.log10(data_python["A/M [m^2/kg]"])
+    plt.hist(log_cpp, bins=50, alpha=0.5, log=True, label="C++", color='blue')
+    plt.hist(log_python, bins=50, alpha=0.5, log=True, label="Python", color='red')
+    plt.legend(loc='upper right')
+    plt.xlabel("$\log_{10}(A/M)$")
+    plt.ylabel("Number")
+    plt.title("$\log_{10}(A/M)$ Distribution C++ vs. Python for " + title)
+    plt.savefig("compare_histogram_am_CPP_vs_Python_log", dpi=300)
+    plt.close(fig)
+
+
 def main():
     file_name_cpp = sys.argv[1]
     file_name_python = sys.argv[2]
@@ -59,7 +87,9 @@ def main():
     df_python = pd.read_csv(file_name_python)
 
     compare_histogram_lc(df_cpp, df_python, plot_name)
+    compare_histogram_lc_log(df_cpp, df_python, plot_name)
     compare_histogram_am(df_cpp, df_python, plot_name)
+    compare_histogram_am_log(df_cpp, df_python, plot_name)
     compare_histogram_dv(df_cpp, df_python, plot_name)
 
 
