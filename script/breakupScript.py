@@ -25,10 +25,9 @@ def histogram_am(data, title, cumulative=False):
     fig = plt.figure(figsize=(6, 4), dpi=300)
     am = data["A/M [m^2/kg]"]
     weights = np.ones_like(am) / float(len(am))
-    plt.hist(am, bins=np.logspace(np.log10(0.001), np.log10(10.0), 50), color='b', weights=weights,
+    plt.hist(am, bins=np.logspace(np.log10(0.001), np.log10(10.0), 25), color='b', weights=weights,
              cumulative=cumulative)
     plt.xscale("log")
-    plt.xlim(10e-4, 10)
     plt.xlabel('$\log(A/M) [m^2/kg]$')
     plt.ylabel('Relative Probability')
     if cumulative:
@@ -89,6 +88,8 @@ def main():
     plot_name = sys.argv[2]
 
     df = pd.read_csv(file_name)
+    # df = df[df["Name"] == "Iridium 33-Collision-Fragment"]
+    # df = df[df["Name"] == "Kosmos 2251-Collision-Fragment"]
 
     histogram_lc(df, plot_name)
     histogram_am(df, plot_name)
