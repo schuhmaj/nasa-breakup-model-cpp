@@ -15,13 +15,12 @@ public:
     using Breakup::Breakup;
 
 private:
-    void calculateFragmentCount() override;
 
-    void characteristicLengthDistribution() override;
+    void init() final;
 
-    void assignParentProperties() override;
+    void calculateFragmentCount() final;
 
-    void deltaVelocityDistribution() override;
+    void assignParentProperties() final;
 
 public:
 

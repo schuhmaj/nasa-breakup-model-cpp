@@ -26,6 +26,7 @@ class YAMLConfigurationReader : public InputConfigurationSource, public OutputCo
     static constexpr char CURRENT_MAX_ID_TAG[] = "currentMaxID";
     static constexpr char INPUT_SOURCE_TAG[] = "inputSource";
     static constexpr char ID_FILTER_TAG[] = "idFilter";
+    static constexpr char ENFORCE_MASS_CONSERVATION_TAG[] = "enforceMassConservation";
     static constexpr char RESULT_OUTPUT_TAG[] = "resultOutput";
     static constexpr char INPUT_OUTPUT_TAG[] = "inputOutput";
     static constexpr char TARGET_TAG[] = "target";
@@ -95,6 +96,13 @@ public:
      * @return filter or empty
      */
     std::optional<std::set<size_t>> getIDFilter() const override;
+
+    /**
+     * Returns a bool which states if the simulation should enforce the mass conservation through the generation
+     * of additional fragments if the mass budget was not yet exceeded (after the normal run)
+     * @return true or false if a value is given for this TAG in the YAML file, otherwise always false
+     */
+    bool getEnforceMassConservation() const override;
 
     /**
      * Reads in which Output is wished by the YAML file.

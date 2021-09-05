@@ -303,7 +303,7 @@ public:
      * @param velocity - cartesian vector
      */
     void setVelocity(const std::array<double, 3> &velocity) {
-        //Orbital Elements if they where previously calculated are now invalid
+        //Orbital Elements if they were previously calculated are now invalid
         _orbitalElementsCache = std::nullopt;
         _velocity = velocity;
     }
@@ -320,19 +320,6 @@ public:
      */
     void setEjectionVelocity(const std::array<double, 3> &ejectionVelocity) {
         _ejectionVelocity = ejectionVelocity;
-    }
-
-    /**
-     * Sets the ejection velocity of this Satellite (debris-fragment)
-     * and adds in on top of the base velocity.
-     * @note This does modifies the state, but the the ejection velocity is property of the breakup and not directly
-     * linked to the Satellite like it is the "whole" velocity. The _orbitalElementsCache is therefore not invalidated.
-     * @param ejectionVelocity - cartesian vector
-     */
-    void addEjectionVelocity(const std::array<double, 3> &ejectionVelocity) {
-        using util::operator+;
-        _ejectionVelocity = ejectionVelocity;
-        _velocity = _velocity + _ejectionVelocity;
     }
 
     [[nodiscard]] const std::array<double, 3> &getPosition() const {

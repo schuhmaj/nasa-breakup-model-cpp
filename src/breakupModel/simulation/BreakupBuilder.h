@@ -29,6 +29,8 @@ class BreakupBuilder {
 
     std::vector<Satellite> _satellites;
 
+    bool _enforceMassConservation;
+
 public:
 
     explicit BreakupBuilder(const std::shared_ptr<InputConfigurationSource> &configurationSource)
@@ -37,6 +39,7 @@ public:
               _simulationType{configurationSource->getTypeOfSimulation()},
               _currentMaximalGivenID{configurationSource->getCurrentMaximalGivenID()},
               _idFilter{configurationSource->getIDFilter()},
+              _enforceMassConservation{configurationSource->getEnforceMassConservation()},
               _satellites{configurationSource->getDataReader()->getSatelliteCollection()} {}
 
     /**
@@ -81,6 +84,13 @@ public:
      * @return this
      */
     BreakupBuilder &setIDFilter(const std::optional<std::set<size_t>> &idFilter);
+
+    /**
+     * Overrides/ Re-Sets the value of enforceMassConservation to the given value.
+     * @param enforceMassConservation - new Value
+     * @return this
+     */
+    BreakupBuilder &setEnforceMassConservation(bool enforceMassConservation);
 
     /**
      * Overrides/ Re-Sets the Data Source to a specific Satellite vector

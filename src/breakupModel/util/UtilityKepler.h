@@ -29,7 +29,7 @@ namespace util {
         }
 
         inline double d_kepE(double EA, double eccentricity) {
-            return (1 - eccentricity * std::cos(EA));
+            return (1.0 - eccentricity * std::cos(EA));
         }
 
         inline double newtonRaphson(double EA, double MA, double e) {
@@ -52,7 +52,7 @@ namespace util {
          * @return angle in [rad], positive
          */
         inline double normAngle(double angle) {
-            return angle < 0 ? angle + PI2 : angle;
+            return angle < 0.0 ? angle + PI2 : angle;
         }
 
     }
@@ -88,7 +88,7 @@ namespace util {
      */
     inline double trueAnomalyToEccentricAnomaly(double TA, double e) {
         using namespace detail;
-        return normAngle(2 * std::atan(std::sqrt((1 - e) / (1 + e)) * std::tan(TA / 2)));
+        return normAngle(2.0 * std::atan(std::sqrt((1.0 - e) / (1.0 + e)) * std::tan(TA / 2.0)));
     }
 
     /**
@@ -99,7 +99,7 @@ namespace util {
      */
     inline double eccentricAnomalyToTrueAnomaly(double EA, double e) {
         using namespace detail;
-        return normAngle(2 * std::atan(std::sqrt((1 + e) / (1 - e)) * std::tan(EA / 2)));
+        return normAngle(2.0 * std::atan(std::sqrt((1.0 + e) / (1.0 - e)) * std::tan(EA / 2.0)));
     }
 
     /**

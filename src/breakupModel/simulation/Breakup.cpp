@@ -1,6 +1,9 @@
 #include "Breakup.h"
 
 void Breakup::run() {
+    //0. Step: Prepare constants, etc.
+    this->init();
+
     //1. Step: Generate the new Satellites
     this->calculateFragmentCount();
 
@@ -10,13 +13,16 @@ void Breakup::run() {
     //3. Step: Calculate the A/M (area-to-mass-ratio), A (area) and M (mass) values for every Satellite
     this->areaToMassRatioDistribution();
 
-    //4. Step: Assign parent and by doing that assign each fragment a base velocity
+    //4. Step: Enforce the Mass Conservation and remove (or add) fragments
+    this->enforceMassConservation();
+
+    //5. Step: Assign parent and by doing that assign each fragment a base velocity
     this->assignParentProperties();
 
-    //5. Step: Calculate the Ejection velocity for every Satellite
+    //6. Step: Calculate the Ejection velocity for every Satellite
     this->deltaVelocityDistribution();
 
-    //6. Step: As a last step set the _currentMaxGivenID to the new valid value
+    //7. Step: As a last step set the _currentMaxGivenID to the new valid value
     _currentMaxGivenID += _output.size();
 }
 
@@ -29,104 +35,152 @@ Breakup &Breakup::setSeed(std::optional<unsigned long> seed) {
     return *this;
 }
 
-void
-Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3> &position) {
-    //Just in case of a rerun - reset the outputMass to zero
+void Breakup::init() {
+    _inputMass = 0;
     _outputMass = 0;
+}
+
+void Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3> &position) {
     _output = Satellites{_currentMaxGivenID+1, SatType::DEBRIS, position, fragmentCount};
 }
 
-void Breakup::characteristicLengthDistribution(double powerLawExponent) {
-    using util::transformUniformToPowerLaw;
-    std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
-    std::for_each(std::execution::par, _output._characteristicLength.begin(), _output._characteristicLength.end(),
+void Breakup::characteristicLengthDistribution() {
+    std::for_each(std::execution::par_unseq, _output.characteristicLength.begin(), _output.characteristicLength.end(),
                   [&](double &lc) {
-        const double y = getRandomNumber(uniformRealDistribution);
-        lc = transformUniformToPowerLaw(_minimalCharacteristicLength, _maximalCharacteristicLength, powerLawExponent, y);
+        lc = calculateCharacteristicLength();
     });
 }
 
 void Breakup::areaToMassRatioDistribution() {
     auto tupleView = _output.getAreaMassTuple();
-    std::for_each(std::execution::par, tupleView.begin(), tupleView.end(),
+    std::for_each(std::execution::par_unseq, tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: L_c | 1: A/M | 2: Area | 3: Mass
+        auto &[lc, areaToMassRatio, area, mass] = tuple;
         //Calculate the A/M value in [m^2/kg]
-        std::get<1>(tuple) = calculateAM(std::get<0>(tuple));
-
-        //Calculate the are A in [m^2]
-        if (std::get<0>(tuple) < 0.00167) {
-            std::get<2>(tuple) = 0.540424 * std::get<0>(tuple) * std::get<0>(tuple);
-        } else {
-            std::get<2>(tuple) = 0.556945 * std::pow(std::get<0>(tuple), 2.0047077);
-        }
+        areaToMassRatio = calculateAreaMassRatio(lc);
+        //Calculate the area A in [m^2]
+        area = calculateArea(lc);
         //Calculate the mass m in [kg]
-        std::get<3>(tuple) = std::get<2>(tuple) / std::get<1>(tuple);
+        mass = calculateMass(area, areaToMassRatio);
     });
+}
+
+void Breakup::enforceMassConservation() {
     //Enforce Mass Conservation if the output mass is greater than the input mass
-    _outputMass = std::accumulate(_output._mass.begin(), _output._mass.end(), 0.0);
+    _outputMass = std::reduce(std::execution::par_unseq,_output.mass.begin(), _output.mass.end(), 0.0);
+    spdlog::debug("The simulation got {} kg of input mass", _inputMass);
+    spdlog::debug("The simulation produced {} kg of debris", _outputMass);
     size_t oldSize = _output.size();
     size_t newSize = _output.size();
     while (_outputMass > _inputMass) {
-        _outputMass -= _output._mass.back();
+        _outputMass -= _output.mass.back();
         newSize -= 1;
-        _output._mass.pop_back();
+        _output.mass.pop_back();
     }
     if (oldSize != newSize) {
         spdlog::warn("The simulation reduced the number of fragments because the mass budget was exceeded. "
                      "In other words: The random behaviour has produced heavier fragments");
+        spdlog::warn("The fragment count was reduced from {} to {} fragments.", oldSize, newSize);
+        spdlog::debug("The simulation corrected to {} kg of debris", _outputMass);
         _output.resize(newSize);
+    } else if (_enforceMassConservation) {
+        //This is written in an else if, because if the former condition was true, we already had too many fragments
+        //But we only need to check this here when no fragments had to be removed.
+        while (_outputMass < _inputMass) {
+            //Order in the tuple: 0: L_c | 1: A/M | 2: Area | 3: Mass
+            //Create new element and assign values
+            auto tuple = _output.appendElement();
+            auto &[lc, areaToMassRatio, area, mass] = tuple;
+            lc = calculateCharacteristicLength();
+            areaToMassRatio = calculateAreaMassRatio(lc);
+            area = calculateArea(lc);
+            mass = calculateMass(area, areaToMassRatio);
+
+            //Calculate new mass
+            _outputMass += mass;
+        }
+        //Remove the element which has lead to the exceeding of the mass budget
+        _outputMass -= _output.mass.back();
+        _output.popBack();
+        newSize = _output.size();
+        spdlog::warn("The simulation increased the number of fragments to enforce the mass conservation.");
+        spdlog::warn("The fragment count was increased from {} to {} fragments.", oldSize, newSize);
+        spdlog::debug("The simulation corrected to {} kg of debris", _outputMass);
     }
 }
 
-void Breakup::deltaVelocityDistribution(double factor, double offset) {
+void Breakup::deltaVelocityDistribution() {
     using namespace util;
     auto tupleView = _output.getVelocityTuple();
-    std::for_each(std::execution::par, tupleView.begin(), tupleView.end(),
+    std::for_each(std::execution::par_unseq, tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: A/M | 1: Velocity | 2: Ejection Velocity
+        auto &[areaToMassRatio, velocity, ejectionVelocity] = tuple;
         //Calculates the velocity as a scalar based on Equation 11/ 12
-        const double chi = log10(std::get<0>(tuple));
-        const double mu = factor * chi + offset;
-        static constexpr double sigma = 0.4;
-        std::normal_distribution normalDistribution{mu, sigma};
-        double velocity = std::pow(10, getRandomNumber(normalDistribution));
+        const double chi = log10(areaToMassRatio);
+        const double mu = _deltaVelocityFactorOffset.first * chi + _deltaVelocityFactorOffset.second;
+        constexpr double sigma = 0.4;
+        std::normal_distribution<> normalDistribution{mu, sigma};
+        double velocityScalar = std::pow(10.0, getRandomNumber(normalDistribution));
 
         //Transform the scalar velocity into a cartesian vector
-        std::get<2>(tuple) = calculateVelocityVector(velocity);
-        std::get<1>(tuple) = std::get<1>(tuple) + std::get<2>(tuple);
+        ejectionVelocity = calculateVelocityVector(velocityScalar);
+        velocity = velocity + ejectionVelocity;
     });
 }
 
-double Breakup::calculateAM(double characteristicLength) {
+double Breakup::calculateCharacteristicLength() {
+    using util::transformUniformToPowerLaw;
+    static std::uniform_real_distribution<> uniformRealDistribution{0.0, 1.0};
+    const double y = getRandomNumber(uniformRealDistribution);
+    return transformUniformToPowerLaw(_minimalCharacteristicLength, _maximalCharacteristicLength, _lcPowerLawExponent, y);
+}
+
+double Breakup::calculateAreaMassRatio(double characteristicLength) {
     using namespace util;
     const double logLc = std::log10(characteristicLength);
 
-    double areaToMassRatio{0};
+    if (characteristicLength > 0.11) {
+        //Case bigger than 11 cm
+        std::normal_distribution<> n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
+        std::normal_distribution<> n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
 
-    if (characteristicLength > 0.11) {          //Case bigger than 11 cm
-        std::normal_distribution n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
-        std::normal_distribution n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
+        return std::pow(10.0, alpha(_satType, logLc) * getRandomNumber(n1) +
+            (1 - alpha(_satType, logLc)) * getRandomNumber(n2));
+    } else if (characteristicLength < 0.08) {
+        //Case smaller than 8 cm
+        std::normal_distribution<> n{mu_soc(logLc), sigma_soc(logLc)};
 
-        areaToMassRatio = std::pow(10, alpha(_satType, logLc) * getRandomNumber(n1) +
-        (1 - alpha(_satType, logLc)) * getRandomNumber(n2));
-    } else if (characteristicLength < 0.08) {   //Case smaller than 8 cm
-        std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
+        return std::pow(10.0, getRandomNumber(n));
+    } else {
+        //Case between 8 cm and 11 cm
+        std::normal_distribution<> n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
+        std::normal_distribution<> n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
+        std::normal_distribution<> n{mu_soc(logLc), sigma_soc(logLc)};
 
-        areaToMassRatio = std::pow(10, getRandomNumber(n));
-    } else {                                    //Case between 8 cm and 11 cm
-        std::normal_distribution n1{mu_1(_satType, logLc), sigma_1(_satType, logLc)};
-        std::normal_distribution n2{mu_2(_satType, logLc), sigma_2(_satType, logLc)};
-        std::normal_distribution n{mu_soc(logLc), sigma_soc(logLc)};
+        double y1 = std::pow(10.0, alpha(_satType, logLc) * getRandomNumber(n1) +
+                                 (1.0 - alpha(_satType, logLc)) * getRandomNumber(n2));
+        double y0 = std::pow(10.0, getRandomNumber(n));
 
-        double y1 = std::pow(10, alpha(_satType, logLc) * getRandomNumber(n1) +
-                                 (1 - alpha(_satType, logLc)) * getRandomNumber(n2));
-        double y0 = std::pow(10, getRandomNumber(n));
-
-        areaToMassRatio = y0 + (characteristicLength - 0.08) * (y1 - y0) / (0.03);
+        return y0 + (characteristicLength - 0.08) * (y1 - y0) / (0.03);
     }
+}
 
-    return areaToMassRatio;
+double Breakup::calculateArea(double characteristicLength) {
+    constexpr double lcBound = 0.00167;
+    if (characteristicLength < lcBound) {
+        constexpr double factorLittle = 0.540424;
+        return factorLittle * characteristicLength * characteristicLength;
+    } else {
+        constexpr double exponentBig = 2.0047077;
+        constexpr double factorBig = 0.556945;
+        return factorBig * std::pow(characteristicLength, exponentBig);
+    }
+}
+
+double Breakup::calculateMass(double area, double areaMassRatio) {
+    return area / areaMassRatio;
 }
 
 std::array<double, 3> Breakup::calculateVelocityVector(double velocity) {

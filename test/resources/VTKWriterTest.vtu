@@ -33,6 +33,12 @@
           3 3 3
           4 4 4
         </DataArray>
+        <DataArray Name="ejection-velocity" NumberOfComponents="3" format="ascii" type="Float32">
+          100 1 1
+          200 2 2
+          300 3 3
+          400 4 4
+        </DataArray>
       </PointData>
       <CellData/>
       <Points>

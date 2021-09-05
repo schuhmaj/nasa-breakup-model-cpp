@@ -34,7 +34,47 @@ After the build, the simulation can be run by executing:
 
     ./breakupModel [yaml-file]
 
-where the yaml-file contains a Configuration.
+where the yaml-file contains a Configuration. Examples for Configuration Files
+can be found in the folder example-config of this repository.
+
+### Brief overview on the available options
+
+- _minimalCharacteristicLength_
+  - The simulation will only produce fragments greater than this lower bound
+  - Usefully because, real radar detection does not allow us to track infinitesimal
+    small particles in space
+  - Set this to reasonable values, small values will lead to lots of debris!
+- _simulationType_
+  - OPTIONAL 
+  - Acts like a guard to protect the user from running an undesired simulation
+  - Ensures Mode: COLLISION or EXPLOSION
+- _currentMaxID_
+  - OPTIONAL
+  - The debris fragments will have unique IDs, this option should contain the
+    currently highest NORAD Catalog ID
+  - If not given the Simulation tries to derive the current highest ID from
+    the given input
+- _inputSource_
+  - Takes the input data as a list: Either Data-YAML file or TLE + Satcat
+- _idFilter_
+  - OPTIONAL
+  - Applies a filter over the inputSource
+  - Useful if you give the full Satcat + TLE data and don't want to manually
+    extract the Satellites which should collide or similar
+- _enforceMassConservation_
+  - OPTIONAL (default false)
+  - The simulation does produce the debris according to power law distribution
+  - If this is enabled more fragments than specified for the minimal L_c will be
+    produced if the former simulation ended with outputMass < inputMass
+  - **Caution!** The filling of the mass budget is not always reasonable! E.g. In case
+    of a non-catastrophic collision the bigger object is NOT fully fragmented,
+    hence a fulfilling inputMass == outputMass in the end is not desirable!
+  - Notice that to maintain the correct distribution, outputMass == inputMass will
+    not be produced but approximated
+  - Notice that the case outputMass > inputMass is not affected by this option;
+    the removal of a mass excess is always applied
+  - Notice that this option kills some performance because of the random nature, there
+    is no possibility to schedule how many particles will be produced in the end
 
 ### Input
 
@@ -47,6 +87,7 @@ The given yaml-file should look like this:
                                       #If not given type is determined
                                       # by number of input satellites 
     currentMaxID: 48514               #For determining fragment ID
+                               
                                       #Should be the currently largest given NORAD-Catalog ID
                                       #If not given, zero is assumed
     inputSource: ["../data.yaml"]     #Path to input file(s) - One of the following:
@@ -55,6 +96,9 @@ The given yaml-file should look like this:
     idFilter: [1, 2]                  #Only the satellites with these IDs will be
                                       #recognized by the simulation.
                                       #If not given, no filter is applied
+    enforceMassConservation: True     #When this is set to true, the simulation will
+                                      #try to enforce mass conservation
+                                      #if not given, this is always false
   inputOutput:                        #If you want to print out the input data into specific file (optional)
     target: ["input.csv", "input.vtu"]#Target files
     #kepler: True                     #CSV with Kepler elements
@@ -143,6 +187,7 @@ it produces both, either of them or none (see YAML Configuration File)
 | A       | Area [m^2]                | M       | Mean Anomaly [rad] |
 | m       | Mass [kg]                 | E       | Eccentric Anomaly [rad] |
 | v       | Velocity [m/s]            | T       | True Anomaly [rad] |
+| j       | Ejection Velocity [m/s]   |         | |
 | p       | Position [m]              |         | |
 
 ## Library

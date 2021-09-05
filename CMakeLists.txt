@@ -31,7 +31,7 @@ target_link_libraries(${PROJECT_NAME}_lib
         )
 
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    message("-- Linking tbb libary")
+    message(STATUS "Linking tbb libary")
     target_link_libraries(${PROJECT_NAME}_lib
             tbb)
 endif()

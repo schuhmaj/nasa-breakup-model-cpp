@@ -6,6 +6,7 @@ BreakupBuilder &BreakupBuilder::reconfigure(const std::shared_ptr<InputConfigura
     this->setSimulationType(configurationSource->getTypeOfSimulation());
     this->setCurrentMaximalGivenID(configurationSource->getCurrentMaximalGivenID()),
     this->setIDFilter(configurationSource->getIDFilter());
+    this->setEnforceMassConservation(configurationSource->getEnforceMassConservation());
     this->setDataSource(configurationSource->getDataReader());
     return *this;
 }
@@ -32,6 +33,11 @@ BreakupBuilder &BreakupBuilder::setCurrentMaximalGivenID(const std::optional<siz
 
 BreakupBuilder &BreakupBuilder::setIDFilter(const std::optional<std::set<size_t>> &idFilter) {
     _idFilter = idFilter;
+    return *this;
+}
+
+BreakupBuilder &BreakupBuilder::setEnforceMassConservation(bool enforceMassConservation) {
+    _enforceMassConservation = enforceMassConservation;
     return *this;
 }
 
@@ -95,11 +101,11 @@ std::unique_ptr<Breakup> BreakupBuilder::getBreakup() const {
 }
 
 std::unique_ptr<Breakup> BreakupBuilder::createExplosion(std::vector<Satellite> &satelliteVector, size_t maxID) const {
-    return std::make_unique<Explosion>(satelliteVector, _minimalCharacteristicLength, maxID);
+    return std::make_unique<Explosion>(satelliteVector, _minimalCharacteristicLength, maxID, _enforceMassConservation);
 }
 
 std::unique_ptr<Breakup> BreakupBuilder::createCollision(std::vector<Satellite> &satelliteVector, size_t maxID) const {
-    return std::make_unique<Collision>(satelliteVector, _minimalCharacteristicLength, maxID);
+    return std::make_unique<Collision>(satelliteVector, _minimalCharacteristicLength, maxID, _enforceMassConservation);
 }
 
 std::vector<Satellite> BreakupBuilder::applyFilter() const {

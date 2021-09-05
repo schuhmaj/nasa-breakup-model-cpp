@@ -19,6 +19,8 @@ class RuntimeInputSource
 
     const std::optional<std::set<size_t>> _idFilter{std::nullopt};
 
+    const bool _enforceMassConservation{false};
+
     const std::vector<Satellite> _satellites;
 
 public:
@@ -40,33 +42,37 @@ public:
      * @param simulationType - type of simulation --> strong definition, error handling possible
      * @param currentMaximalGivenId - maximal given NORAD Catalog ID
      * @param idFilter - filter which satellites to use
+     * @param enforceMassConservation - should the input mass always equals the output mass (default: false)
      */
     RuntimeInputSource(double minimalCharacteristicLength, std::vector<Satellite> satellites,
                        SimulationType simulationType, size_t currentMaximalGivenId,
-                       std::optional<std::set<size_t>> idFilter)
+                       std::optional<std::set<size_t>> idFilter, bool enforceMassConservation = false)
             : _minimalCharacteristicLength{minimalCharacteristicLength},
               _satellites{std::move(satellites)},
               _simulationType{simulationType},
               _currentMaximalGivenID{std::make_optional(currentMaximalGivenId)},
-              _idFilter{std::move(idFilter)} {}
+              _idFilter{std::move(idFilter)},
+              _enforceMassConservation{enforceMassConservation} {}
 
 
     /**
-     * Constructs a new Runtime Source with all parameters available.
-     * @param minimalCharacteristicLength - double
-     * @param satellites - satellite vector
-     * @param simulationType - type of simulation --> strong definition, error handling possible
-     * @param currentMaximalGivenId - maximal given NORAD Catalog ID
-     * @param idFilter - filter which satellites to use
-     */
+    * Constructs a new Runtime Source with all parameters available.
+    * @param minimalCharacteristicLength - double
+    * @param satellites - satellite vector
+    * @param simulationType - type of simulation --> strong definition, error handling possible
+    * @param currentMaximalGivenId - maximal given NORAD Catalog ID
+    * @param idFilter - filter which satellites to use
+    * @param enforceMassConservation - should the input mass always equals the output mass (default: false)
+    */
     RuntimeInputSource(double minimalCharacteristicLength, std::vector<Satellite> satellites,
                        SimulationType simulationType, std::optional<size_t> currentMaximalGivenId,
-                       std::optional<std::set<size_t>> idFilter)
+                       std::optional<std::set<size_t>> idFilter, bool enforceMassConservation = false)
             : _minimalCharacteristicLength{minimalCharacteristicLength},
               _satellites{std::move(satellites)},
               _simulationType{simulationType},
               _currentMaximalGivenID{currentMaximalGivenId},
-              _idFilter{std::move(idFilter)} {}
+              _idFilter{std::move(idFilter)},
+              _enforceMassConservation{enforceMassConservation} {}
 
 
     /**
@@ -78,15 +84,17 @@ public:
      * @param simulationType - type of simulation --> strong definition, error handling possible
      * @param currentMaximalGivenId - maximal given NORAD Catalog ID
      * @param idFilter - filter which satellites to use
+     * @param enforceMassConservation - should the input mass always equals the output mass (default: false)
      */
     RuntimeInputSource(double minimalCharacteristicLength, const std::shared_ptr<const DataSource> &dataSource,
                        SimulationType simulationType, size_t currentMaximalGivenId,
-                       std::optional<std::set<size_t>> idFilter)
+                       std::optional<std::set<size_t>> idFilter, bool enforceMassConservation = false)
             : _minimalCharacteristicLength{minimalCharacteristicLength},
               _satellites{dataSource->getSatelliteCollection()},
               _simulationType{simulationType},
               _currentMaximalGivenID{std::make_optional(currentMaximalGivenId)},
-              _idFilter{std::move(idFilter)} {}
+              _idFilter{std::move(idFilter)},
+              _enforceMassConservation{enforceMassConservation} {}
 
 
     double getMinimalCharacteristicLength() const final;
@@ -100,4 +108,6 @@ public:
     std::optional<std::set<size_t>> getIDFilter() const final;
 
     std::vector<Satellite> getSatelliteCollection() const final;
+
+    bool getEnforceMassConservation() const final;
 };

@@ -24,3 +24,7 @@ std::optional<std::set<size_t>> RuntimeInputSource::getIDFilter() const {
 std::vector<Satellite> RuntimeInputSource::getSatelliteCollection() const {
     return _satellites;
 }
+
+bool RuntimeInputSource::getEnforceMassConservation() const {
+    return _enforceMassConservation;
+}

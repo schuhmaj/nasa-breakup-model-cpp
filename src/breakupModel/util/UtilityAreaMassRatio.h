@@ -34,9 +34,9 @@ namespace util {
      */
     inline double alpha(SatType satType, double logLc) {
         return satType == SatType::ROCKET_BODY
-               ? distributionConstant(logLc, -1.4, 0, 1, 0.5,
+               ? distributionConstant(logLc, -1.4, 0.0, 1.0, 0.5,
                                       [](double logLc) { return 1.0 - 0.3571 * (logLc + 1.4); })
-               : distributionConstant(logLc, -1.95, 0.55, 0, 1,
+               : distributionConstant(logLc, -1.95, 0.55, 0.0, 1.0,
                                       [](double logLc) { return 0.3 + 0.4 * (logLc + 1.2); });
     }
 
@@ -47,9 +47,9 @@ namespace util {
     */
     inline double mu_1(SatType satType, double logLc) {
         return satType == SatType::ROCKET_BODY
-               ? distributionConstant(logLc, -0.5, 0, -0.45, -0.9,
+               ? distributionConstant(logLc, -0.5, 0.0, -0.45, -0.9,
                                       [](double logLc) { return -0.45 - 0.9 * (logLc + 0.5); })
-               : distributionConstant(logLc, -1.1, 0, -0.6, -0.95,
+               : distributionConstant(logLc, -1.1, 0.0, -0.6, -0.95,
                                       [](double logLc) { return -0.6 - 0.318 * (logLc + 1.1); });
     }
 

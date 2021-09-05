@@ -6,6 +6,7 @@
 #include <cmath>
 #include <random>
 #include <algorithm>
+#include <numeric>
 #include <memory>
 #include <execution>
 #include <optional>
@@ -69,6 +70,25 @@ protected:
     double _outputMass{0};
 
     /**
+     * This is per default false.
+     * If this is set top true then the method enforceMassConservation() will add additional fragments to the
+     * output until the output mass approximately equals the input mass.
+     */
+    bool _enforceMassConservation{false};
+
+    /**
+     * Contains the Power Law Exponent for the L_c distribution.
+     * This constant is correctly set-up in the subclasses by an init method.
+     */
+    double _lcPowerLawExponent{0};
+
+    /**
+     * Contains Factor and Offset of the Delta (Ejection) Velocity Distribution.
+     * This constant is correctly set-up in the subclasses by an init method.
+     */
+    std::pair<double, double> _deltaVelocityFactorOffset{std::make_pair(0, 0)};
+
+    /**
      * This is potential member for testing purpose. It allows the user to fixate a specific seed (with the
      * method setSeed()). The produced std::mt19937 is then saved in this member and used to calculate random
      * values. The access on this member must be thread safe!
@@ -105,10 +125,12 @@ public:
             : _input{std::move(input)},
               _minimalCharacteristicLength{minimalCharacteristicLength} {};
 
-    Breakup(std::vector<Satellite> input, double minimalCharacteristicLength, size_t currentMaxGivenID)
+    Breakup(std::vector<Satellite> input, double minimalCharacteristicLength,
+            size_t currentMaxGivenID, bool enforceMassConservation)
             : _input{std::move(input)},
               _minimalCharacteristicLength{minimalCharacteristicLength},
-              _currentMaxGivenID{currentMaxGivenID} {}
+              _currentMaxGivenID{currentMaxGivenID},
+              _enforceMassConservation{enforceMassConservation} {}
 
 
     virtual ~Breakup() = default;
@@ -156,6 +178,12 @@ public:
 protected:
 
     /**
+     * This method does set up the process and correctly inits the required variables.
+     * Implementation depends on the subclass.
+     */
+    virtual void init();
+
+    /**
      * Creates the a number of fragments, following the Equation 2 for Explosions and
      * Equation 4 for Collisions.
      */
@@ -168,30 +196,27 @@ protected:
      * @param debrisName - the name for the fragments
      * @param position - position of the fragment, derived from the one parent (explosion) or from first parent (collision)
      */
-    virtual void
-    generateFragments(size_t fragmentCount, const std::array<double, 3> &position);
-
-    /**
-     * Creates the Size Distribution. After the fragments are generated this method will assign
-     * every fragment a L_c value based on the corresponding power law distribution (Equation 2 and 4).
-     * Contains the specific part, so this method is for each subclass different.
-     * @note This method is implemented in the subclasses and calls the general form with parameters in the base class
-     */
-    virtual void characteristicLengthDistribution() = 0;
+    virtual void generateFragments(size_t fragmentCount, const std::array<double, 3> &position);
 
     /**
      * Creates the Size Distribution according to an specific powerLaw Exponent.
-     * The Exponent comes from the probability density function (pdf).
-     * @attention Implemented in the base class, called by the subclasses with their parameters
-     * @param powerLawExponent - double
+     * The Exponent comes from the probability density function (pdf) and depends on the subclass.
+     * The subclasses therefore init _lcPowerLawExponent differently.
      */
-    virtual void characteristicLengthDistribution(double powerLawExponent);
+    void characteristicLengthDistribution();
 
     /**
      * Creates for every satellite the area-to-mass ratio according to Equation 6.
      * This method also ensures that the output mass does not exceed the input mass.
      */
-    virtual void areaToMassRatioDistribution();
+    void areaToMassRatioDistribution();
+
+    /**
+     * This method enforces the Mass Conservation.
+     * It removes fragments if outputMass > inputMass and
+     * it generates more fragments if outputMass < inputMass && _enforceMassConservation is enabled
+     */
+    void enforceMassConservation();
 
     /**
      * This Method does assign each fragment a parent (trivial in Explosion case) and checks that
@@ -202,33 +227,49 @@ protected:
     virtual void assignParentProperties() = 0;
 
     /**
-     * Implements the Delta Velocity Distribution (ejection velocity).
-     * Assigns every satellite an cartesian velocity vector.
-     * Therefore it first calculates the velocity according to Equation 11/ 12 as an scalar and transform this
-     * into an cartesian vector.
-     * @note This method is implemented in the subclasses and calls the general form with parameters in the base class
-     */
-    virtual void deltaVelocityDistribution() = 0;
-
-    /**
      * Implements the Delta Velocity Distribution according to Equation 11/ 12.
      * The parameters can be described as the following: mu = factor * chi + offset where mu is the mean value of the
-     * normal distribution.
-     * @attention Implemented in the base class, called by the subclasses with their parameters
-     * @param factor - for the chi
-     * @param offset - on top of the chi
+     * normal distribution. The factor and the offset are both saved,
+     * depending on the subclass with different values, in _deltaVelocityFactorOffset
+     * The subclasses therefore init _deltaVelocityFactorOffset differently.
      */
-    virtual void deltaVelocityDistribution(double factor, double offset);
+    void deltaVelocityDistribution();
 
 private:
 
     /**
+     * This Method calculates one characteristic Length for one Debris Particle.
+     * This method uses equation (2) and (4) from the the NASA Breakup Model Paper.
+     * @return L_c in [m]
+     */
+    double calculateCharacteristicLength();
+
+    /**
      * Calculates an A/M Value for a given L_c.
      * The utilised equation is chosen based on L_c and the SatType attribute of this Breakup.
+     * This method uses equation (5), (6) and (7) from the the NASA Breakup Model Paper.
      * @param characteristicLength in [m]
-     * @return A/M value
+     * @return A/M value in [m^2/kg]
      */
-    double calculateAM(double characteristicLength);
+    double calculateAreaMassRatio(double characteristicLength);
+
+    /**
+     * Calculates the Area for one fragment.
+     * This method uses equation (8) and (9) from the the NASA Breakup Model Paper.
+     * @param characteristicLength in [m]
+     * @return Area in [m^2]
+     */
+    static double calculateArea(double characteristicLength);
+
+    /**
+     * Calculates the Mass for one fragment.
+     * This method uses equation (10) from the the NASA Breakup Model Paper.
+     * @param area in [m^2]
+     * @param areaMassRatio in [m^2/kg]
+     * @return Mass in [kg]
+     */
+    static double calculateMass(double area, double areaMassRatio);
+
 
     /**
      * Transforms a scalar velocity into a 3-dimensional cartesian velocity vector.
@@ -237,7 +278,6 @@ private:
      * @return 3-dimensional cartesian velocity vector
      */
     std::array<double, 3> calculateVelocityVector(double velocity);
-
 
     /**
      * Returns a random number according to a specific distribution.
@@ -271,7 +311,6 @@ public:
     [[nodiscard]] size_t getCurrentMaxGivenId() const {
         return _currentMaxGivenID;
     }
-
 };
 
 
