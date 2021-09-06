@@ -92,6 +92,10 @@ Epoch OrbitalElements::getEpoch() const {
     return _epoch;
 }
 
+double OrbitalElements::getBstar() const {
+    return _bstar;
+}
+
 bool operator==(const OrbitalElements &lhs, const OrbitalElements &rhs) {
     return lhs._semiMajorAxis == rhs._semiMajorAxis &&
            lhs._eccentricity == rhs._eccentricity &&

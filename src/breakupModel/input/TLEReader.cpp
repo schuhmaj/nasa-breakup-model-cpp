@@ -68,6 +68,7 @@ std::pair<size_t, OrbitalElements> TLEReader::parseTLELines(const std::string &l
     std::array<double, 6> tleData{};
     int year;
     double fraction;
+    double bstar;
 
     try {
         //ID
@@ -94,6 +95,9 @@ std::pair<size_t, OrbitalElements> TLEReader::parseTLELines(const std::string &l
         //The fraction of the year
         fraction = std::stod(line1.substr(20, 8));
 
+        bstar = std::stod(
+                line1.substr(53, 1) + "0." + line1.substr(54, 5) + "e" + line1.substr(59, 2));
+
     } catch (std::exception &e) {
         throw std::runtime_error{"The TLE file \"" + _filepath +
                                  "\" is malformed! Some Data could not be parsed correctly into valid numbers!\n"
@@ -104,5 +108,7 @@ std::pair<size_t, OrbitalElements> TLEReader::parseTLELines(const std::string &l
 
     OrbitalElementsFactory factory{};
     Epoch epoch{year, fraction};
-    return std::make_pair(id, factory.createFromTLEData(tleData, epoch));
+    OrbitalElements orbitalElements = factory.createFromTLEData(tleData, epoch);
+    orbitalElements.setBstar(bstar);
+    return std::make_pair(id, orbitalElements);
 }

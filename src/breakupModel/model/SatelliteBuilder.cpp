@@ -4,6 +4,7 @@ SatelliteBuilder &SatelliteBuilder::reset() {
     _satellite = Satellite{};
     _hasID = false;
     _hasMass = false;
+    _hasMassByArea = false;
     _hasVelocity = false;
     _hasPosition = false;
     return *this;
@@ -70,7 +71,7 @@ SatelliteBuilder &SatelliteBuilder::setMassByArea(double area) {
     _satellite.setArea(area);
     _satellite.setAreaToMassRatio(area / mass);
     _satellite.setCharacteristicLength(characteristicLength);
-    _hasMass = true;
+    _hasMassByArea = true;
     return *this;
 }
 
@@ -87,9 +88,16 @@ SatelliteBuilder &SatelliteBuilder::setPosition(const std::array<double, 3> &pos
 }
 
 SatelliteBuilder &SatelliteBuilder::setOrbitalElements(const OrbitalElements &orbitalElements) {
+    constexpr double coefficientOfDrag = 2.2;
+    constexpr double factor = 12.741621 / coefficientOfDrag;
     _hasVelocity = true;
     _hasPosition = true;
     _satellite.setCartesianByOrbitalElements(orbitalElements);
+    if (orbitalElements.getBstar() != 0.0) {
+        double mass = factor * orbitalElements.getBstar() / _satellite.getArea();
+        double areaMassRatio = _satellite.getArea() / mass;
+        _satellite.setAreaToMassRatio(areaMassRatio);
+    }
     return *this;
 }
 
@@ -99,7 +107,7 @@ Satellite &SatelliteBuilder::getResult() {
         message << _satellite << " has no valid ID!";
         throw std::runtime_error{message.str()};
     }
-    if (!_hasMass) {
+    if (!_hasMass && !_hasMassByArea) {
         std::stringstream message{};
         message << _satellite << " has no mass or way to derive the mass!";
         throw std::runtime_error{message.str()};

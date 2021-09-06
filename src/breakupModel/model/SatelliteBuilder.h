@@ -32,6 +32,7 @@ class SatelliteBuilder {
 
     bool _hasID;
     bool _hasMass;
+    bool _hasMassByArea;
     bool _hasVelocity;
     bool _hasPosition;  //Unused, maybe useful for further modeling after breakup
 
@@ -41,6 +42,7 @@ public:
             : _satellite{},
               _hasID{false},
               _hasMass{false},
+              _hasMassByArea{false},
               _hasVelocity{false},
               _hasPosition{false} {}
 

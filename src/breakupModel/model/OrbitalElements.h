@@ -132,6 +132,11 @@ class OrbitalElements {
      */
     Epoch _epoch{};
 
+    /**
+     * Drag term or Radiation Pressure Coefficient or BSTAR
+     */
+    double _bstar{0.0};
+
 public:
 
     OrbitalElements() = default;
@@ -242,6 +247,16 @@ public:
      * @return Epoch
      */
     [[nodiscard]] Epoch getEpoch() const;
+
+    /**
+     * Returns the BSTAR
+     * @return BSTAR
+     */
+    [[nodiscard]] double getBstar() const;
+
+    void setBstar(double bstar) {
+        _bstar = bstar;
+    }
 
     /**
      * Compares two OrbitalElements for equality.
