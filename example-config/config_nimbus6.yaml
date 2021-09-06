@@ -5,7 +5,7 @@ simulation:
   minimalCharacteristicLength: 0.1
   simulationType: EXPLOSION
   inputSource: ["../example-config/data_explosion.yaml"]
-  idFilter: [7924]
+  idFilter: [7946]
 inputOutput:
   target: ["nimbus6_input.csv"]
 resultOutput:
