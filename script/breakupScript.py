@@ -8,11 +8,11 @@ import pandas as pd
 def histogram_lc(data, title, cumulative=False):
     fig = plt.figure(figsize=(6, 4), dpi=300)
     lc = data["Characteristic Length [m]"]
-    weights = np.ones_like(lc) / float(len(lc))
-    plt.hist(lc, density=False, bins=1000, color='b', weights=weights, cumulative=cumulative)
-    plt.xscale("log")
+    # weights = np.ones_like(lc) / float(len(lc))
+    plt.hist(lc, density=False, bins=np.linspace(0, 5, 50), color='b',
+             cumulative=cumulative)
     plt.xlabel('$L_c [m]$')
-    plt.ylabel('Relative Probability')
+    plt.ylabel('Number')
     if cumulative:
         plt.title(title + ' $L_c$ Cumulative Distribution')
     else:
@@ -24,12 +24,12 @@ def histogram_lc(data, title, cumulative=False):
 def histogram_am(data, title, cumulative=False):
     fig = plt.figure(figsize=(6, 4), dpi=300)
     am = data["A/M [m^2/kg]"]
-    weights = np.ones_like(am) / float(len(am))
-    plt.hist(am, bins=np.logspace(np.log10(0.001), np.log10(10.0), 25), color='b', weights=weights,
+    # weights = np.ones_like(am) / float(len(am))
+    plt.hist(am, bins=np.logspace(np.log10(0.001), np.log10(10.0), 25), color='b',
              cumulative=cumulative)
     plt.xscale("log")
     plt.xlabel('A/M [m^2/kg]$')
-    plt.ylabel('Relative Probability')
+    plt.ylabel('Number')
     if cumulative:
         plt.title(title + ' $A/M$ Cumulative Distribution')
     else:
@@ -41,10 +41,10 @@ def histogram_am(data, title, cumulative=False):
 def histogram_am_log(data, title):
     fig = plt.figure(figsize=(6, 4), dpi=300)
     am = np.log10(data["A/M [m^2/kg]"])
-    weights = np.ones_like(am) / float(len(am))
-    plt.hist(am, bins=np.linspace(-3, 2, 25), color='b', weights=weights)
+    # weights = np.ones_like(am) / float(len(am))
+    plt.hist(am, bins=np.linspace(-3, 2, 25), color='b')
     plt.xlabel('$\log(A/M) [m^2/kg]$')
-    plt.ylabel('Relative Probability')
+    plt.ylabel('Number')
     plt.title(title + " $A/M$ Distribution")
     plt.savefig("histogram_am_log_" + title, dpi=300)
     plt.close(fig)
@@ -102,6 +102,8 @@ def main():
     df = pd.read_csv(file_name)
     # df = df[df["Name"] == "Iridium 33-Collision-Fragment"]
     # df = df[df["Name"] == "Kosmos 2251-Collision-Fragment"]
+    # df = df[df["Characteristic Length [m]"] != 0.0]
+    # df = df[df["A/M [m^2/kg]"] > 0.0]
 
     histogram_lc(df, plot_name)
     histogram_am(df, plot_name)
