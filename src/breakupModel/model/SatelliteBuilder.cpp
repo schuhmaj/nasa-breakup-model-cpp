@@ -88,15 +88,12 @@ SatelliteBuilder &SatelliteBuilder::setPosition(const std::array<double, 3> &pos
 }
 
 SatelliteBuilder &SatelliteBuilder::setOrbitalElements(const OrbitalElements &orbitalElements) {
-    constexpr double coefficientOfDrag = 2.2;
-    constexpr double factor = 12.741621 / coefficientOfDrag;
+    using util::calculateAreaToMassRatio;
     _hasVelocity = true;
     _hasPosition = true;
     _satellite.setCartesianByOrbitalElements(orbitalElements);
     if (orbitalElements.getBstar() != 0.0) {
-        double mass = factor * orbitalElements.getBstar() / _satellite.getArea();
-        double areaMassRatio = _satellite.getArea() / mass;
-        _satellite.setAreaToMassRatio(areaMassRatio);
+        _satellite.setAreaToMassRatio(calculateAreaToMassRatio(orbitalElements.getBstar()));
     }
     return *this;
 }
