@@ -93,7 +93,8 @@ SatelliteBuilder &SatelliteBuilder::setOrbitalElements(const OrbitalElements &or
     _hasPosition = true;
     _satellite.setCartesianByOrbitalElements(orbitalElements);
     if (orbitalElements.getBstar() != 0.0) {
-        _satellite.setAreaToMassRatio(calculateAreaToMassRatio(orbitalElements.getBstar()));
+        _satellite.setAreaToMassRatio(calculateAreaToMassRatio(
+                orbitalElements.getBstar(), orbitalElements.getSemiMajorAxis(), orbitalElements.getEccentricity()));
     }
     return *this;
 }

@@ -84,11 +84,38 @@ namespace util {
      * @param bstar
      * @return A/M in [m^2/kg]
      */
-    inline double calculateAreaToMassRatio(double bstar) {
-        static constexpr double C_d = 0.47; //2.2;
+    inline double calculateAreaToMassRatio(double bstar, double a, double e) {
+        static constexpr double C_d = 2.2;
         static constexpr double p_0 = 0.1570; //0.00002461;           //2.461 * 10^(-5)
         static constexpr double factor = 2.0 / p_0 / C_d;
-        return bstar * factor;
+        double am = bstar * factor;
+        double periapsis = (1 - e) * a;
+        //Scaling:
+
+        //Iridium 33
+//        if (periapsis < 750000) {
+//            return 79.44 * am;
+//        } else {
+//            return 74.42 * am;
+//        }
+
+        //Kosmos 2251
+        if (periapsis < 500000) {
+            return 21.56 * am;
+        } else if (periapsis <= 500000 && periapsis <= 700000) {
+            return 67.77 * am;
+        } else {
+            return 80.05 * am;
+        }
+
+//        //Fengyun 1-C
+//        if (periapsis < 600000) {
+//            return 28.85 * am;
+//        } else if (periapsis <= 600000 && periapsis <= 800000) {
+//            return 76.48 * am;
+//        } else {
+//            return 73.09 * am;
+//        }
     }
 
     /**
