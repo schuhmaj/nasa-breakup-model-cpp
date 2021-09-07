@@ -20,10 +20,10 @@
  * The CSVPatternWriter provides methods to print the Satellite catalog in an custom format.
  * It takes a string-pattern which is then used to print specific attributes of the Satellites.
  * @example
- * "IntLRAmvp" corresponds to ID, name, type, Characteristic Length, Area, mass, velocity, position<br>
+ * "IntLRAmjvp" corresponds to ID, name, type, Characteristic Length, Area, mass, ejection vel., velocity, position<br>
  * This would be an analogous to the CSVWriter without Kepler information
  * @example
- * "IntLRAmvpaeiWwM" corresponds to (same as above) + semi-major-axis, eccentricity, inclination, RAAN, Arg. of. Per.,
+ * "IntLRAmjvpaeiWwM" corresponds to (same as above) + semi-major-axis, eccentricity, inclination, RAAN, Arg. of. Per.,
  * Mean Anomaly<br>
  * This would be analogous to the CSVWriter with Kepler information
  * @example

@@ -10,4 +10,4 @@ inputOutput:
   kepler: True
 resultOutput:
   target: ["iridium_cosmos_result.csv", "iridium_cosmos_result.vtu"]
-  csvPattern: "IntLRAmvjpaeiWwM"
+  kepler: True
