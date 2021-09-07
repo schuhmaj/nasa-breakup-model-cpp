@@ -1,11 +1,13 @@
 ---
 simulation:
   minimalCharacteristicLength: 0.05
-  # inputSource: ["../example-config/satcat.csv", "../example-config/iridium-33-debris.txt"]
-  inputSource: [ "../example-config/satcat.csv", "../example-config/cosmos-2251-debris2.txt" ]
+  #inputSource: ["../example-config/satcat.csv", "../example-config/iridium-33-debris.txt"]
+  inputSource: [ "../example-config/satcat.csv", "../example-config/cosmos-2251-debris.txt" ]
+  # inputSource: [ "../example-config/satcat.csv", "../example-config/fengyun-1c-debris.txt" ]
   # inputSource: ["../example-config/satcat.csv", "../example-config/nimbus-6-debris.txt"]
 inputOutput:
-  #target: ["iridium_fragments.csv"]
+  # target: ["iridium_fragments.csv"]
   target: ["cosmos_fragments.csv"]
+  # target: ["fengyun_fragments.csv"]
   # target: ["nimbus_fragments.csv"]
   kepler: True
