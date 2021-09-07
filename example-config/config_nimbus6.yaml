@@ -10,4 +10,4 @@ inputOutput:
   target: ["nimbus6_input.csv"]
 resultOutput:
   target: ["nimbus6_result.csv"]
-  csvPattern: "IntLRAmvjpaeiWwM"
+  kepler: True
