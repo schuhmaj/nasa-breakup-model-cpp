@@ -63,7 +63,7 @@ TEST_F(CSVWriterTest, HeaderCheck) {
 
     CSVReader<size_t, std::string, SatType,
             double, double, double, double,
-            std::string, std::string>
+            std::string, std::string, std::string>
             csvReader{_filePath, true};
 
     auto header = csvReader.getHeader();
@@ -75,8 +75,9 @@ TEST_F(CSVWriterTest, HeaderCheck) {
     ASSERT_EQ(header.at(4), "A/M [m^2/kg]");
     ASSERT_EQ(header.at(5), "Area [m^2]");
     ASSERT_EQ(header.at(6), "Mass [kg]");
-    ASSERT_EQ(header.at(7), "Velocity [m/s]");
-    ASSERT_EQ(header.at(8), "Position [m]");
+    ASSERT_EQ(header.at(7), "Ejection Velocity [m/s]");
+    ASSERT_EQ(header.at(8), "Velocity [m/s]");
+    ASSERT_EQ(header.at(9), "Position [m]");
 
 }
 
@@ -89,7 +90,7 @@ TEST_F(CSVWriterTest, DataCheck) {
 
     CSVReader<size_t, std::string, SatType,
             double, double, double, double,
-            std::string, std::string> csvReader{_filePath, true};
+            std::string, std::string, std::string> csvReader{_filePath, true};
 
     size_t expectedID = 1;
     const std::string expectedName{"DebrisTestFragment"};
@@ -98,6 +99,7 @@ TEST_F(CSVWriterTest, DataCheck) {
     double expectedArea = 1.0;
     double expectedMass = 100.0;
     double expectedAM = 1.0 / 100.0;
+    const std::string expectedEjectionVelocity{"[0 0 0]"};
     const std::string expectedVelocity{"[1 2 3]"};
     const std::string expectedPosition{"[0 0 0]"};
 
@@ -111,8 +113,9 @@ TEST_F(CSVWriterTest, DataCheck) {
         ASSERT_DOUBLE_EQ(std::get<4>(*line), expectedAM);
         ASSERT_DOUBLE_EQ(std::get<5>(*line), expectedArea);
         ASSERT_DOUBLE_EQ(std::get<6>(*line), expectedMass);
-        ASSERT_EQ(std::get<7>(*line), expectedVelocity);
-        ASSERT_EQ(std::get<8>(*line), expectedPosition);
+        ASSERT_EQ(std::get<7>(*line), expectedEjectionVelocity);
+        ASSERT_EQ(std::get<8>(*line), expectedVelocity);
+        ASSERT_EQ(std::get<9>(*line), expectedPosition);
         expectedID += 1;
         expectedArea += 1.0;
         expectedMass += 100.0;

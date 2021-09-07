@@ -88,14 +88,15 @@ void Collision::assignParentProperties() {
                   [&](auto &tuple) {
         //Order in the tuple: 0: Characteristic Length | 1: Mass | 2: Velocity | 3: NamePtr
         auto &[lc, mass, velocity, name] = tuple;
-        if (lc <= smallSat.getCharacteristicLength()
-        && assignedMassForBigSatellite < normedMassBigSat) {
-            name = debrisNameBigPtr;
-            velocity = bigSat.getVelocity();
-            assignedMassForBigSatellite += mass;
-        } else {
-            name = debrisNameSmallPtr;
-            velocity = smallSat.getVelocity();
+        if (lc <= smallSat.getCharacteristicLength()) {
+            if (assignedMassForBigSatellite < normedMassBigSat) {
+                name = debrisNameBigPtr;
+                velocity = bigSat.getVelocity();
+                assignedMassForBigSatellite += mass;
+            } else {
+                name = debrisNameSmallPtr;
+                velocity = smallSat.getVelocity();
+            }
         }
     });
 }
