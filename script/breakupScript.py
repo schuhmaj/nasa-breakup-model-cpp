@@ -141,33 +141,19 @@ def histogram_lc_cum(data, fen, title):
 def main():
     file_name = sys.argv[1]
     plot_name = sys.argv[2]
-    file_name2 = sys.argv[3]
-    file_name3 = sys.argv[4]
 
     df = pd.read_csv(file_name)
-    fenggyun = pd.read_csv(file_name2)
-    nimbus = pd.read_csv(file_name3)
     # df = df[df["Name"] == "Iridium 33-Collision-Fragment"]
     # df = df[df["Name"] == "Kosmos 2251-Collision-Fragment"]
     # df = df[df["Characteristic Length [m]"] != 0.0]
     # df = df[df["A/M [m^2/kg]"] > 0.0]
 
-    # histogram_am_log(fenggyun, "Fenggyun-1C", 'r')
-
-    # histogram_lc_cum(df, fenggyun, plot_name)
-    # histogram_am(df, plot_name)
-    # histogram_am_log(df, plot_name)
-
-    # scatter_lc_am(df, plot_name, 'b')
-    # scatter_lc_am(df[df["Name"] == "Iridium 33-Collision-Fragment"], "Iridium-33 Fragments", 'k')
-    # scatter_lc_am(df[df["Name"] == "Kosmos 2251-Collision-Fragment"], "Cosmos-2251 Fragments", 'm')
-    # scatter_lc_am(fenggyun, "Fengyun-1C Fragments", 'r')
-
-
-    scatter_dv_am_log(nimbus, "Nimbus 6 R/B Explosion", 'b')
-    histogram_am_log(nimbus, "Nimbus 6 R/B Explosion", 'b')
-    scatter_lc_am(nimbus, "Nimbus 6 R/B Explosion", 'b')
-    # scatter_dv_am_log(df, plot_name, 'b')
+    histogram_lc(df, plot_name)
+    histogram_am(df, plot_name)
+    histogram_am_log(df, plot_name, 'b')
+    scatter_lc_am(df, plot_name, 'b')
+    scatter_dv_am(df, plot_name)
+    scatter_dv_am_log(df, plot_name, 'b')
 
 
 if __name__ == '__main__':
