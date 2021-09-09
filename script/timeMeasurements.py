@@ -88,6 +88,8 @@ def time_measurement_gcc():
     plt.xscale("log")
     plt.yscale("log")
     plt.grid(True)
+    plt.xlim(10, 10e7)
+    plt.ylim(1, 10e8)
 
     plt.xlabel("Fragment Count")
     plt.ylabel("Time in [$\mu$s]")
@@ -124,6 +126,8 @@ def time_measurement_clang():
     plt.xscale("log")
     plt.yscale("log")
     plt.grid(True)
+    plt.xlim(10, 10e7)
+    plt.ylim(1, 10e8)
 
     plt.xlabel("Fragment Count")
     plt.ylabel("Time in [$\mu$s]")
@@ -223,15 +227,18 @@ def time_measurement_mass_gcc():
     plt.fill_between(x_values,
                      gcc_time_measurements_SoA_par_min, gcc_time_measurements_SoA_par_max, color="blue", alpha=0.3)
 
-    plt.vlines(x_values, 0, 10e7, colors="black", linestyles="dashed", label="$L_c$ in [m]")
+    plt.vlines(fragment_count_fixed.values(), 0, 10e7, colors="black", linestyles="dashed", label="$L_c$ in [m]")
     for lc, x in fragment_count_fixed.items():
         plt.text(x=x - x / 10 * 4, y=10e7, s=str(lc), fontdict={"size": 7})
 
-    plt.hlines(gcc_time_measurements_SoA_par_mass_avg, x_min, x_max, colors="black", linewidths=5.0)
+    plt.hlines(gcc_time_measurements_SoA_par_mass_avg, x_min, x_max, colors="black", linewidths=5.0,
+               label="Fragment number variation")
 
     plt.xscale("log")
     plt.yscale("log")
     plt.grid(True)
+    plt.xlim(10, 10e7)
+    plt.ylim(1, 10e8)
 
     plt.xlabel("Fragment Count")
     plt.ylabel("Time in [$\mu$s]")
@@ -275,6 +282,7 @@ def time_measurement_mass_relative_gcc():
     plt.savefig("timeMeasurements_mass_con_relative_gcc", dpi=300)
     plt.close(fig)
 
+
 def time_measurement_mass_relative_clang():
     fig = plt.figure(figsize=(6, 4), dpi=300)
 
@@ -284,7 +292,8 @@ def time_measurement_mass_relative_clang():
 
     plt.plot(x_values, clang_time_measurements_SoA_par_mass_avg / y_norm, color="red", label="Enabled")
     plt.fill_between(x_values,
-                     clang_time_measurements_SoA_par_mass_min / y_norm, clang_time_measurements_SoA_par_mass_max / y_norm,
+                     clang_time_measurements_SoA_par_mass_min / y_norm,
+                     clang_time_measurements_SoA_par_mass_max / y_norm,
                      color="red",
                      alpha=0.3)
 
@@ -324,15 +333,18 @@ def time_measurement_mass_clang():
     plt.fill_between(x_values,
                      clang_time_measurements_SoA_par_min, clang_time_measurements_SoA_par_max, color="blue", alpha=0.3)
 
-    plt.vlines(x_values, 0, 10e7, colors="black", linestyles="dashed", label="$L_c$ in [m]")
+    plt.vlines(fragment_count_fixed.values(), 0, 10e7, colors="black", linestyles="dashed", label="$L_c$ in [m]")
     for lc, x in fragment_count_fixed.items():
         plt.text(x=x - x / 10 * 4, y=10e7, s=str(lc), fontdict={"size": 7})
 
-    plt.hlines(clang_time_measurements_SoA_par_mass_avg, x_min, x_max, colors="black", linewidths=5.0)
+    plt.hlines(clang_time_measurements_SoA_par_mass_avg, x_min, x_max, colors="black", linewidths=5.0,
+               label="Fragment number variation")
 
     plt.xscale("log")
     plt.yscale("log")
     plt.grid(True)
+    plt.xlim(10, 10e7)
+    plt.ylim(1, 10e8)
 
     plt.xlabel("Fragment Count")
     plt.ylabel("Time in [$\mu$s]")
