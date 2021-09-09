@@ -160,6 +160,9 @@ def time_measurement_relative_gcc():
                      gcc_time_measurements_SoA_par_min / y_norm, gcc_time_measurements_SoA_par_max / y_norm,
                      color='magenta',
                      alpha=0.3)
+    plt.vlines(x_values, 0, 11, colors="black", linestyles="dashed", label="$L_c$ in [m]")
+    for lc, x in fragment_count_fixed.items():
+        plt.text(x=lc, y=11, s=str(lc), fontdict={"size": 7})
 
     plt.grid(True)
     plt.xscale("log")
@@ -170,7 +173,7 @@ def time_measurement_relative_gcc():
     plt.ylabel("Relative Time")
     plt.title("Relative Time GCC 9.3 - 10 runs each (min, avg, max)")
 
-    plt.legend(loc="lower right")
+    plt.legend(loc="upper left")
 
     plt.savefig("timeMeasurements_relative_milestones_gcc", dpi=300)
     plt.close(fig)
@@ -197,6 +200,9 @@ def time_measurement_relative_clang():
                      clang_time_measurements_SoA_par_min / y_norm, clang_time_measurements_SoA_par_max / y_norm,
                      color='magenta',
                      alpha=0.3)
+    plt.vlines(x_values, 0, 11, colors="black", linestyles="dashed", label="$L_c$ in [m]")
+    for lc, x in fragment_count_fixed.items():
+        plt.text(x=lc, y=11, s=str(lc), fontdict={"size": 7})
 
     plt.grid(True)
     plt.xscale("log")
@@ -207,7 +213,7 @@ def time_measurement_relative_clang():
     plt.ylabel("Relative Time")
     plt.title("Relative Time Clang 10.0 - 10 runs each (min, avg, max)")
 
-    plt.legend(loc="lower right")
+    plt.legend(loc="upper left")
 
     plt.savefig("timeMeasurements_relative_milestones_clang", dpi=300)
     plt.close(fig)
@@ -269,6 +275,9 @@ def time_measurement_mass_relative_gcc():
     plt.fill_between(x_values,
                      gcc_time_measurements_SoA_par_min / y_norm, gcc_time_measurements_SoA_par_max / y_norm,
                      color="blue", alpha=0.3)
+    plt.vlines(x_values, 0, 11, colors="black", linestyles="dashed", label="$L_c$ in [m]")
+    for lc, x in fragment_count_fixed.items():
+        plt.text(x=lc, y=11, s=str(lc), fontdict={"size": 7})
 
     plt.grid(True)
     plt.xscale("log")
@@ -280,7 +289,7 @@ def time_measurement_mass_relative_gcc():
 
     plt.title("Relative Time GCC 9.3 - Mass Conservation")
 
-    plt.legend(loc="lower right")
+    plt.legend(loc="upper right")
 
     plt.savefig("timeMeasurements_mass_con_relative_gcc", dpi=300)
     plt.close(fig)
@@ -304,6 +313,9 @@ def time_measurement_mass_relative_clang():
     plt.fill_between(x_values,
                      clang_time_measurements_SoA_par_min / y_norm, clang_time_measurements_SoA_par_max / y_norm,
                      color="blue", alpha=0.3)
+    plt.vlines(x_values, 0, 11, colors="black", linestyles="dashed", label="$L_c$ in [m]")
+    for lc, x in fragment_count_fixed.items():
+        plt.text(x=lc, y=11, s=str(lc), fontdict={"size": 7})
 
     plt.grid(True)
     plt.xscale("log")
@@ -315,7 +327,7 @@ def time_measurement_mass_relative_clang():
 
     plt.title("Relative Time Clang 10.0 - Mass Conservation")
 
-    plt.legend(loc="lower right")
+    plt.legend(loc="upper right")
 
     plt.savefig("timeMeasurements_mass_con_relative_clang", dpi=300)
     plt.close(fig)
