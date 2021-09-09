@@ -164,10 +164,11 @@ def time_measurement_relative_gcc():
     plt.grid(True)
     plt.xscale("log")
     plt.xlim(1.0, 0.0001)
+    plt.ylim(0.0, 12.0)
 
     plt.xlabel("$L_c$ in [m]")
     plt.ylabel("Relative Time")
-    plt.title("Relative Time Measurements GCC 9.3 - 10 runs each (min, avg, max)")
+    plt.title("Relative Time GCC 9.3 - 10 runs each (min, avg, max)")
 
     plt.legend(loc="lower right")
 
@@ -200,10 +201,11 @@ def time_measurement_relative_clang():
     plt.grid(True)
     plt.xscale("log")
     plt.xlim(1.0, 0.0001)
+    plt.ylim(0.0, 12.0)
 
     plt.xlabel("$L_c$ in [m]")
     plt.ylabel("Relative Time")
-    plt.title("Relative Time Measurements Clang 10.0 - 10 runs each (min, avg, max)")
+    plt.title("Relative Time Clang 10.0 - 10 runs each (min, avg, max)")
 
     plt.legend(loc="lower right")
 
@@ -271,11 +273,12 @@ def time_measurement_mass_relative_gcc():
     plt.grid(True)
     plt.xscale("log")
     plt.xlim(1.0, 0.0001)
+    plt.ylim(0.0, 12.0)
 
     plt.xlabel("$L_c$ in [m]")
     plt.ylabel("Relative Time")
 
-    plt.title("Relative Time Measurements GCC 9.3 - Mass Conservation")
+    plt.title("Relative Time GCC 9.3 - Mass Conservation")
 
     plt.legend(loc="lower right")
 
@@ -305,11 +308,12 @@ def time_measurement_mass_relative_clang():
     plt.grid(True)
     plt.xscale("log")
     plt.xlim(1.0, 0.0001)
+    plt.ylim(0.0, 12.0)
 
     plt.xlabel("$L_c$ in [m]")
     plt.ylabel("Relative Time")
 
-    plt.title("Relative Time Measurements Clang 10.0 - Mass Conservation")
+    plt.title("Relative Time Clang 10.0 - Mass Conservation")
 
     plt.legend(loc="lower right")
 
