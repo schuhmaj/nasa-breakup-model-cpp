@@ -63,6 +63,27 @@ clang_fragments_SoA_par_mass_max = np.array([69, 1888, 5878, 91100, 262320, 4338
 clang_fragments_SoA_par_mass_avg = np.array([61, 1678, 5115, 72708, 227708, 3850426, 11295145, 57038138])
 clang_fragments_SoA_par_mass_min = np.array([44, 1563, 4061, 60693, 177825, 2976784, 8866479, 41525083])
 
+# Utilized cores (0 - 16)
+utilized_cores = np.array([
+    0.057391663100000004,
+    0.29719989589999996,
+    0.1558400977,
+    0.09634660310000001,
+    0.0012367221999999998,
+    0.0029524258999999997,
+    0.0021224513,
+    0.0009660218999999999,
+    0.0101923808,
+    0.0008027215,
+    0.000795917,
+    0.0010135777,
+    0.0102957217,
+    0.0000069341,
+    0.000012538900000000001,
+    0.11984812660000001,
+    0.1301281496
+])
+
 
 def time_measurement_gcc():
     fig = plt.figure(figsize=(6, 4), dpi=300)
@@ -426,6 +447,36 @@ def mass_range_clang():
     plt.close(fig)
 
 
+def core_utilization_plot():
+    fig = plt.figure(figsize=(8, 4), dpi=300)
+    numbers = np.arange(0, 17)
+
+    utilized_cores_ms = utilized_cores * 1000
+
+    bars1 = plt.bar(numbers, utilized_cores_ms)
+
+    for i, b in enumerate(bars1):
+        if i < 12:
+            b.set_color("red")
+        elif i < 16:
+            b.set_color("orange")
+        else:
+            b.set_color("green")
+
+    plt.vlines(5.636, 0, 300, colors="black", linestyles="dashed", label="Average utilization")
+    plt.grid(True)
+    plt.xlim(-1, 17)
+
+    plt.xlabel("Utilized Cores")
+    plt.ylabel("Time in [ms]")
+    plt.title("Core Utilization for $L_c = 0.0005$ as analyzed by VTune")
+
+    plt.legend(loc="upper right")
+
+    plt.savefig("vtune_speed_0005", dpi=300)
+    plt.close(fig)
+
+
 def main():
     print("Staring to plot...")
 
@@ -446,6 +497,8 @@ def main():
     # Mass conservation Fragment Number
     mass_range_gcc()
     mass_range_clang()
+
+    core_utilization_plot()
 
     print("Finished Plotting")
 
