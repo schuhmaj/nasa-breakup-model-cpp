@@ -54,7 +54,7 @@ std::map<size_t, OrbitalElements> TLEReader::getMappingIDOrbitalElements() const
             line1Found = true;
         } else if (line.rfind('2', 0) == 0 && line1Found) {
             line2 = line;
-            auto pair = parseLineTwo(line1, line2);
+            auto pair = parseTLELines(line1, line2);
             mapping.insert(pair);
             line1Found = false;
         }
@@ -63,7 +63,7 @@ std::map<size_t, OrbitalElements> TLEReader::getMappingIDOrbitalElements() const
     return mapping;
 }
 
-std::pair<size_t, OrbitalElements> TLEReader::parseLineTwo(const std::string &line1, const std::string &line2) const {
+std::pair<size_t, OrbitalElements> TLEReader::parseTLELines(const std::string &line1, const std::string &line2) const {
     size_t id;
     std::array<double, 6> tleData{};
     int year;

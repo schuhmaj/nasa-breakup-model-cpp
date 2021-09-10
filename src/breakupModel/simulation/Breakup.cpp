@@ -163,6 +163,7 @@ double Breakup::calculateAreaMassRatio(double characteristicLength) {
                                  (1.0 - alpha(_satType, logLc)) * getRandomNumber(n2));
         double y0 = std::pow(10.0, getRandomNumber(n));
 
+        //beta * y1 + (1 - beta) * y0 = beta * y1 + y0 - beta * y0 = y0 + beta * (y1 - y0)
         return y0 + (characteristicLength - 0.08) * (y1 - y0) / (0.03);
     }
 }
