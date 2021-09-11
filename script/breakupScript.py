@@ -13,7 +13,7 @@ def histogram_lc(data, title):
     plt.xlabel('$L_c [m]$')
     plt.ylabel('Number')
     plt.xscale("log")
-    plt.savefig("histogram_lc_" + title, dpi=300)
+    plt.savefig("histogram_lc", dpi=300)
     plt.close(fig)
 
 
@@ -30,7 +30,7 @@ def histogram_am(data, title, cumulative=False):
         plt.title(title + ' $A/M$ Cumulative Distribution')
     else:
         plt.title(title + ' $A/M$ Distribution')
-    plt.savefig("histogram_am_" + title, dpi=300)
+    plt.savefig("histogram_am", dpi=300)
     plt.close(fig)
 
 
@@ -42,7 +42,7 @@ def histogram_am_log(data, title, color):
     plt.xlabel('$\log(A/M) [m^2/kg]$')
     plt.ylabel('Number')
     plt.title(title + " $A/M$ Distribution")
-    plt.savefig("histogram_am_log_" + title, dpi=300)
+    plt.savefig("histogram_am_log", dpi=300)
     plt.close(fig)
 
 
@@ -55,7 +55,7 @@ def scatter_lc_am(data, title, color):
     plt.ylabel('$A/M [m^2/kg]$')
     plt.xlim(0.01, 10)
     plt.ylim(0.001, 100)
-    plt.savefig("scatter_lc_am_" + title, dpi=300)
+    plt.savefig("scatter_lc_am", dpi=300)
     plt.close(fig)
 
 
@@ -71,7 +71,7 @@ def scatter_dv_am(data, title):
     plt.yscale("log")
     plt.xlim(0, 10000)
     plt.ylim(0.001, 100)
-    plt.savefig("scatter_dv_am_" + title, dpi=300)
+    plt.savefig("scatter_dv_am", dpi=300)
     plt.close(fig)
 
 
@@ -87,15 +87,15 @@ def scatter_dv_am_log(data, title, color):
     plt.yscale("log")
     plt.xscale("log")
     plt.ylim(0.001, 100)
-    plt.savefig("scatter_dv_am_log_" + title, dpi=300)
+    plt.savefig("scatter_dv_am_log", dpi=300)
     plt.close(fig)
 
 
-def histogram_lc_cum(data, fen, title):
+def histogram_lc_cum(data_col, data_fen):
     number = 3000
     fig = plt.figure(figsize=(6, 4), dpi=300)
-    data1 = data[data["Name"] == "Kosmos 2251-Collision-Fragment"]["Characteristic Length [m]"]
-    data2 = data[data["Name"] == "Iridium 33-Collision-Fragment"]["Characteristic Length [m]"]
+    data1 = data_col[data_col["Name"] == "Kosmos 2251-Collision-Fragment"]["Characteristic Length [m]"]
+    data2 = data_col[data_col["Name"] == "Iridium 33-Collision-Fragment"]["Characteristic Length [m]"]
 
     x = np.logspace(-2.0, 1.0, num=number)
     y = np.zeros(number)
@@ -113,7 +113,7 @@ def histogram_lc_cum(data, fen, title):
                 y[i] += 1
     plt.plot(x, y, c='k', label="Iridium 33")
 
-    data3 = fen["Characteristic Length [m]"]
+    data3 = data_fen["Characteristic Length [m]"]
     x = np.logspace(-2.0, 1.0, num=number)
     y = np.zeros(number)
     for i, point in enumerate(x):
@@ -134,13 +134,13 @@ def histogram_lc_cum(data, fen, title):
     plt.grid(True)
 
     plt.title("Size Distributions of Modelled Breakups")
-    plt.savefig("histogram_lc_cum_" + title, dpi=300)
+    plt.savefig("histogram_lc_cum", dpi=300)
     plt.close(fig)
 
 
 def main():
-    file_name = sys.argv[1]
-    plot_name = sys.argv[2]
+    file_name = "../cpp-results/iridium_cosmos_result.csv"
+    plot_name = "Iridium-33 Cosmos-2251 Collision"
 
     df = pd.read_csv(file_name)
     # df = df[df["Name"] == "Iridium 33-Collision-Fragment"]
