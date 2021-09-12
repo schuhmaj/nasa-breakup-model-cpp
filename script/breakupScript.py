@@ -91,11 +91,13 @@ def scatter_dv_am_log(data, title, color):
     plt.close(fig)
 
 
-def histogram_lc_cum(data_col, data_fen, cpp_col, cpp_fen):
+def histogram_lc_cum(data_col, data_fen, ir, cos, fen):
     number = 3000
     fig = plt.figure(figsize=(6, 4), dpi=300)
-    data1 = data_col[data_col["Name"] == "Kosmos 2251-Collision-Fragment"]["Characteristic Length [m]"]
-    data2 = data_col[data_col["Name"] == "Iridium 33-Collision-Fragment"]["Characteristic Length [m]"]
+    data1 = cos["Characteristic Length [m]"]
+    data1_mod = data_col[data_col["Name"] == "Kosmos 2251-Collision-Fragment"]["Characteristic Length [m]"]
+    data2 = ir["Characteristic Length [m]"]
+    data2_mod = data_col[data_col["Name"] == "Iridium 33-Collision-Fragment"]["Characteristic Length [m]"]
 
     x = np.logspace(-2.0, 1.0, num=number)
     y = np.zeros(number)
@@ -103,7 +105,15 @@ def histogram_lc_cum(data_col, data_fen, cpp_col, cpp_fen):
         for mass in data1:
             if mass >= point:
                 y[i] += 1
-    plt.plot(x, y, c='m', label="Cosmos 2251")
+
+    y_mod = np.zeros(number)
+    for i, point in enumerate(x):
+        for mass in data1_mod:
+            if mass >= point:
+                y_mod[i] += 1
+
+    # plt.plot(x, y_mod - y, c='m', label="Cosmos 2251")
+    plt.plot(x, y_mod, c='m', label="Cosmos 2251")
 
     x = np.logspace(-2.0, 1.0, num=number)
     y = np.zeros(number)
@@ -111,21 +121,38 @@ def histogram_lc_cum(data_col, data_fen, cpp_col, cpp_fen):
         for mass in data2:
             if mass >= point:
                 y[i] += 1
-    plt.plot(x, y, c='k', label="Iridium 33")
 
-    data3 = data_fen["Characteristic Length [m]"]
+    y_mod = np.zeros(number)
+    for i, point in enumerate(x):
+        for mass in data2_mod:
+            if mass >= point:
+                y_mod[i] += 1
+
+    # plt.plot(x, y_mod - y, c='k', label="Iridium 33")
+    plt.plot(x, y_mod, c='k', label="Iridium 33")
+
+    data3 = fen["Characteristic Length [m]"]
+    data3_mod = data_fen["Characteristic Length [m]"]
     x = np.logspace(-2.0, 1.0, num=number)
     y = np.zeros(number)
     for i, point in enumerate(x):
         for mass in data3:
             if mass >= point:
                 y[i] += 1
-    plt.plot(x, y, c='r', label="Fengyun 1C")
+
+    y_mod = np.zeros(number)
+    for i, point in enumerate(x):
+        for mass in data3_mod:
+            if mass >= point:
+                y_mod[i] += 1
+
+    # plt.plot(x, y_mod - y, c='r', label="Fengyun 1C")
+    plt.plot(x, y_mod, c='r', label="Fengyun 1C")
 
     plt.legend(loc='upper right')
 
     plt.xlabel('$L_c [m]$')
-    plt.ylabel("Cumulative number")
+    plt.ylabel("Cumulative Difference")
 
     plt.xlim(0.01, 10)
 
@@ -133,13 +160,13 @@ def histogram_lc_cum(data_col, data_fen, cpp_col, cpp_fen):
     plt.yscale("log")
     plt.grid(True)
 
-    plt.title("Size Distributions of Modelled Breakups")
+    plt.title("NASA Breakup Model $L_c$ Distribution")
     plt.savefig("histogram_lc_cum", dpi=300)
     plt.close(fig)
 
 
 def main():
-    file_name = "../cpp-results/iridium_cosmos_result.csv"
+    file_name = "../cpp-results/iridium_cosmos_result2.csv"
     plot_name = "Iridium-33 Cosmos-2251 Collision"
 
     df = pd.read_csv(file_name)
@@ -157,6 +184,11 @@ def main():
 
     df_fen = pd.read_csv("../cpp-results/fengyun-1c_result.csv")
 
+    fen = pd.read_csv("../cpp-results/fengyun_fragments.csv")
+    ir = pd.read_csv("../cpp-results/iridium_fragments.csv")
+    cos = pd.read_csv("../cpp-results/cosmos_fragments.csv")
+
+    histogram_lc_cum(df, df_fen, ir, cos, fen)
 
 
 if __name__ == '__main__':
