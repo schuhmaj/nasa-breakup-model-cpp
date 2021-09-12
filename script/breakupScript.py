@@ -91,7 +91,7 @@ def scatter_dv_am_log(data, title, color):
     plt.close(fig)
 
 
-def histogram_lc_cum(data_col, data_fen):
+def histogram_lc_cum(data_col, data_fen, cpp_col, cpp_fen):
     number = 3000
     fig = plt.figure(figsize=(6, 4), dpi=300)
     data1 = data_col[data_col["Name"] == "Kosmos 2251-Collision-Fragment"]["Characteristic Length [m]"]
@@ -154,6 +154,9 @@ def main():
     scatter_lc_am(df, plot_name, 'b')
     scatter_dv_am(df, plot_name)
     scatter_dv_am_log(df, plot_name, 'b')
+
+    df_fen = pd.read_csv("../cpp-results/fengyun-1c_result.csv")
+
 
 
 if __name__ == '__main__':
