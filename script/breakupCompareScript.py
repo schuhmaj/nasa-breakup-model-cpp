@@ -92,7 +92,7 @@ def compare_histogram_am_log(data_cpp, data_python, title):
     plt.hist(log_python, bins=50, alpha=0.5, log=True, label="Python", color='red')
 
     plt.grid(True)
-    plt.xlim(-3.0, 1.5)
+    plt.xlim(-3.0, 1.0)
     plt.legend(loc='upper right')
 
     plt.xlabel("$\log_{10}(A/M)$")
@@ -154,7 +154,7 @@ def compare_scatter_dv_am_log(data_cpp, data_python, title):
 
 
 def main():
-    file_name_cpp = "../cmake-build-relwithdebinfo/iridium_cosmos_result.csv"
+    file_name_cpp = "../cpp-results/iridium_cosmos_result2.csv"
     file_name_python = "../python-results/iridium_cosmos_python.csv"
     plot_name = "Iridium-33 Cosmos-2251 Collision"
 
