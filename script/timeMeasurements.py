@@ -477,6 +477,32 @@ def core_utilization_plot():
     plt.close(fig)
 
 
+def lc_number():
+    fig = plt.figure(figsize=(6, 4), dpi=300)
+
+    mass = 556.0 + 900.0
+    lc_values = np.linspace(1.0, 0.0001)
+    fragment_numbers = 0.1 * (mass ** 0.75) * (lc_values ** -1.71)
+
+    plt.plot(lc_values, fragment_numbers, label="Iridium-33 Cosmos-2251 Collision", color="red")
+
+    lines = plt.vlines(lc_data_point, 0, 10e7, colors="black", linestyles="dashed", label="Time Measurements")
+
+    plt.grid(True)
+    plt.xlim(1.0, 0.0001)
+
+    plt.xscale("log")
+    plt.yscale("log")
+
+    plt.xlabel("$L_{c, min}$ in [m]")
+    plt.ylabel("Fragment Number")
+    plt.title("Number of Fragments depending on $L_{c, min}$")
+    plt.legend(loc="upper left")
+
+    plt.savefig("lc_number", dpi=300)
+    plt.close(fig)
+
+
 def main():
     print("Staring to plot...")
 
@@ -494,11 +520,7 @@ def main():
     time_measurement_mass_relative_gcc()
     time_measurement_mass_relative_clang()
 
-    # Mass conservation Fragment Number
-    mass_range_gcc()
-    mass_range_clang()
-
-    core_utilization_plot()
+    lc_number()
 
     print("Finished Plotting")
 
