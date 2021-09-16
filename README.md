@@ -1,13 +1,20 @@
 # nasa-breakup-model-cpp
+
 ![Build and Test](https://github.com/schuhmaj/nasa-breakup-model-cpp/actions/workflows/ctest.yml/badge.svg)
 
-Implementation as part of the Bachelor Thesis "Efficient Implementation and Evaluation of the NASA Breakup Model in modern C++"
+### Bachelor's Thesis: Efficient Implementation and Evaluation of the NASA Breakup Model in modern C++
 
-Comments to Equations or similar in the source code reference the following document:
+Implementation of the Bachelor's Thesis _Efficient Implementation and Evaluation of the NASA Breakup Model in modern C++_.
+The document can be found and accessed as PDF at https://mediatum.ub.tum.de/1624604.
 
-Johnson, Nicholas L., et al. “NASA’s new breakup model of EVOLVE 4.0” Advances in Space Research 28.9 (2001): 1377-1384
+It contains extensive information about the theoretical background, related work, implementation & design decisions, application, verification, and runtime measurements of the presented code.
 
-### Requirements
+### Orginal Paper: NASA’s new breakup model of EVOLVE 4.0
+Comments to Equations or similar in the source code reference this document:
+
+Johnson, Nicholas L., et al. _NASA’s new breakup model of EVOLVE 4.0_ Advances in Space Research 28.9 (2001): 1377-1384
+
+## Requirements
 The project uses the following dependencies:
 - GoogleTest-1.10.0 (Only required for Testing, Automatically set-up by CMake)
 - yaml-cpp-0.6.3 (Required for Input, Automatically set-up by CMake)
