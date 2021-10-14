@@ -9,6 +9,9 @@ The document can be found and accessed as PDF at https://mediatum.ub.tum.de/1624
 
 It contains extensive information about the theoretical background, related work, implementation & design decisions, application, verification, and runtime measurements of the presented code.
 
+This Thesis has been written at the Technical University of Munich in cooperation with the Advanced Concepts Team of the European Space Agency.
+
+
 ### Orginal Paper: NASA’s new breakup model of EVOLVE 4.0
 Comments to Equations or similar in the source code reference this document:
 
