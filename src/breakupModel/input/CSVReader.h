@@ -45,7 +45,7 @@ public:
             : _filepath(std::move(filepath)),
               _hasHeader(hasHeader) {
         if (!std::filesystem::exists(_filepath)) {
-            throw std::runtime_error{"The CSV file " + filepath + " does not exist!"};
+            throw std::runtime_error{"The CSV file " + _filepath + " does not exist!"};
         }
     }
 

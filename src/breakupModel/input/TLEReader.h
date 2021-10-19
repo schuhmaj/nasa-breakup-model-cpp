@@ -35,7 +35,7 @@ public:
     explicit TLEReader(std::string filepath)
         : _filepath(std::move(filepath)) {
         if (!std::filesystem::exists(_filepath)) {
-            throw std::runtime_error{"The TLE file " + filepath + " does not exist!"};
+            throw std::runtime_error{"The TLE file " + _filepath + " does not exist!"};
         }
     }
 
