@@ -45,7 +45,7 @@ void Breakup::generateFragments(size_t fragmentCount, const std::array<double, 3
 }
 
 void Breakup::characteristicLengthDistribution() {
-    std::for_each(std::execution::par_unseq, _output.characteristicLength.begin(), _output.characteristicLength.end(),
+    thrust::for_each(_output.characteristicLength.begin(), _output.characteristicLength.end(),
                   [&](double &lc) {
         lc = calculateCharacteristicLength();
     });
@@ -53,7 +53,7 @@ void Breakup::characteristicLengthDistribution() {
 
 void Breakup::areaToMassRatioDistribution() {
     auto tupleView = _output.getAreaMassTuple();
-    std::for_each(std::execution::par_unseq, tupleView.begin(), tupleView.end(),
+    thrust::for_each(tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: L_c | 1: A/M | 2: Area | 3: Mass
         auto &[lc, areaToMassRatio, area, mass] = tuple;
@@ -68,7 +68,7 @@ void Breakup::areaToMassRatioDistribution() {
 
 void Breakup::enforceMassConservation() {
     //Enforce Mass Conservation if the output mass is greater than the input mass
-    _outputMass = std::reduce(std::execution::par_unseq,_output.mass.begin(), _output.mass.end(), 0.0);
+    _outputMass = thrust::reduce(_output.mass.begin(), _output.mass.end(), 0.0);
     spdlog::debug("The simulation got {} kg of input mass", _inputMass);
     spdlog::debug("The simulation produced {} kg of debris", _outputMass);
     size_t oldSize = _output.size();
@@ -113,7 +113,7 @@ void Breakup::enforceMassConservation() {
 void Breakup::deltaVelocityDistribution() {
     using namespace util;
     auto tupleView = _output.getVelocityTuple();
-    std::for_each(std::execution::par_unseq, tupleView.begin(), tupleView.end(),
+    thrust::for_each(tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: A/M | 1: Velocity | 2: Ejection Velocity
         auto &[areaToMassRatio, velocity, ejectionVelocity] = tuple;

@@ -12,6 +12,8 @@ include(yaml)
 #Incorporate spdlog into the project
 include(spdlog)
 
+include(thrust)
+
 #Also include the cpp files
 file(GLOB_RECURSE SRC
         "${PROJECT_SOURCE_DIR}/src/breakupModel/*.h"
@@ -30,14 +32,17 @@ target_link_libraries(${PROJECT_NAME}_lib
         spdlog
         )
 
-if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    message(STATUS "Linking tbb libary")
-    find_library(TBB
-            NAME tbb
-            HINTS "/opt/homebrew/lib/")
-    target_link_libraries(${PROJECT_NAME}_lib
-            ${TBB})
-endif()
+thrust_create_target(Thrust HOST OMP DEVICE OMP)
+target_link_libraries(${PROJECT_NAME}_lib Thrust)
+
+#if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+#    message(STATUS "Linking tbb libary")
+#    find_library(TBB
+#            NAME tbb
+#            HINTS "/opt/homebrew/lib/")
+#    target_link_libraries(${PROJECT_NAME}_lib
+#            ${TBB})
+#endif()
 
 #Option to simulation or not
 option(BUILD_BREAKUP_MODEL_SIM "Set to on if the simulation should be built (Default: ON)" ON)

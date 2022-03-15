@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <numeric>
 #include <memory>
-#include <execution>
 #include <optional>
 #include <mutex>
 #include "breakupModel/model/Satellite.h"
@@ -18,6 +17,8 @@
 #include "breakupModel/util/UtilityAreaMassRatio.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
+#include "thrust/for_each.h"
+#include "thrust/reduce.h"
 
 /**
  * Pure virtual class which needs a Collection of Satellites as input and output and simulates a breakup

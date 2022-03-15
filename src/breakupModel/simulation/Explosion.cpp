@@ -34,7 +34,7 @@ void Explosion::assignParentProperties() {
     auto debrisNamePtr = std::make_shared<const std::string>(parent.getName() + "-Explosion-Fragment");
 
     auto tupleView = _output.getVNTuple();
-    std::for_each(std::execution::par, tupleView.begin(), tupleView.end(),
+    thrust::for_each(tupleView.begin(), tupleView.end(),
                   [&](auto &tuple) {
         //Order in the tuple: 0: Velocity | 1: NamePtr
         auto &[velocity, name] = tuple;
