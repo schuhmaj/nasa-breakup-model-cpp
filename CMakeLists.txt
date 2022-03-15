@@ -32,8 +32,11 @@ target_link_libraries(${PROJECT_NAME}_lib
 
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message(STATUS "Linking tbb libary")
+    find_library(TBB
+            NAME tbb
+            HINTS "/opt/homebrew/lib/")
     target_link_libraries(${PROJECT_NAME}_lib
-            tbb)
+            ${TBB})
 endif()
 
 #Option to simulation or not
