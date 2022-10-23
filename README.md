@@ -11,6 +11,9 @@ It contains extensive information about the theoretical background, related work
 
 This Thesis has been written at the Technical University of Munich in cooperation with the Advanced Concepts Team of the European Space Agency.
 
+### Notice!
+
+The most recent version of the implementation can be found in the following repository: [esa/NASA-breakup-model-cpp](https://github.com/esa/NASA-breakup-model-cpp)
 
 ### Orginal Paper: NASA’s new breakup model of EVOLVE 4.0
 Comments to Equations or similar in the source code reference this document:
