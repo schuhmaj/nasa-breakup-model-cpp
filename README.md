@@ -1,5 +1,8 @@
 # nasa-breakup-model-cpp
 
+> [!CAUTION]
+> The project **was migrated** to a new repository inside the European Space Agency's GitHub organization: [esa/NASA-breakup-model-cpp](https://github.com/esa/NASA-breakup-model-cpp). **Please refer to the ESA repository** for questions, issues, contributions and the newest updates!
+
 ![Build and Test](https://github.com/schuhmaj/nasa-breakup-model-cpp/actions/workflows/ctest.yml/badge.svg)
 
 ### Bachelor's Thesis: Efficient Implementation and Evaluation of the NASA Breakup Model in modern C++
@@ -10,10 +13,6 @@ The document can be found and accessed as PDF at https://mediatum.ub.tum.de/1624
 It contains extensive information about the theoretical background, related work, implementation & design decisions, application, verification, and runtime measurements of the presented code.
 
 This Thesis has been written at the Technical University of Munich in cooperation with the Advanced Concepts Team of the European Space Agency.
-
-### Notice!
-
-The most recent version of the implementation can be found in the following repository: [esa/NASA-breakup-model-cpp](https://github.com/esa/NASA-breakup-model-cpp)
 
 ### Orginal Paper: NASA’s new breakup model of EVOLVE 4.0
 Comments to Equations or similar in the source code reference this document:
